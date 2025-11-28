@@ -1,0 +1,21 @@
+:root {
+  --primary-color: #007bff; /* Example primary blue color */
+  --secondary-color: #23374D; /* Example secondary gray color */
+  --success-color: #28a745; /* Example success green color */
+  --danger-color: #dc3545; /* Example danger red color */
+  --text-color-dark: #333; /* Example dark text color */
+  --text-color-light: #fff; /* Example light text color */
+}
+body {
+  background-color: var(--primary-color);
+  color: var(--text-color-dark);
+}
+
+h1 {
+  color: var(--secondary-color);
+}
+
+.button-success {
+  background-color: var(--success-color);
+  color: var(--text-color-light);
+}
