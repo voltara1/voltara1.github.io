@@ -1,5 +1,13 @@
+/* universal settings */
+*,*::before,*::after{
+  margin:0;
+  padding:0;
+  box-sizing: border-box;
+  /* outline: 1px dashed #ffff20; */
+}
+
 :root {
-  --primary-color: #1089ff; /* Example primary blue color */
+  --primary-color: ##fff; /* Example primary blue color */
   --secondary-color: #23374D; /* Example secondary gray color */
   --success-color: #28a745; /* Example success green color */
   --danger-color: #dc3545; /* Example danger red color */
@@ -7,6 +15,7 @@
   --text-color-light: #fff; /* Example light text color */
 }
 body {
+  min-height: 100dvh;
   background-color: var(--primary-color);
   color: var(--text-color-dark);
 }
@@ -18,33 +27,6 @@ h1 {
 .button-success {
   background-color: var(--success-color);
   color: var(--text-color-light);
-}
-
-/* start of footer section */
-footer {
-  grid-column: full-start / full-end;
-  display: flex;
-  flex-direction: row;
-  font-size: smaller;
-  border-top: 1px solid #e7e7e7;
-  /* how do we spread the content, similar to the navbar */
-  justify-content: space-between;
-  padding: 1rem 0 2rem 0;
-  color: #8d8d8d;
-}
-
-footer > p {
-  margin-left: 1.5rem;
-}
-footer > ul {
-  display: flex;
-  list-style: none;
-}
-footer > ul > li {
-  margin-right: 1rem;
-}
-footer > ul > li:last-child {
-  margin-right: 1.5rem;
 }
 
 /* Navbar styling for Login and Sign-Up on the right */
