@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="s]-Photoroom.png" alt="Voltata Logo" width="280"/>
+  <img <img width="720" height="720" alt="s -Photoroom" src="https://github.com/user-attachments/assets/d8805243-378c-4283-9229-e450d7c991d2" />
 </p>
 
 <h1 align="center">⚡ VOLTARA</h1>
