@@ -26,16 +26,16 @@ function submitForm(event) {
 
 /**
  * function() to display a toast message with the given message and background color
- * @param {*} param0.msg the message to be displayed in the toast
- * @param {*} param0.bgColor the background color of the toast (success or danger)
+ * @param {string} bgColor the background color (success/danger/info/...)
+ * @param {string} msg the message to be displayed in the toast
  */
-function showToast({ msg, bgColor }) {
+function showToast({ bgColor, msg }) {
     const toastElement = document.getElementById('msg-toast'); 
     const toastBodyElement = document.getElementById('msg-toast-body');
     toastBodyElement.textContent = msg;
     toastElement.classList.remove("bg-success", "bg-danger");
     toastElement.classList.add("bg-" + bgColor);
 
-    const toast = new bootstrap.Toast(toastElement, { delay: 4000 });
+    const toast = new bootstrap.Toast(toastElement, { delay: 10000 });
     toast.show(); /* display the toast message for 4 secs */
 }

@@ -21,9 +21,9 @@ body {
   
 }
 
-h1 {
+/* h1 {
   color: var(--secondary-color);
-}
+} */
 
 .button-success {
   background-color: var(--success-color);
