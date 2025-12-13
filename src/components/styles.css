@@ -18,15 +18,17 @@ body {
   min-height: 100dvh;
   background-color: var(--primary-color);
   color: var(--text-color-dark);
+  
 }
 
-h1 {
+/* h1 {
   color: var(--secondary-color);
-}
+} */
 
 .button-success {
   background-color: var(--success-color);
   color: var(--text-color-light);
+  
 }
 
 /* Navbar styling for Login and Sign-Up on the right */
@@ -36,15 +38,8 @@ h1 {
 
 /* Navbar logo styling */
 .navbar-logo {
-  height: 50px;
+  height: 100px;
   width: auto;
   max-width: 200px;
 }
 
-/* Projects Grid */
-.projects-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 2rem;
-    margin-bottom: 2rem;
-}

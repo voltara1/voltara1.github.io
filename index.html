@@ -1,221 +1,536 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>Voltara - A place to learn IoT</title>
+<html lang="en">
 
-    <!-- Import Bootstrap 5's utility classes and components via its CDN -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-      crossorigin="anonymous"
-    />
+<head>
+  <meta charset="utf-8" />
+  <title>Voltara - A place to learn IoT</title>
 
-    <!-- Import fonts awesome stylesheet -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
+  <!-- Import Bootstrap 5's utility classes and components via its CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
 
-    <!-- Import our stylesheet -->
-    <link href="src/components/styles.css" rel="stylesheet" type="text/css" />
+  <!-- Import fonts awesome stylesheet -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    <!-- End of declarations to activate css -->
-  </head>
+  <!-- Import our stylesheet -->
+  <link href="src/components/styles.css" rel="stylesheet" type="text/css" />
+
+  <!-- End of declarations to activate css -->
+</head>
 <!-- JavaScript Bundle with Popper -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-…"
-        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-…"
+  crossorigin="anonymous"></script>
 
-  <body class="h-100">
-    <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#">
-          <img
-            src="assets/voltara-logo-transparent.png"
-            alt="Voltara Logo"
-            class="navbar-logo"
-          />
-        </a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav nav-fill nav-pills w-70 me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Explore</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Articles</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Activity</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Forum</a>
-            </li>
-          </ul>
-
-          <form class="d-flex me-3" role="search">
-            <input
-              class="form-control me-2"
-              type="search"
-              placeholder="Search"
-              aria-label="Search"
-            />
-            <button class="btn btn-outline-success" type="submit">
-              Search
-            </button>
-          </form>
-
-          <ul class="navbar-nav nav-fill w-10 nav-pills">
-            <li class="nav-item"><a class="nav-link active" href="#">Login</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">Sign-Up</a></li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-
-    <!-- Header areas -->
-    <header>
-      <div class="container my-5">
-        <div class="bg-secondary-subtle p-5 rounded">
-          <div class="col-sm-8 py-2 mx-auto">
-            <h1 class="display-5 fw-normal">Welcome to VOLTARA</h1>
-            <p class="fs-5">
-              Unleash Your Creativity, Build, Share, and Learn Together. Connect
-              with like-minded individuals, exchange ideas, and grow your skills
-              in a supportive, collaborative environment.
-            </p>
-            <p>To learn more about the community:</p>
-            <p>
-              <a
-                class="btn btn-primary"
-                href="/docs/5.3/components/navbar#offcanvas"
-                role="button"
-                >click here to find out more »</a
-              >
-            </p>
-          </div>
-        </div>
-      </div>
-    </header>
-
-    <main class="px-4">
-      <h4>What is Voltara</h4>
-      <p>
-        VOLTARA is the ultimate online community for electronics and
-        microcontroller enthusiasts. Whether you’re just starting your journey
-        or an experienced hobbyist to share your knowledge, this is your space
-        to connect, create, and collaborate.
-      </p>
-
-      <h4>Why learn microcontrollers?</h4>
-      <p>
-        From the rice cooker, washing machine at our home, to cars and all the
-        way to the satellites orbiting the earth, they all have one thing in
-        common: they all have microcontrollers at the heart of their operations.
-        Learning microcontrollers unlocks the gateway to understand how modern
-        technology works.
-      </p>
-
-      <h4>For Everyone</h4>
-      <p>
-        Discover and Explore Projects Browse a diverse collection of
-        user-submitted projects, from beginner-friendly circuits to advanced
-        microcontroller builds. Use our powerful search to find projects that
-        match your interests—whether it’s home automation, robotics, IoT, or
-        creative lighting. Each project includes detailed circuit diagrams,
-        build photos, source code, and build files such as the Gerber file for
-        PCB making or .stl, or .gcode for 3D printing. Curious about how a
-        project works? Stuck on a step? Every project page features a dedicated
-        Q&A section where you can post questions and get answers directly from
-        the project creator or the community.
-      </p>
-
-      <h4>Be a Member</h4>
-      <p>
-        Want to quickly replicate the project or add your own creativity to it?
-        With a click of a button the build files such as the circuit diagram,
-        code, Gerber file, .stl or gcode files will be downloaded and ready for
-        use to use and edit for customisation.
-      </p>
-
-      <h4>Be a Creator</h4>
-      <p>
-        Share Your Own Creations Ready to inspire others? As a creator, you can
-        easily upload your projects, with build photos, schematics, code, and
-        supporting files. Respond to questions, offer tips, and become a mentor
-        to fellow makers. Your project could be the spark that ignites someone
-        else’s passion for electronics!
-      </p>
-      <h4>Start Your Journey Today.</h4>
-      <p>
-        Sign up now to share your projects, ask questions, or simply explore and
-        learn. VOLTARA is where your next big idea begins!
-      </p>
-    </main>
-
-    <!-- Featured Projects Section -->
-    <section class="projects-section" id="projects">
-      <div class="container">
-        <h2 class="section-title">Featured Projects (TODO)</h2>
-        <div id="projectsGrid">
-          <!-- Projects will be dynamically loaded here -->
-        </div>
-      </div>
-    </section>
-
-    <!-- Footer -->
-
-    <footer
-      class="d-flex bg-dark text-white-50 justify-content-between align-items-center p-3 border-top"
-    >
-      <p class="col-md-4 mb-0">© 2025 Voltara.</p>
-      <a
-        href="/"
-        class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none"
-        aria-label="Bootstrap"
-      >
-        <img
-          src="assets/voltara-logo-transparent.png"
-          alt="Voltara Logo"
-          class="navbar-logo"
-        />
+<body class="h-100">
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">
+        <img src="assets/voltara-logo-transparent.png" alt="Voltara Logo" class="navbar-logo" width=200 />
       </a>
-      <ul class="nav col-md-4 justify-content-end flex-nowrap">
-        <li class="nav-item">
-          <a href="#" class="nav-link px-2 text-white-50">Home</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav nav-fill nav-pills w-70 me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Explore</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Articles</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Activity</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Forum</a>
+          </li>
+        </ul>
+
+        <form class="d-flex me-3" role="search">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+          <button class="btn btn-outline-success" type="submit">
+            Search
+          </button>
+        </form>
+
+        <ul class="navbar-nav nav-fill w-10 nav-pills">
+          <li class="nav-item"><a class="nav-link active" href="#">Login</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Sign-Up</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Header area -->
+  <section class="container-fluid d-flex flex-column bg-black">
+    <div class="row row-cols-2 py-4">
+      <div class="col d-flex flex-column justify-content-around text-secondary px-4">
+        <h1>Welcome to Voltara</h2>
+          <h6>Unleash Your Creativi1y, Build, Share, and Learn Together. Connect with like-minded individuals, exchange
+            ideas, and grow your skills in a supportive and collaborative environment.
+          </h6>
+          <div class="d-flex gap-3 fs-6">
+            <a class="btn btn-primary" href="#" role="button">Explore Projects</a>
+            <a class="btn btn-primary" href="#" role="button">Create Project</a>
+          </div>
+      </div>
+      <div class="col d-flex justify-content-end pe-4">
+        <img src="assets/singapore.png" class="object-fit-sm-scale" alt="">
+      </div>
+    </div>
+  </section>
+
+  <!-- TODO: Browse by Categories section -->
+  <!-- Start of Browse by Categories section -->
+  <section class="ms-0 pb-4 bg-dark-subtle">
+    <div class="text-black text-start fs-2 fw-semibold ps-4 pt-4 pb-2">
+      Browse by Categories
+    </div>
+    <div>
+      <ul class="nav text-white fw-bold ps-2 justify-content-evenly row-gap-2">
+        <li class="category-item rounded-4 p-1 bg-secondary">
+          <a class="btn btn-secondary" href="#" role="button">
+            <i class="fa-solid fa-infinity px-1"></i>Arduino
+          </a>
         </li>
-        <li class="nav-item">
-          <a href="#" class="nav-link px-2 text-white-50">Explore</a>
+        <li class="category-item rounded-4 p-1 bg-secondary">
+          <a class="btn btn-secondary" href="#" role="button">
+            <i class="fa-solid fa-microchip px-1"></i>ESP32
+          </a>
         </li>
-        <li class="nav-item">
-          <a href="#" class="nav-link px-2 text-white-50">Articles</a>
+        <li class="category-item rounded-4 p-1 bg-secondary">
+          <a class="btn btn-secondary" href="#" role="button">
+            <i class="fa-solid fa-network-wired px-1"></i>IoT
+          </a>
         </li>
-        <li class="nav-item">
-          <a href="#" class="nav-link px-2 text-white-50">Activity</a>
+        <li class="category-item rounded-4 p-1 bg-secondary">
+          <a class="btn btn-secondary" href="#" role="button">
+            <i class="fa-solid fa-sliders px-1"></i>
+            PCB Design
+          </a>
         </li>
-        <li class="nav-item">
-          <a href="#" class="nav-link px-2 text-white-50">Forum</a>
+        <li class="category-item rounded-4 p-1 bg-secondary">
+          <a class="btn btn-secondary" href="#" role="button">
+            <i class="fa-brands fa-raspberry-pi px-1"></i>
+            Raspberry Pi
+          </a>
+        </li>
+        <li class="category-item rounded-4 p-1 bg-secondary">
+          <a class="btn btn-secondary" href="#" role="button">
+            <i class="fa-brands fa-steam-symbol px-1"></i>
+            Robotics
+          </a>
+        </li>
+        <li class="category-item rounded-4 p-1 bg-secondary">
+          <a class="btn btn-secondary" href="#" role="button">
+            <i class="fa-solid fa-fingerprint px-1"></i>
+            Sensors
+          </a>
         </li>
       </ul>
-    </footer>
-  </body>
+    </div>
+  </section>
+  <!-- end of Browse by Categories section -->
+
+
+  <!-- TODO: Browse by Featured Projects section -->
+  <!-- Start of Featured Projects section -->
+  <section class="">
+    <!-- Featured Projects title -->
+    <div class="text-black text-start fs-2 fw-semibold ps-4 pt-4 pb-2">
+      Featured Projects
+    </div>
+
+    <!-- Container hosting card group for Featured Projects -->
+    <div
+      class="container-fluid my-2 row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 justify-item-evenly px-3 border">
+
+      <!-- featured project card#1 -->
+      <div class="col">
+        <div class="card ms-0 rounded-4 border bg-light">
+          <a href="#" class="text-decoration-none">
+            <img src="https://placehold.co/200x200/5F6B6D/FFFFFF/png" class="card-img-top rounded-top-3" alt="..." />
+            <div class="card-body">
+              <h5 class="card-title text-secondary fw-bolder">
+                Lorem ipsum dolor sit amet consectetur.
+              </h5>
+              <p class="card-text text-dark small">
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
+                numquam
+                facilis quis
+                recusandae molestias velit harum ab.
+              </p>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- featured project card#2 -->
+      <div class="col">
+        <div class="card ms-0 rounded-4 border bg-light">
+          <a href="#" class="text-decoration-none">
+            <img src="https://placehold.co/200x200/5ECBC8/FFFFFF/png" class="card-img-top rounded-top-3" alt="..." />
+            <div class="card-body">
+              <h5 class="card-title text-secondary fw-bolder">
+                Lorem ipsum dolor sit amet consectetur.
+              </h5>
+              <p class="card-text text-dark small">
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
+                numquam
+                facilis quis
+                recusandae molestias velit harum ab.
+              </p>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- featured project card#3 -->
+      <div class="col">
+        <div class="card ms-0 rounded-4 border bg-light">
+          <a href="#" class="text-decoration-none">
+            <img src="https://placehold.co/200x200/008B8B/FFFFFF/png" class="card-img-top rounded-top-3" alt="..." />
+            <div class="card-body">
+              <h5 class="card-title text-secondary fw-bolder">
+                Lorem ipsum dolor sit amet consectetur.
+              </h5>
+              <p class="card-text text-dark small">
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
+                numquam
+                facilis quis
+                recusandae molestias velit harum ab.
+              </p>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- featured project card#4 -->
+      <div class="col">
+        <div class="card ms-0 rounded-4 border bg-light">
+          <a href="#" class="text-decoration-none">
+            <img src="https://placehold.co/200x200/D8D8D8/FFFFFF/png" class="card-img-top rounded-top-3" alt="..." />
+            <div class="card-body">
+              <h5 class="card-title text-secondary fw-bolder">
+                Lorem ipsum dolor sit amet consectetur.
+              </h5>
+              <p class="card-text text-dark small">
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
+                numquam
+                facilis quis
+                recusandae molestias velit harum ab.
+              </p>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- featured project card#5 -->
+      <div class="col">
+        <div class="card ms-0 rounded-4 border bg-light">
+          <a href="#" class="text-decoration-none">
+            <img src="https://placehold.co/200x200/A66999/FFFFFF/png" class="card-img-top rounded-top-3" alt="..." />
+            <div class="card-body">
+              <h5 class="card-title text-secondary fw-bolder">
+                Lorem ipsum dolor sit amet consectetur.
+              </h5>
+              <p class="card-text text-dark small">
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
+                numquam
+                facilis quis
+                recusandae molestias velit harum ab.
+              </p>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- featured project card#6 -->
+      <div class="col">
+        <div class="card ms-0 rounded-4 border bg-light">
+          <a href="#" class="text-decoration-none">
+            <img src="https://placehold.co/200x200/998F85/FFFFFF/png" class="card-img-top rounded-top-3" alt="..." />
+            <div class="card-body">
+              <h5 class="card-title text-secondary fw-bolder">
+                Lorem ipsum dolor sit amet consectetur.
+              </h5>
+              <p class="card-text text-dark small">
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
+                numquam
+                facilis quis
+                recusandae molestias velit harum ab.
+              </p>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- featured project card#7 -->
+      <div class="col">
+        <div class="card ms-0 rounded-4 border bg-light">
+          <a href="#" class="text-decoration-none">
+            <img src="https://placehold.co/200x200/D8D8D8/FFFFFF/png" class="card-img-top rounded-top-3" alt="..." />
+            <div class="card-body">
+              <h5 class="card-title text-secondary fw-bolder">
+                Lorem ipsum dolor sit amet consectetur.
+              </h5>
+              <p class="card-text text-dark small">
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
+                numquam
+                facilis quis
+                recusandae molestias velit harum ab.
+              </p>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- featured project card#8 -->
+      <div class="col">
+        <div class="card ms-0 rounded-4 border bg-light">
+          <a href="#" class="text-decoration-none">
+            <img src="https://placehold.co/200x200/8BC7F7/FFFFFF/png" class="card-img-top rounded-top-3" alt="..." />
+            <div class="card-body">
+              <h5 class="card-title text-secondary fw-bolder">
+                Lorem ipsum dolor sit amet consectetur.
+              </h5>
+              <p class="card-text text-dark small">
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
+                numquam
+                facilis quis
+                recusandae molestias velit harum ab.
+              </p>
+            </div>
+          </a>
+        </div>
+      </div>
+      <!-- .... -->
+      <!-- Repeat more .col blocks for additional cards as needed -->
+      <!-- .... -->
+    </div>
+
+    <!-- pagination control for Featured Projects section  -->
+    <!-- to be controlled by function() in script.js -->
+    <nav class="ps-3 pt-2 border" aria-label="Page navigation example">
+      <ul class="pagination justify-content-start">
+        <li class="page-item disabled">
+          <a class="page-link" href="#" tabindex="-1">Previous</a>
+        </li>
+        <li class="page-item"><a class="page-link" href="#">1</a></li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item">
+          <a class="page-link" href="#">Next</a>
+        </li>
+      </ul>
+    </nav>
+    <!-- end of Featured Projects pagination control -->
+    <!-- end of Featured Projecst container hosting card group-->
+  </section>
+  <!-- End of Featured Projects section -->
+
+  <!-- TODO: Browse by About Us section -->
+  <!-- Start of About Us section -->
+  <section class="container-fluid bg-secondary-subtle">
+    <div class="row row-cols-2 py-4">
+      <div class="col d-flex flex-column justify-content-around text-secondary px-4">
+        <h4>Learn more</h4>
+        <h2>About Us</h2>
+        <br>
+        <h5>
+          VOLTARA is the ultimate online community for electronics and microcontroller enthusiasts. Whether you’re
+          just starting your journey or an experienced hobbyist to share your knowledge, this is your space to
+          connect, create, and collaborate.
+        </h5>
+        <a class="btn btn-primary" href="#" role="button">Join the Community</a>
+      </div>
+      <div class="col d-flex justify-content-end pe-4">
+        <img src="https://placehold.co/400x300/0F0F0F/FFFFFF/png" alt="">
+      </div>
+    </div>
+  </section>
+  <!-- End of About Us section -->
+
+
+  <!-- TODO: Browse by Curated Collections section -->
+  <!-- Start of Curated Collections section -->
+  <section class="border">
+    <div class="fs-2 text-black text-start fw-semibold pt-4 pb-1 mx-4">
+      Curated Collections
+    </div>
+    <!-- Container hosting card group for Curated Collections -->
+    <div class="container-fluid mt-2 mb-4 px-4">
+      <div class="row row-cols-3 row-cols-md-3 row-cols-sm-2 g-4 justify-content-between">
+        <div class="col">
+          <div class="card ms-0 rounded-4">
+            <a href="#" class="text-decoration-none">
+              <img src="https://placehold.co/400x300/D8D8D8/FFFFFF/png" class="card-img-top rounded-top-3" alt="..." />
+              <div class="card-body">
+                <h5 class="card-title text-secondary fw-bold">
+                  Lorem ipsum dolor sit amet consectetur.
+                </h5>
+                <p class="card-text text-dark fw-light small">
+                  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
+                  numquam
+                  facilis quis
+                  recusandae molestias velit harum ab.
+                </p>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="card ms-0 rounded-4">
+            <a href="#" class="text-decoration-none">
+              <img src="https://placehold.co/400x300/8BC7F7/FFFFFF/png" class="card-img-top rounded-top-3" alt="..." />
+              <div class="card-body">
+                <h5 class="card-title text-secondary fw-bold">
+                  Lorem ipsum dolor sit amet consectetur.
+                </h5>
+                <p class="card-text text-dark fw-light small">
+                  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
+                  numquam
+                  facilis quis
+                  recusandae molestias velit harum ab.
+                </p>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="card ms-0 rounded-4">
+            <a href="#" class="text-decoration-none">
+              <img src="https://placehold.co/400x300/750985/FFFFFF/png" class="card-img-top rounded-top-3" alt="..." />
+              <div class="card-body">
+                <h5 class="card-title text-secondary fw-bold">
+                  Lorem ipsum dolor sit amet consectetur.
+                </h5>
+                <p class="card-text text-dark fw-light small">
+                  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
+                  numquam
+                  facilis quis
+                  recusandae molestias velit harum ab.
+                </p>
+              </div>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Start of Footer section -->
+  <footer class="container-fluid bg-primary">
+    <div class="">
+      <div class="row">
+        <!-- Footer - Logo section  -->
+        <div class="col">
+          <img src="assets/voltara-logo-transparent.png" alt="Voltara Logo" width="150" />
+          <p class="ms-3 fw-light text-black">&copy 2025 Voltara</p>
+        </div>
+
+        <!-- Company navbar section -->
+        <div class="col text-black pt-3 ps-4">
+          <h5>Company</h5>
+          <div class="list-group">
+            <a href="#" class="text-black text-decoration-none">Home</a>
+            <a href="#" class="text-black text-decoration-none">About</a>
+            <a href="#" class="text-black text-decoration-none">Privacy</a>
+          </div>
+        </div>
+        <!-- end of Company navbar section -->
+
+        <!-- Help navbar section -->
+        <div class="col text-black pt-3 ps-4">
+          <h5>Help</h5>
+          <div class="list-group">
+            <a href="#" class="text-black text-decoration-none">Help Center</a>
+            <a href="#" class="text-black text-decoration-none">FAQ</a>
+            <a href="#" class="text-black text-decoration-none">Contact</a>
+          </div>
+        </div>
+
+        <!-- Footer - Newsletter & Social Media section  -->
+        <div class="col-6 pt-3">
+          <!-- Container hosting the newsletter form -->
+          <div class="container ms-4">
+            <div class="d-flex flex-column">
+              <div class="col-sm-11 ms-0">
+
+                <div class="text-black text-start fw-medium pt-1 pb-2">
+                  Subscribe to our Newsletter:
+                </div>
+                <!-- Newsletter section contains form for email and button -->
+                <!-- submitForm() function (in script.js) is invoked everytime the subscribe button is clicked -->
+                <!-- the purpose is for email validation with toast notifications -->
+                <form id="newsletter-form" action="" method="post" onsubmit="submitForm(event);">
+                  <div class="input-group mb-1">
+                    <input id="txtEmail" type="text" class="form-control rounded-3" placeholder="e.g. john@email.com"
+                      aria-label="Recipient's username" aria-describedby="button-addon2" />
+                    <button class="btn btn-dark ms-4 rounded-2" type="submit" id="button-addon2">
+                      <i class="fa-solid fa-newspaper"></i>
+                      Subscribe
+                    </button>
+                  </div>
+                </form>
+
+              </div>
+            </div>
+          </div>
+          <!-- end of Newsletter form section -->
+
+          <!-- Footer - Social Media section  -->
+          <div class="nav justify-content-evenly pt-4">
+            <a href="#" class="text-dark text-decoration-none">
+              <i class="fa-brands fa-square-facebook text-info"></i>
+              Facebook</a>
+            <a href="#" class="text-dark text-decoration-none">
+              <i class="fa-brands fa-instagram text-danger"></i>
+              Instagram</a>
+            <a href="#" class="text-dark text-decoration-none">
+              <i class="fa-brands fa-x-twitter text-black"></i>
+              Twitter</a>
+            <a href="#" class="text-dark text-decoration-none">
+              <i class="fa-brands fa-youtube text-danger"></i>
+              YouTube</a>
+
+          </div>
+        </div>
+        <!-- end of Social Media section -->
+
+      </div>
+    </div>
+    <!-- End of Footer section -->
+  </footer>
+
+  <!-- TOAST CONTAINER SECTION  -->
+  <!-- the toast can be activated by invoking the showToast() function (in script.js)  -->
+  <!-- refer to showToast() section in script.js for more details -->
+  <div id="toast-container" class="position-fixed top-0 start-50 translate-middle-x p-3">
+    <div id="msg-toast" class="toast align-items-center mt-2 text-white" role="alert" aria-live="assertive"
+      aria-atomic="true" data-bs-autohide="true" data-bs-delay="4000">
+      <div class="d-flex">
+        <div id="msg-toast-body" class="toast-body">
+          <!-- Message displayed here -->
+        </div>
+        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- include the javascript script.js -->
+  <script src="./src/components/script.js"></script>
+
+</body>
+
 </html>
