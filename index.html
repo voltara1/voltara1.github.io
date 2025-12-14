@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
   <title>Voltara - A place to learn IoT</title>
 
   <!-- Import Bootstrap 5's utility classes and components via its CDN -->
@@ -19,11 +20,8 @@
 
   <!-- End of declarations to activate css -->
 </head>
-<!-- JavaScript Bundle with Popper -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-…"
-  crossorigin="anonymous"></script>
 
-<body class="h-100">
+<body class="contianer h-100">
   <!-- Navigation Bar -->
   <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
     <div class="container-fluid">
@@ -92,7 +90,7 @@
 
   <!-- TODO: Browse by Categories section -->
   <!-- Start of Browse by Categories section -->
-  <section class="ms-0 pb-4">
+  <section class="ms-0 pb-4 mx-4">
     <div class="fs-2 text-black text-center fw-semibold pt-2 pb-2">
       Browse by Categories
     </div>
@@ -103,35 +101,35 @@
             <i class="fa-solid fa-infinity px-1"></i>Arduino
           </a>
         </li>
-        <li class="category-item rounded-4 p-1 bg-secondary">
+        <li class="category-item rounded-4 p-2 bg-secondary">
           <a class="btn btn-secondary" href="#" role="button">
             <i class="fa-solid fa-microchip px-1"></i>ESP32
           </a>
         </li>
-        <li class="category-item rounded-4 p-1 bg-secondary">
+        <li class="category-item rounded-4 p-2 bg-secondary">
           <a class="btn btn-secondary" href="#" role="button">
             <i class="fa-solid fa-network-wired px-1"></i>IoT
           </a>
         </li>
-        <li class="category-item rounded-4 p-1 bg-secondary">
+        <li class="category-item rounded-4 p-2 bg-secondary">
           <a class="btn btn-secondary" href="#" role="button">
             <i class="fa-solid fa-sliders px-1"></i>
             PCB Design
           </a>
         </li>
-        <li class="category-item rounded-4 p-1 bg-secondary">
+        <li class="category-item rounded-4 p-2 bg-secondary">
           <a class="btn btn-secondary" href="#" role="button">
             <i class="fa-brands fa-raspberry-pi px-1"></i>
             Raspberry Pi
           </a>
         </li>
-        <li class="category-item rounded-4 p-1 bg-secondary">
+        <li class="category-item rounded-4 p-2 bg-secondary">
           <a class="btn btn-secondary" href="#" role="button">
             <i class="fa-brands fa-steam-symbol px-1"></i>
             Robotics
           </a>
         </li>
-        <li class="category-item rounded-4 p-1 bg-secondary">
+        <li class="category-item rounded-4 p-2 bg-secondary">
           <a class="btn btn-secondary" href="#" role="button">
             <i class="fa-solid fa-fingerprint px-1"></i>
             Sensors
@@ -145,22 +143,54 @@
 
   <!-- TODO: Browse by Featured Projects section -->
   <!-- Start of Featured Projects section -->
-  <section class="border">
-    <div class="fs-2 text-black text-center fw-semibold pt-4 pb-1">
-      Featured Projects
+  <section>       
+    <div class="d-flex flex-column pt-4 mx-4">
+      
+      <div class="col-sm-6">
+        <div class="fs-2 text-black text-start fw-semibold align-items-center">
+          Featured Projects
+        </div>
+      </div>
+      
+      <div class="col-sm-6 align-items-center">
+        <!-- pagination control for Featured Projects section  -->
+        <!-- to be controlled by function() in script.js -->
+        <nav class="pt-2" aria-label="Page navigation example">
+          <ul class="pagination">
+            <li class="page-item disabled">
+              <a class="page-link" href="#" tabindex="-1">Previous</a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">4</a></li>
+            <li class="page-item"><a class="page-link" href="#">5</a></li>
+            <li class="page-item"><a class="page-link" href="#">...</a></li>
+            <li class="page-item">
+              <a class="page-link" href="#">Next</a>
+            </li>
+          </ul>
+        </nav>
+        <!-- end of Featured Projects pagination control -->
+        <!-- end of Featured Projecst container hosting card group-->
+      </div>
+
     </div>
+
     <!-- Container hosting card group for Featured Projects -->
     <div class="container-fluid ms-0 my-2">
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+        
+        <!-- featured project card#1 -->
         <div class="col">
-          <div class="card ms-0 rounded-4">
+          <div class="card ms-0 rounded-4 border bg-light">
             <a href="#" class="text-decoration-none">
-              <img src="https://placehold.co/200x200" class="card-img-top rounded-top-3" alt="..." />
+              <img src="https://placehold.co/200x200/5F6B6D/FFFFFF/png" class="card-img-top rounded-top-3" alt="..." />
               <div class="card-body">
-                <h5 class="card-title text-secondary fw-normal">
+                <h5 class="card-title text-secondary fw-bolder">
                   Lorem ipsum dolor sit amet consectetur.
                 </h5>
-                <p class="card-text fw-light small">
+                <p class="card-text text-dark small">
                   Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
                   numquam
                   facilis quis
@@ -171,15 +201,16 @@
           </div>
         </div>
 
+        <!-- featured project card#2 -->
         <div class="col">
-          <div class="card ms-0 rounded-4">
+          <div class="card ms-0 rounded-4 border bg-light">
             <a href="#" class="text-decoration-none">
-              <img src="https://placehold.co/200x200" class="card-img-top rounded-top-3" alt="..." />
+              <img src="https://placehold.co/200x200/5ECBC8/FFFFFF/png" class="card-img-top rounded-top-3" alt="..." />
               <div class="card-body">
-                <h5 class="card-title text-secondary fw-normal">
+                <h5 class="card-title text-secondary fw-bolder">
                   Lorem ipsum dolor sit amet consectetur.
                 </h5>
-                <p class="card-text fw-light small">
+                <p class="card-text text-dark small">
                   Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
                   numquam
                   facilis quis
@@ -190,15 +221,16 @@
           </div>
         </div>
 
+        <!-- featured project card#3 -->
         <div class="col">
-          <div class="card ms-0 rounded-4">
+          <div class="card ms-0 rounded-4 border bg-light">
             <a href="#" class="text-decoration-none">
-              <img src="https://placehold.co/200x200" class="card-img-top rounded-top-3" alt="..." />
+              <img src="https://placehold.co/200x200/008B8B/FFFFFF/png" class="card-img-top rounded-top-3" alt="..." />
               <div class="card-body">
-                <h5 class="card-title text-secondary fw-normal">
+                <h5 class="card-title text-secondary fw-bolder">
                   Lorem ipsum dolor sit amet consectetur.
                 </h5>
-                <p class="card-text fw-light small">
+                <p class="card-text text-dark small">
                   Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
                   numquam
                   facilis quis
@@ -209,15 +241,16 @@
           </div>
         </div>
 
+        <!-- featured project card#4 -->
         <div class="col">
-          <div class="card ms-0 rounded-4">
+          <div class="card ms-0 rounded-4 border bg-light">
             <a href="#" class="text-decoration-none">
-              <img src="https://placehold.co/200x200" class="card-img-top rounded-top-3" alt="..." />
+              <img src="https://placehold.co/200x200/D8D8D8/FFFFFF/png" class="card-img-top rounded-top-3" alt="..." />
               <div class="card-body">
-                <h5 class="card-title text-secondary fw-normal">
+                <h5 class="card-title text-secondary fw-bolder">
                   Lorem ipsum dolor sit amet consectetur.
                 </h5>
-                <p class="card-text fw-light small">
+                <p class="card-text text-dark small">
                   Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
                   numquam
                   facilis quis
@@ -228,15 +261,16 @@
           </div>
         </div>
 
+        <!-- featured project card#5 -->
         <div class="col">
-          <div class="card ms-0 rounded-4">
+          <div class="card ms-0 rounded-4 border bg-light">
             <a href="#" class="text-decoration-none">
-              <img src="https://placehold.co/200x200" class="card-img-top rounded-top-3" alt="..." />
+              <img src="https://placehold.co/200x200/A66999/FFFFFF/png" class="card-img-top rounded-top-3" alt="..." />
               <div class="card-body">
-                <h5 class="card-title text-secondary fw-normal">
+                <h5 class="card-title text-secondary fw-bolder">
                   Lorem ipsum dolor sit amet consectetur.
                 </h5>
-                <p class="card-text fw-light small">
+                <p class="card-text text-dark small">
                   Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
                   numquam
                   facilis quis
@@ -247,15 +281,16 @@
           </div>
         </div>
 
+        <!-- featured project card#6 -->
         <div class="col">
-          <div class="card ms-0 rounded-4">
+          <div class="card ms-0 rounded-4 border bg-light">
             <a href="#" class="text-decoration-none">
-              <img src="https://placehold.co/200x200" class="card-img-top rounded-top-3" alt="..." />
+              <img src="https://placehold.co/200x200/998F85/FFFFFF/png" class="card-img-top rounded-top-3" alt="..." />
               <div class="card-body">
-                <h5 class="card-title text-secondary fw-normal">
+                <h5 class="card-title text-secondary fw-bolder">
                   Lorem ipsum dolor sit amet consectetur.
                 </h5>
-                <p class="card-text fw-light small">
+                <p class="card-text text-dark small">
                   Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
                   numquam
                   facilis quis
@@ -266,15 +301,16 @@
           </div>
         </div>
 
+        <!-- featured project card#7 -->
         <div class="col">
-          <div class="card ms-0 rounded-4">
+          <div class="card ms-0 rounded-4 border bg-light">
             <a href="#" class="text-decoration-none">
-              <img src="https://placehold.co/200x200" class="card-img-top rounded-top-3" alt="..." />
+              <img src="https://placehold.co/200x200/D8D8D8/FFFFFF/png" class="card-img-top rounded-top-3" alt="..." />
               <div class="card-body">
-                <h5 class="card-title text-secondary fw-normal">
+                <h5 class="card-title text-secondary fw-bolder">
                   Lorem ipsum dolor sit amet consectetur.
                 </h5>
-                <p class="card-text fw-light small">
+                <p class="card-text text-dark small">
                   Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
                   numquam
                   facilis quis
@@ -285,15 +321,16 @@
           </div>
         </div>
 
+        <!-- featured project card#8 -->
         <div class="col">
-          <div class="card ms-0 rounded-4">
+          <div class="card ms-0 rounded-4 border bg-light">
             <a href="#" class="text-decoration-none">
-              <img src="https://placehold.co/200x200" class="card-img-top rounded-top-3" alt="..." />
+              <img src="https://placehold.co/200x200/8BC7F7/FFFFFF/png" class="card-img-top rounded-top-3" alt="..." />
               <div class="card-body">
-                <h5 class="card-title text-secondary fw-normal">
+                <h5 class="card-title text-secondary fw-bolder">
                   Lorem ipsum dolor sit amet consectetur.
                 </h5>
-                <p class="card-text fw-light small">
+                <p class="card-text text-dark small">
                   Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
                   numquam
                   facilis quis
@@ -306,84 +343,32 @@
         <!-- Repeat more .col blocks for additional cards as needed -->
       </div>
     </div>
-    </div>
-    </div>
   </section>
   <!-- End of Featured Projects section -->
 
   <!-- TODO: Browse by Curated Collections section -->
   <!-- Start of Curated Collections section -->
-  <section class="border">
-    <div class="fs-2 text-black text-center fw-semibold pt-4 pb-1">
+  <section>
+    <div class="fs-2 text-black text-start fw-semibold pt-4 pb-1 mx-4">
       Curated Collections
     </div>
     <!-- Container hosting card group for Curated Collections -->
-    <div class="container-fluid mt-2 mb-4">
-      <div class="row row-cols-3 row-cols-md-3 row-cols-sm-2 g-4 justify-content-between">
-        <div class="col">
-          <div class="card ms-0 rounded-4">
-            <a href="#" class="text-decoration-none">
-              <img src="https://placehold.co/400x300" class="card-img-top rounded-top-3" alt="..." />
-              <div class="card-body">
-                <h5 class="card-title text-secondary fw-normal">
-                  Lorem ipsum dolor sit amet consectetur.
-                </h5>
-                <p class="card-text fw-light small">
-                  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
-                  numquam
-                  facilis quis
-                  recusandae molestias velit harum ab.
-                </p>
-              </div>
-            </a>
-          </div>
-        </div>
+    <div id="curated-projects" class="container-fluid mt-2 mb-4 px-4">
+      <!-- curatedProjectCardGroup is the parent container ID that is used as the reference starting point for DOM manipulation in addCard() function in script.js -->
+      <div id="curatedProjectCardGroup" class="row row-cols-3 row-cols-md-3 row-cols-sm-2 g-4 justify-content-between">
 
-        <div class="col">
-          <div class="card ms-0 rounded-4">
-            <a href="#" class="text-decoration-none">
-              <img src="https://placehold.co/400x300" class="card-img-top rounded-top-3" alt="..." />
-              <div class="card-body">
-                <h5 class="card-title text-secondary fw-normal">
-                  Lorem ipsum dolor sit amet consectetur.
-                </h5>
-                <p class="card-text fw-light small">
-                  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
-                  numquam
-                  facilis quis
-                  recusandae molestias velit harum ab.
-                </p>
-              </div>
-            </a>
-          </div>
-        </div>
+        <!-- Curated Projects cards is dinamically inserted here 
+        by addCard() function in script.js -->
 
-        <div class="col">
-          <div class="card ms-0 rounded-4">
-            <a href="#" class="text-decoration-none">
-              <img src="https://placehold.co/400x300" class="card-img-top rounded-top-3" alt="..." />
-              <div class="card-body">
-                <h5 class="card-title text-secondary fw-normal">
-                  Lorem ipsum dolor sit amet consectetur.
-                </h5>
-                <p class="card-text fw-light small">
-                  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
-                  numquam
-                  facilis quis
-                  recusandae molestias velit harum ab.
-                </p>
-              </div>
-            </a>
-          </div>
-        </div>
       </div>
     </div>
   </section>
+  <!-- End of Curated Projects section -->
 
   <!-- TODO: Browse by About Us section -->
   <!-- Start of About Us section -->
-  <!-- <section class="row row-cols-2 pt-4 mx-5 py-4">
-    <div class=" col ps-4">
+  <section class="row border border-top-0 border-bottom">
+    <div class="col-sm-6 px-5">
       <h4>Learn more</h4>
       <h2>About Us</h2>
       <br>
@@ -394,10 +379,10 @@
       </h5>
       <a class="btn btn-primary" href="#" role="button">Join the Community</a>
     </div>
-    <div class=" col ps-5">
-      <img src="https://placehold.co/400x300" alt="">
+    <div class="col-sm-6 d-flex flex-column p-3 mx-auto">
+      <img class="m-4" src="https://placehold.co/400x300" alt="">
     </div>
-  </section> -->
+  </section>
   <!-- End of About Us section -->
 
   <!-- Start of Newletter and Social Media section -->
@@ -507,7 +492,15 @@
   </div>
 
   <!-- include the javascript script.js -->
+  <script src="./src/components/listprojects.js"></script>
   <script src="./src/components/script.js"></script>
+
+  <!-- JavaScript Bundle with Popper -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+    crossorigin="anonymous"
+  ></script>
 
 </body>
 
