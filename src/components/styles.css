@@ -43,3 +43,11 @@ h1 {
   max-width: 200px;
 }
 
+footer .navbar-logo {
+  width: 4rem;
+  height: auto;
+}
+
+footer{
+  font-size: small;
+}

@@ -382,7 +382,7 @@
 
   <!-- TODO: Browse by About Us section -->
   <!-- Start of About Us section -->
-  <section class="row row-cols-2 pt-4 mx-5 py-4">
+  <!-- <section class="row row-cols-2 pt-4 mx-5 py-4">
     <div class=" col ps-4">
       <h4>Learn more</h4>
       <h2>About Us</h2>
@@ -397,22 +397,14 @@
     <div class=" col ps-5">
       <img src="https://placehold.co/400x300" alt="">
     </div>
-  </section>
+  </section> -->
   <!-- End of About Us section -->
 
-  <!-- Start of Footer section -->
-  <footer class="container pt-4 pb-2 mx-4 border">
+  <!-- Start of Newletter and Social Media section -->
+  <section class="container py-4">
     <div class="row">
-      <!-- Footer - Logo section  -->
-      <div class="col">
-        <img src="assets/voltara-logo-transparent.png" alt="Voltara Logo" width="150" />
-        <p class="ms-3 fw-light">&copy 2025 by Voltara</p>
-      </div>
-
-      <!-- Footer - Newsletter & Social Media section  -->
-      <div class="col-6 newsletter ps-4">
-        <!-- Container hosting the newsletter form -->
-        <div class="container ms-5">
+      <!-- Newsletter section  -->
+      <div class="col-sm-6">
           <div class="d-flex flex-column">
             <div class="col-sm-11 ms-0">
               <div class="text-black text-start fw-medium pt-1 pb-2">
@@ -438,72 +430,67 @@
 
             </div>
           </div>
-        </div>
-        <!-- end of Newsletter form section -->
-
-        <!-- Footer - Social Media section  -->
-        <ul class="nav justify-content-sm-around ms-4 pt-4">
-          <li class="nav-item">
-            <a href="#">
-              <i class="fa-brands fa-square-facebook"></i>
-              Facebook</a>
-          </li>
-          <li class="nav-item">
-            <a href="#">
-              <i class="fa-brands fa-instagram"></i>
-              Instagram</a>
-          </li>
-          <li class="nav-item">
-            <a href="#">
-              <i class="fa-brands fa-x-twitter"></i>
-              Twitter</a>
-          </li>
-          <li class="nav-item">
-            <a href="#">
-              <i class="fa-brands fa-youtube"></i>
-              YouTube</a>
-          </li>
-        </ul>
       </div>
-      <!-- end of Social Media section -->
-
-      <!-- Company navbar section -->
-      <div class="col ps-4">
-        <h5 class="ms-3">Company</h5>
-        <ul class="list-group">
-          <li class="list-group-item border-0">
-            <a href="#" class="text-decoration-none">Home</a>
-          </li>
-          <li class="list-group-item border-0">
-            <a href="#" class="text-decoration-none">About</a>
-          </li>
-          <li class="list-group-item border-0">
-            <a href="#" class="text-decoration-none">Privacy</a>
-          </li>
-        </ul>
-      </div>
-      <!-- end of Company navbar section -->
-
-      <!-- Help navbar section -->
-      <div class="col ps-4">
-        <h5 class="ms-3">Help</h5>
-        <ul class="list-group row-gap-2">
-          <li class="list-group-item border-0">
-            <a href="#" class="text-decoration-none">Help Center</a>
-          </li>
-          <li class="list-group-item border-0">
-            <a href="#" class="text-decoration-none">FAQ</a>
-          </li>
-          <li class="list-group-item border-0">
-            <a href="#" class="text-decoration-none">Contact</a>
-          </li>
-        </ul>
+      <!-- Social Media section -->      
+      <div class="nav col-sm-6 pt-2 justify-content-evenly align-items-center small">
+        <a href="#" class="text-dark text-decoration-none">
+          <i class="fa-brands fa-square-facebook text-info"></i>
+          Facebook
+        </a>
+        <a href="#" class="text-dark text-decoration-none">
+          <i class="fa-brands fa-instagram text-danger"></i>
+          Instagram
+        </a>
+        <a href="#" class="text-dark text-decoration-none">
+          <i class="fa-brands fa-x-twitter text-black"></i>
+          Twitter
+        </a>
+        <a href="#" class="text-dark text-decoration-none">
+          <i class="fa-brands fa-youtube text-danger"></i>
+          YouTube
+        </a>
       </div>
     </div>
-    <!-- End of Footer section -->
-  </footer>
+  </section>
+  <!-- End of Newletter and Social Media section -->
 
-  /** TOAST CONTAINER SECTION */
+  <!-- Updated Footer section -->
+  <footer
+    class="d-flex bg-dark text-white-50 justify-content-between align-items-center p-3 border-top"
+  >
+    <p class="col-md-4 mb-0">© 2025 Voltara.</p>
+    <a
+      href="/"
+      class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none"
+      aria-label="Bootstrap"
+    >
+      <img
+        src="assets/voltara-logo-transparent.png"
+        alt="Voltara Logo"
+        class="navbar-logo"
+      />
+    </a>
+    <ul class="nav col-md-4 justify-content-end flex-nowrap">
+      <li class="nav-item">
+        <a href="#" class="nav-link px-2 text-white-50">Home</a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link px-2 text-white-50">Explore</a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link px-2 text-white-50">Articles</a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link px-2 text-white-50">Activity</a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link px-2 text-white-50">Forum</a>
+      </li>
+    </ul>
+  </footer>
+  <!-- End of Updated Footer section -->
+
+  <!-- TOAST CONTAINER SECTION -->
   <!-- Toast Container -->
   <!-- the toast can be activated by invoking the showToast() function (in script.js)  -->
   <!-- refer to showToast() section in script.js to understand how to use it -->
