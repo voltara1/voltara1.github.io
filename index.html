@@ -358,7 +358,6 @@
   </section>
   <!-- End of About Us section -->
 
-
   <!-- TODO: Browse by Curated Collections section -->
   <!-- Start of Curated Collections section -->
   <section class="border">
@@ -366,68 +365,18 @@
       Curated Collections
     </div>
     <!-- Container hosting card group for Curated Collections -->
-    <div class="container-fluid mt-2 mb-4 px-4">
-      <div class="row row-cols-3 row-cols-md-3 row-cols-sm-2 g-4 justify-content-between">
-        <div class="col">
-          <div class="card ms-0 rounded-4">
-            <a href="#" class="text-decoration-none">
-              <img src="https://placehold.co/400x300/D8D8D8/FFFFFF/png" class="card-img-top rounded-top-3" alt="..." />
-              <div class="card-body">
-                <h5 class="card-title text-secondary fw-bold">
-                  Lorem ipsum dolor sit amet consectetur.
-                </h5>
-                <p class="card-text text-dark fw-light small">
-                  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
-                  numquam
-                  facilis quis
-                  recusandae molestias velit harum ab.
-                </p>
-              </div>
-            </a>
-          </div>
-        </div>
+    <div id="curated-projects" class="container-fluid mt-2 mb-4 px-4">
+      <!-- curatedProjectCardGroup is the parent container ID that is used as the reference starting point for DOM manipulation in addCard() function in script.js -->
+      <div id="curatedProjectCardGroup" class="row row-cols-3 row-cols-md-3 row-cols-sm-2 g-4 justify-content-between">
 
-        <div class="col">
-          <div class="card ms-0 rounded-4">
-            <a href="#" class="text-decoration-none">
-              <img src="https://placehold.co/400x300/8BC7F7/FFFFFF/png" class="card-img-top rounded-top-3" alt="..." />
-              <div class="card-body">
-                <h5 class="card-title text-secondary fw-bold">
-                  Lorem ipsum dolor sit amet consectetur.
-                </h5>
-                <p class="card-text text-dark fw-light small">
-                  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
-                  numquam
-                  facilis quis
-                  recusandae molestias velit harum ab.
-                </p>
-              </div>
-            </a>
-          </div>
-        </div>
-
-        <div class="col">
-          <div class="card ms-0 rounded-4">
-            <a href="#" class="text-decoration-none">
-              <img src="https://placehold.co/400x300/750985/FFFFFF/png" class="card-img-top rounded-top-3" alt="..." />
-              <div class="card-body">
-                <h5 class="card-title text-secondary fw-bold">
-                  Lorem ipsum dolor sit amet consectetur.
-                </h5>
-                <p class="card-text text-dark fw-light small">
-                  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
-                  numquam
-                  facilis quis
-                  recusandae molestias velit harum ab.
-                </p>
-              </div>
-            </a>
-          </div>
-        </div>
+        <!-- Curated Projects cards is dinamically inserted here 
+        by addCard() function in script.js -->
 
       </div>
     </div>
+
   </section>
+  <!-- End of Curated Projects section -->
 
   <!-- Start of Footer section -->
   <footer class="container-fluid bg-primary">
