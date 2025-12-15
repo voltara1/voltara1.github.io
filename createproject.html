@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>  </title>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/projectstyles.css">
+</head>
+<body>
+<main class="container py-4">
+  <div class="row g-4">
+    <div class="col-lg-4">
+
+      <div class="card mt-4">
+        <div class="card-header">Create a New Project</div>
+        <div class="card-body">
+          <form id="createProjectForm" >
+            <div class="mb-3">
+              <label class="form-label" for="projectTitleInput">Project Title</label>
+              <input class="form-control" id="projectTitleInput" type="text" required maxlength="120">
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="projectDescriptionInput">Description</label>
+              <textarea class="form-control" id="projectDescriptionInput" rows="4" placeholder="Describe goals, hardware, wiring notes..." required></textarea>
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="projectCategorySelect">Category</label>
+              <select class="form-select" id="projectCategorySelect" required>
+                <option value="">Select a category</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="projectCodeFiles">Upload Code / Text Files</label>
+              <input class="form-control" id="projectCodeFiles" type="file" accept=".txt,.md,.ino,.c,.cpp,.h,.hpp,.py,.json" multiple>
+              <small class="text-muted file-input-hint">Only text-based files (examples: .txt, .ino, .py, .json).</small>
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="projectImageFiles">Upload Images</label>
+              <input class="form-control" id="projectImageFiles" type="file" accept=".png,.jpg,.jpeg" multiple>
+              <small class="text-muted file-input-hint">Accepted formats: PNG, JPG, JPEG. Maximum 10 images recommended.</small>
+            </div>
+            <button class="btn btn-success w-100" type="submit">
+              <i class="bi bi-cloud-upload me-1"></i> Publish Project
+            </button>
+            <small class="d-block mt-2 text-muted">Files are stored securely; you can attach more when editing.</small>
+          </form>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-header d-flex flex-wrap gap-2 align-items-center justify-content-between">
+          <div>
+            <h5 class="mb-0">My Projects</h5>
+            <small class="text-light-50">Select, update or delete multiple entries.</small>
+          </div>
+          <div class="d-flex flex-wrap gap-2">
+            <input type="text" class="form-control" id="projectSearchInput" placeholder="Search title or description">
+            <button class="btn btn-outline-secondary" id="refreshProjectsBtn" type="button">
+              <i class="bi bi-arrow-clockwise"></i>
+            </button>
+            <button class="btn btn-outline-danger" id="bulkDeleteBtn" type="button" disabled>
+              <i class="bi bi-trash3 me-1"></i> Delete Selected
+            </button>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-hover table-striped align-middle mb-0">
+            <thead class="table-light">
+            <tr>
+              <th style="width: 40px;">
+                <input class="form-check-input" type="checkbox" id="selectAllProjects">
+              </th>
+              <th>Project</th>
+              <th>Category</th>
+              <th>Updated</th>
+              <th class="text-center">Comments</th>
+              <th class="text-center">Actions</th>
+            </tr>
+            </thead>
+            <tbody id="projectTableBody">
+            <tr>
+              <td colspan="6" class="text-center text-muted py-4">
+                Sign in to view and manage your projects.
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card mt-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <span>Project Preview</span>
+          <button class="btn btn-sm btn-outline-primary" type="button" id="openCommentsModalBtn" disabled>
+            <i class="bi bi-chat-dots me-1"></i> View Comments
+          </button>
+        </div>
+        <div class="card-body" id="projectPreviewPanel">
+          <p class="text-muted mb-0">Select a project to preview description, attachments and quick comment access.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+
+</body>
+</html>
