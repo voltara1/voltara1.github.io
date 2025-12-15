@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
+
   <title>Voltara - A place to learn IoT</title>
 
   <!-- Import Bootstrap 5's utility classes and components via its CDN -->
@@ -21,7 +22,7 @@
   <!-- End of declarations to activate css -->
 </head>
 
-<body class="contianer h-100">
+<body class="h-100">
   <!-- Navigation Bar -->
   <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
     <div class="container-fluid">
@@ -68,18 +69,19 @@
 
   <!-- Header area -->
   <section class="container-fluid d-flex flex-column bg-black">
-    <div class="row row-cols-2 py-4">
-      <div class="col d-flex flex-column justify-content-around text-secondary px-4">
+    <div class="row py-4">
+      <div class="col-12 col-md-6 d-flex flex-column justify-content-around text-secondary px-4">
         <h1>Welcome to Voltara</h2>
-          <h6>Unleash Your Creativi1y, Build, Share, and Learn Together. Connect with like-minded individuals, exchange
+          <h6>Unleash Your Creativi1y, Build, Share, and Learn Together. Connect with like-minded individuals,
+            exchange
             ideas, and grow your skills in a supportive and collaborative environment.
           </h6>
-          <div class="d-flex gap-3 fs-6">
+          <div class="d-flex flex-column flex-md-row gap-3 fs-6 mb-4 mb-md-0">
             <a class="btn btn-primary" href="#" role="button">Explore Projects</a>
             <a class="btn btn-primary" href="#" role="button">Create Project</a>
           </div>
       </div>
-      <div class="col d-flex justify-content-end pe-4">
+      <div class="col-12 col-md-6 d-flex justify-content-center justify-content-md-end pe-4">
         <img src="assets/singapore.png" class="object-fit-sm-scale" alt="">
       </div>
     </div>
@@ -89,82 +91,283 @@
   <!-- Start of Browse by Categories section -->
   <section class="ms-0 pb-4 mx-4">
     <div class="fs-2 text-black text-center fw-semibold pt-2 pb-2">
-  <section class="ms-0 pb-4 bg-dark-subtle">
-    <div class="text-black text-start fs-2 fw-semibold ps-4 pt-4 pb-2">
-      Browse by Categories
-    </div>
-    <div>
-      <ul class="nav text-white fw-bold ps-2 justify-content-evenly row-gap-2">
-        <li class="category-item rounded-4 p-1 bg-secondary">
-          <a class="btn btn-secondary" href="#" role="button">
-            <i class="fa-solid fa-infinity px-1"></i>Arduino
-          </a>
-        </li>
-        <li class="category-item rounded-4 p-2 bg-secondary">
-          <a class="btn btn-secondary" href="#" role="button">
-            <i class="fa-solid fa-microchip px-1"></i>ESP32
-          </a>
-        </li>
-        <li class="category-item rounded-4 p-2 bg-secondary">
-          <a class="btn btn-secondary" href="#" role="button">
-            <i class="fa-solid fa-network-wired px-1"></i>IoT
-          </a>
-        </li>
-        <li class="category-item rounded-4 p-2 bg-secondary">
-          <a class="btn btn-secondary" href="#" role="button">
-            <i class="fa-solid fa-sliders px-1"></i>
-            PCB Design
-          </a>
-        </li>
-        <li class="category-item rounded-4 p-2 bg-secondary">
-          <a class="btn btn-secondary" href="#" role="button">
-            <i class="fa-brands fa-raspberry-pi px-1"></i>
-            Raspberry Pi
-          </a>
-        </li>
-        <li class="category-item rounded-4 p-2 bg-secondary">
-          <a class="btn btn-secondary" href="#" role="button">
-            <i class="fa-brands fa-steam-symbol px-1"></i>
-            Robotics
-          </a>
-        </li>
-        <li class="category-item rounded-4 p-2 bg-secondary">
-          <a class="btn btn-secondary" href="#" role="button">
-            <i class="fa-solid fa-fingerprint px-1"></i>
-            Sensors
-          </a>
-        </li>
-      </ul>
-    </div>
-  </section>
-  <!-- end of Browse by Categories section -->
+      <section class="ms-0 pb-4 bg-dark-subtle">
+        <div class="text-black text-start fs-2 fw-semibold ps-4 pt-4 pb-2">
+          Browse by Categories
+        </div>
+        <div>
+          <ul class="nav text-white fw-bold ps-2 justify-content-evenly row-gap-2">
+            <li class="category-item rounded-4 p-1 bg-secondary">
+              <a class="btn btn-secondary" href="#" role="button">
+                <i class="fa-solid fa-infinity px-1"></i>Arduino
+              </a>
+            </li>
+            <li class="category-item rounded-4 p-2 bg-secondary">
+              <a class="btn btn-secondary" href="#" role="button">
+                <i class="fa-solid fa-microchip px-1"></i>ESP32
+              </a>
+            </li>
+            <li class="category-item rounded-4 p-2 bg-secondary">
+              <a class="btn btn-secondary" href="#" role="button">
+                <i class="fa-solid fa-network-wired px-1"></i>IoT
+              </a>
+            </li>
+            <li class="category-item rounded-4 p-2 bg-secondary">
+              <a class="btn btn-secondary" href="#" role="button">
+                <i class="fa-solid fa-sliders px-1"></i>
+                PCB Design
+              </a>
+            </li>
+            <li class="category-item rounded-4 p-2 bg-secondary">
+              <a class="btn btn-secondary" href="#" role="button">
+                <i class="fa-brands fa-raspberry-pi px-1"></i>
+                Raspberry Pi
+              </a>
+            </li>
+            <li class="category-item rounded-4 p-2 bg-secondary">
+              <a class="btn btn-secondary" href="#" role="button">
+                <i class="fa-brands fa-steam-symbol px-1"></i>
+                Robotics
+              </a>
+            </li>
+            <li class="category-item rounded-4 p-2 bg-secondary">
+              <a class="btn btn-secondary" href="#" role="button">
+                <i class="fa-solid fa-fingerprint px-1"></i>
+                Sensors
+              </a>
+            </li>
+          </ul>
+        </div>
+      </section>
+      <!-- end of Browse by Categories section -->
 
+      <!-- TODO: Browse by Featured Projects section -->
+      <!-- Start of Featured Projects section -->
+      <!-- <section>
+        <div class="d-flex flex-column pt-4 mx-4">
 
-  <!-- TODO: Browse by Featured Projects section -->
-  <!-- Start of Featured Projects section -->
-  <section>       
-    <div class="d-flex flex-column pt-4 mx-4">
-      
-      <div class="col-sm-6">
-        <div class="fs-2 text-black text-start fw-semibold align-items-center">
+          <div class="col-sm-6">
+            <div class="fs-2 text-black text-start fw-semibold align-items-center">
+              Featured Projects
+            </div>
+          </div>
+
+          <div class="col-sm-6 align-items-center">
+            <!-- pagination control for Featured Projects section  -->
+      <!-- to be controlled by function() in script.js -->
+      <nav class="pt-2" aria-label="Page navigation example">
+        <ul class="pagination">
+          <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1">Previous</a>
+          </li>
+          <li class="page-item"><a class="page-link" href="#">1</a></li>
+          <li class="page-item"><a class="page-link" href="#">2</a></li>
+          <li class="page-item"><a class="page-link" href="#">3</a></li>
+          <li class="page-item"><a class="page-link" href="#">4</a></li>
+          <li class="page-item"><a class="page-link" href="#">5</a></li>
+          <li class="page-item"><a class="page-link" href="#">...</a></li>
+          <li class="page-item">
+            <a class="page-link" href="#">Next</a>
+          </li>
+        </ul>
+      </nav>
+      <!-- end of Featured Projects pagination control -->
+      <!-- end of Featured Projecst container hosting card group-->
+
+      <!-- TODO: Browse by Featured Projects section -->
+      <!-- Start of Featured Projects section -->
+      <section class="">
+        <!-- Featured Projects title -->
+        <div class="text-black text-start fs-2 fw-semibold ps-4 pt-4 pb-2">
           Featured Projects
         </div>
-      </div>
-      
-      <div class="col-sm-6 align-items-center">
+
+        <!-- Container hosting card group for Featured Projects -->
+        <div
+          class="container-fluid my-2 row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 justify-item-evenly px-3 border">
+
+          <!-- featured project card#1 -->
+          <div class="col">
+            <div class="card ms-0 rounded-4 border bg-light">
+              <a href="#" class="text-decoration-none">
+                <img src="https://placehold.co/200x200/5F6B6D/FFFFFF/png" class="card-img-top rounded-top-3"
+                  alt="..." />
+                <div class="card-body">
+                  <h5 class="card-title text-secondary fw-bolder">
+                    Lorem ipsum dolor sit amet consectetur.
+                  </h5>
+                  <p class="card-text text-dark small">
+                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
+                    numquam
+                    facilis quis
+                    recusandae molestias velit harum ab.
+                  </p>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <!-- featured project card#2 -->
+          <div class="col">
+            <div class="card ms-0 rounded-4 border bg-light">
+              <a href="#" class="text-decoration-none">
+                <img src="https://placehold.co/200x200/5ECBC8/FFFFFF/png" class="card-img-top rounded-top-3"
+                  alt="..." />
+                <div class="card-body">
+                  <h5 class="card-title text-secondary fw-bolder">
+                    Lorem ipsum dolor sit amet consectetur.
+                  </h5>
+                  <p class="card-text text-dark small">
+                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
+                    numquam
+                    facilis quis
+                    recusandae molestias velit harum ab.
+                  </p>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <!-- featured project card#3 -->
+          <div class="col">
+            <div class="card ms-0 rounded-4 border bg-light">
+              <a href="#" class="text-decoration-none">
+                <img src="https://placehold.co/200x200/008B8B/FFFFFF/png" class="card-img-top rounded-top-3"
+                  alt="..." />
+                <div class="card-body">
+                  <h5 class="card-title text-secondary fw-bolder">
+                    Lorem ipsum dolor sit amet consectetur.
+                  </h5>
+                  <p class="card-text text-dark small">
+                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
+                    numquam
+                    facilis quis
+                    recusandae molestias velit harum ab.
+                  </p>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <!-- featured project card#4 -->
+          <div class="col">
+            <div class="card ms-0 rounded-4 border bg-light">
+              <a href="#" class="text-decoration-none">
+                <img src="https://placehold.co/200x200/D8D8D8/FFFFFF/png" class="card-img-top rounded-top-3"
+                  alt="..." />
+                <div class="card-body">
+                  <h5 class="card-title text-secondary fw-bolder">
+                    Lorem ipsum dolor sit amet consectetur.
+                  </h5>
+                  <p class="card-text text-dark small">
+                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
+                    numquam
+                    facilis quis
+                    recusandae molestias velit harum ab.
+                  </p>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <!-- featured project card#5 -->
+          <div class="col">
+            <div class="card ms-0 rounded-4 border bg-light">
+              <a href="#" class="text-decoration-none">
+                <img src="https://placehold.co/200x200/A66999/FFFFFF/png" class="card-img-top rounded-top-3"
+                  alt="..." />
+                <div class="card-body">
+                  <h5 class="card-title text-secondary fw-bolder">
+                    Lorem ipsum dolor sit amet consectetur.
+                  </h5>
+                  <p class="card-text text-dark small">
+                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
+                    numquam
+                    facilis quis
+                    recusandae molestias velit harum ab.
+                  </p>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <!-- featured project card#6 -->
+          <div class="col">
+            <div class="card ms-0 rounded-4 border bg-light">
+              <a href="#" class="text-decoration-none">
+                <img src="https://placehold.co/200x200/998F85/FFFFFF/png" class="card-img-top rounded-top-3"
+                  alt="..." />
+                <div class="card-body">
+                  <h5 class="card-title text-secondary fw-bolder">
+                    Lorem ipsum dolor sit amet consectetur.
+                  </h5>
+                  <p class="card-text text-dark small">
+                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
+                    numquam
+                    facilis quis
+                    recusandae molestias velit harum ab.
+                  </p>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <!-- featured project card#7 -->
+          <div class="col">
+            <div class="card ms-0 rounded-4 border bg-light">
+              <a href="#" class="text-decoration-none">
+                <img src="https://placehold.co/200x200/D8D8D8/FFFFFF/png" class="card-img-top rounded-top-3"
+                  alt="..." />
+                <div class="card-body">
+                  <h5 class="card-title text-secondary fw-bolder">
+                    Lorem ipsum dolor sit amet consectetur.
+                  </h5>
+                  <p class="card-text text-dark small">
+                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
+                    numquam
+                    facilis quis
+                    recusandae molestias velit harum ab.
+                  </p>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <!-- featured project card#8 -->
+          <div class="col">
+            <div class="card ms-0 rounded-4 border bg-light">
+              <a href="#" class="text-decoration-none">
+                <img src="https://placehold.co/200x200/8BC7F7/FFFFFF/png" class="card-img-top rounded-top-3"
+                  alt="..." />
+                <div class="card-body">
+                  <h5 class="card-title text-secondary fw-bolder">
+                    Lorem ipsum dolor sit amet consectetur.
+                  </h5>
+                  <p class="card-text text-dark small">
+                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
+                    numquam
+                    facilis quis
+                    recusandae molestias velit harum ab.
+                  </p>
+                </div>
+              </a>
+            </div>
+          </div>
+          <!-- .... -->
+          <!-- Repeat more .col blocks for additional cards as needed -->
+          <!-- .... -->
+        </div>
+
         <!-- pagination control for Featured Projects section  -->
         <!-- to be controlled by function() in script.js -->
-        <nav class="pt-2" aria-label="Page navigation example">
-          <ul class="pagination">
+        <nav class="ps-3 pt-2 border" aria-label="Page navigation example">
+          <ul class="pagination justify-content-start">
             <li class="page-item disabled">
               <a class="page-link" href="#" tabindex="-1">Previous</a>
             </li>
             <li class="page-item"><a class="page-link" href="#">1</a></li>
             <li class="page-item"><a class="page-link" href="#">2</a></li>
             <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item"><a class="page-link" href="#">4</a></li>
-            <li class="page-item"><a class="page-link" href="#">5</a></li>
-            <li class="page-item"><a class="page-link" href="#">...</a></li>
             <li class="page-item">
               <a class="page-link" href="#">Next</a>
             </li>
@@ -172,512 +375,79 @@
         </nav>
         <!-- end of Featured Projects pagination control -->
         <!-- end of Featured Projecst container hosting card group-->
-      </div>
+      </section>
+      <!-- End of Featured Projects section -->
 
-    </div>
-
-    <!-- Container hosting card group for Featured Projects -->
-    <div class="container-fluid ms-0 my-2">
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-        
-        <!-- featured project card#1 -->
-        <div class="col">
-          <div class="card ms-0 rounded-4 border bg-light">
-            <a href="#" class="text-decoration-none">
-              <img src="https://placehold.co/200x200/5F6B6D/FFFFFF/png" class="card-img-top rounded-top-3" alt="..." />
-              <div class="card-body">
-                <h5 class="card-title text-secondary fw-bolder">
-                  Lorem ipsum dolor sit amet consectetur.
-                </h5>
-                <p class="card-text text-dark small">
-                  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
-                  numquam
-                  facilis quis
-                  recusandae molestias velit harum ab.
-                </p>
-              </div>
-            </a>
+      <!-- TODO: Browse by About Us section -->
+      <!-- Start of About Us section -->
+      <section class="container-fluid bg-secondary-subtle">
+        <div class="row py-4">
+          <div class="col-12 col-md-6 d-flex flex-column row-gap-3 justify-content-around text-secondary px-4">
+            <h4>Learn more</h4>
+            <h2>About Us</h2>
+            <br>
+            <h5>
+              VOLTARA is the ultimate online community for electronics and microcontroller enthusiasts. Whether
+              you’re
+              just starting your journey or an experienced hobbyist to share your knowledge, this is your space
+              to
+              connect, create, and collaborate.
+            </h5>
+            <a class="btn btn-primary mb-4 mb-md-0" href="#" role="button">Join the Community</a>
           </div>
-  <section class="">
-    <!-- Featured Projects title -->
-    <div class="text-black text-start fs-2 fw-semibold ps-4 pt-4 pb-2">
-      Featured Projects
-    </div>
-
-    <!-- Container hosting card group for Featured Projects -->
-    <div
-      class="container-fluid my-2 row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 justify-item-evenly px-3 border">
-
-      <!-- featured project card#1 -->
-      <div class="col">
-        <div class="card ms-0 rounded-4 border bg-light">
-          <a href="#" class="text-decoration-none">
-            <img src="https://placehold.co/200x200/5F6B6D/FFFFFF/png" class="card-img-top rounded-top-3" alt="..." />
-            <div class="card-body">
-              <h5 class="card-title text-secondary fw-bolder">
-                Lorem ipsum dolor sit amet consectetur.
-              </h5>
-              <p class="card-text text-dark small">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
-                numquam
-                facilis quis
-                recusandae molestias velit harum ab.
-              </p>
-            </div>
-          </a>
-        </div>
-      </div>
-
-        <!-- featured project card#2 -->
-        <div class="col">
-          <div class="card ms-0 rounded-4 border bg-light">
-            <a href="#" class="text-decoration-none">
-              <img src="https://placehold.co/200x200/5ECBC8/FFFFFF/png" class="card-img-top rounded-top-3" alt="..." />
-              <div class="card-body">
-                <h5 class="card-title text-secondary fw-bolder">
-                  Lorem ipsum dolor sit amet consectetur.
-                </h5>
-                <p class="card-text text-dark small">
-                  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
-                  numquam
-                  facilis quis
-                  recusandae molestias velit harum ab.
-                </p>
-              </div>
-            </a>
+          <div class="col-12 col-md-6 d-flex justify-content-center justify-content-md-end px-4">
+            <img src="https://placehold.co/400x300/0F0F0F/FFFFFF/png" alt="">
           </div>
-      <!-- featured project card#2 -->
-      <div class="col">
-        <div class="card ms-0 rounded-4 border bg-light">
-          <a href="#" class="text-decoration-none">
-            <img src="https://placehold.co/200x200/5ECBC8/FFFFFF/png" class="card-img-top rounded-top-3" alt="..." />
-            <div class="card-body">
-              <h5 class="card-title text-secondary fw-bolder">
-                Lorem ipsum dolor sit amet consectetur.
-              </h5>
-              <p class="card-text text-dark small">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
-                numquam
-                facilis quis
-                recusandae molestias velit harum ab.
-              </p>
-            </div>
-          </a>
         </div>
-      </div>
+      </section>
+      <!-- End of About Us section -->
 
-        <!-- featured project card#3 -->
-        <div class="col">
-          <div class="card ms-0 rounded-4 border bg-light">
-            <a href="#" class="text-decoration-none">
-              <img src="https://placehold.co/200x200/008B8B/FFFFFF/png" class="card-img-top rounded-top-3" alt="..." />
-              <div class="card-body">
-                <h5 class="card-title text-secondary fw-bolder">
-                  Lorem ipsum dolor sit amet consectetur.
-                </h5>
-                <p class="card-text text-dark small">
-                  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
-                  numquam
-                  facilis quis
-                  recusandae molestias velit harum ab.
-                </p>
-              </div>
-            </a>
+
+      <!-- TODO: Browse by Curated Collections section -->
+      <!-- Start of Curated Collections section -->
+      <section class="border">
+        <div class="fs-2 text-black text-start fw-semibold pt-4 pb-1 mx-4">
+          Curated Collections
+        </div>
+        <!-- Container hosting card group for Curated Collections -->
+        <div id="curated-projects" class="container-fluid mt-2 mb-4 px-4">
+          <!-- curatedProjectCardGroup is the parent container ID that is used as the reference starting point for DOM manipulation in addCard() function in script.js -->
+          <div id="curatedProjectCardGroup"
+            class="row row-cols-3 row-cols-md-2 row-cols-sm-1 g-4 justify-content-between">
+            <!-- Curated Projects cards is dinamically inserted here by addCard() function in script.js -->
           </div>
-      <!-- featured project card#3 -->
-      <div class="col">
-        <div class="card ms-0 rounded-4 border bg-light">
-          <a href="#" class="text-decoration-none">
-            <img src="https://placehold.co/200x200/008B8B/FFFFFF/png" class="card-img-top rounded-top-3" alt="..." />
-            <div class="card-body">
-              <h5 class="card-title text-secondary fw-bolder">
-                Lorem ipsum dolor sit amet consectetur.
-              </h5>
-              <p class="card-text text-dark small">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
-                numquam
-                facilis quis
-                recusandae molestias velit harum ab.
-              </p>
-            </div>
-          </a>
         </div>
-      </div>
+      </section>
+      <!-- End of Curated Projects section -->
 
-        <!-- featured project card#4 -->
-        <div class="col">
-          <div class="card ms-0 rounded-4 border bg-light">
-            <a href="#" class="text-decoration-none">
-              <img src="https://placehold.co/200x200/D8D8D8/FFFFFF/png" class="card-img-top rounded-top-3" alt="..." />
-              <div class="card-body">
-                <h5 class="card-title text-secondary fw-bolder">
-                  Lorem ipsum dolor sit amet consectetur.
-                </h5>
-                <p class="card-text text-dark small">
-                  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
-                  numquam
-                  facilis quis
-                  recusandae molestias velit harum ab.
-                </p>
-              </div>
-            </a>
-          </div>
-      <!-- featured project card#4 -->
-      <div class="col">
-        <div class="card ms-0 rounded-4 border bg-light">
-          <a href="#" class="text-decoration-none">
-            <img src="https://placehold.co/200x200/D8D8D8/FFFFFF/png" class="card-img-top rounded-top-3" alt="..." />
-            <div class="card-body">
-              <h5 class="card-title text-secondary fw-bolder">
-                Lorem ipsum dolor sit amet consectetur.
-              </h5>
-              <p class="card-text text-dark small">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
-                numquam
-                facilis quis
-                recusandae molestias velit harum ab.
-              </p>
-            </div>
-          </a>
-        </div>
-      </div>
-
-        <!-- featured project card#5 -->
-        <div class="col">
-          <div class="card ms-0 rounded-4 border bg-light">
-            <a href="#" class="text-decoration-none">
-              <img src="https://placehold.co/200x200/A66999/FFFFFF/png" class="card-img-top rounded-top-3" alt="..." />
-              <div class="card-body">
-                <h5 class="card-title text-secondary fw-bolder">
-                  Lorem ipsum dolor sit amet consectetur.
-                </h5>
-                <p class="card-text text-dark small">
-                  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
-                  numquam
-                  facilis quis
-                  recusandae molestias velit harum ab.
-                </p>
-              </div>
-            </a>
-          </div>
-      <!-- featured project card#5 -->
-      <div class="col">
-        <div class="card ms-0 rounded-4 border bg-light">
-          <a href="#" class="text-decoration-none">
-            <img src="https://placehold.co/200x200/A66999/FFFFFF/png" class="card-img-top rounded-top-3" alt="..." />
-            <div class="card-body">
-              <h5 class="card-title text-secondary fw-bolder">
-                Lorem ipsum dolor sit amet consectetur.
-              </h5>
-              <p class="card-text text-dark small">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
-                numquam
-                facilis quis
-                recusandae molestias velit harum ab.
-              </p>
-            </div>
-          </a>
-        </div>
-      </div>
-
-        <!-- featured project card#6 -->
-        <div class="col">
-          <div class="card ms-0 rounded-4 border bg-light">
-            <a href="#" class="text-decoration-none">
-              <img src="https://placehold.co/200x200/998F85/FFFFFF/png" class="card-img-top rounded-top-3" alt="..." />
-              <div class="card-body">
-                <h5 class="card-title text-secondary fw-bolder">
-                  Lorem ipsum dolor sit amet consectetur.
-                </h5>
-                <p class="card-text text-dark small">
-                  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
-                  numquam
-                  facilis quis
-                  recusandae molestias velit harum ab.
-                </p>
-              </div>
-            </a>
-          </div>
-      <!-- featured project card#6 -->
-      <div class="col">
-        <div class="card ms-0 rounded-4 border bg-light">
-          <a href="#" class="text-decoration-none">
-            <img src="https://placehold.co/200x200/998F85/FFFFFF/png" class="card-img-top rounded-top-3" alt="..." />
-            <div class="card-body">
-              <h5 class="card-title text-secondary fw-bolder">
-                Lorem ipsum dolor sit amet consectetur.
-              </h5>
-              <p class="card-text text-dark small">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
-                numquam
-                facilis quis
-                recusandae molestias velit harum ab.
-              </p>
-            </div>
-          </a>
-        </div>
-      </div>
-
-        <!-- featured project card#7 -->
-        <div class="col">
-          <div class="card ms-0 rounded-4 border bg-light">
-            <a href="#" class="text-decoration-none">
-              <img src="https://placehold.co/200x200/D8D8D8/FFFFFF/png" class="card-img-top rounded-top-3" alt="..." />
-              <div class="card-body">
-                <h5 class="card-title text-secondary fw-bolder">
-                  Lorem ipsum dolor sit amet consectetur.
-                </h5>
-                <p class="card-text text-dark small">
-                  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
-                  numquam
-                  facilis quis
-                  recusandae molestias velit harum ab.
-                </p>
-              </div>
-            </a>
-          </div>
-      <!-- featured project card#7 -->
-      <div class="col">
-        <div class="card ms-0 rounded-4 border bg-light">
-          <a href="#" class="text-decoration-none">
-            <img src="https://placehold.co/200x200/D8D8D8/FFFFFF/png" class="card-img-top rounded-top-3" alt="..." />
-            <div class="card-body">
-              <h5 class="card-title text-secondary fw-bolder">
-                Lorem ipsum dolor sit amet consectetur.
-              </h5>
-              <p class="card-text text-dark small">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
-                numquam
-                facilis quis
-                recusandae molestias velit harum ab.
-              </p>
-            </div>
-          </a>
-        </div>
-      </div>
-
-        <!-- featured project card#8 -->
-        <div class="col">
-          <div class="card ms-0 rounded-4 border bg-light">
-            <a href="#" class="text-decoration-none">
-              <img src="https://placehold.co/200x200/8BC7F7/FFFFFF/png" class="card-img-top rounded-top-3" alt="..." />
-              <div class="card-body">
-                <h5 class="card-title text-secondary fw-bolder">
-                  Lorem ipsum dolor sit amet consectetur.
-                </h5>
-                <p class="card-text text-dark small">
-                  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
-                  numquam
-                  facilis quis
-                  recusandae molestias velit harum ab.
-                </p>
-              </div>
-            </a>
-          </div>
-      <!-- featured project card#8 -->
-      <div class="col">
-        <div class="card ms-0 rounded-4 border bg-light">
-          <a href="#" class="text-decoration-none">
-            <img src="https://placehold.co/200x200/8BC7F7/FFFFFF/png" class="card-img-top rounded-top-3" alt="..." />
-            <div class="card-body">
-              <h5 class="card-title text-secondary fw-bolder">
-                Lorem ipsum dolor sit amet consectetur.
-              </h5>
-              <p class="card-text text-dark small">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, expedita est beatae
-                numquam
-                facilis quis
-                recusandae molestias velit harum ab.
-              </p>
-            </div>
-          </a>
-        </div>
-      </div>
-      <!-- .... -->
-      <!-- Repeat more .col blocks for additional cards as needed -->
-      <!-- .... -->
-    </div>
-
-    <!-- pagination control for Featured Projects section  -->
-    <!-- to be controlled by function() in script.js -->
-    <nav class="ps-3 pt-2 border" aria-label="Page navigation example">
-      <ul class="pagination justify-content-start">
-        <li class="page-item disabled">
-          <a class="page-link" href="#" tabindex="-1">Previous</a>
-        </li>
-        <li class="page-item"><a class="page-link" href="#">1</a></li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
-        <li class="page-item">
-          <a class="page-link" href="#">Next</a>
-        </li>
-      </ul>
-    </nav>
-    <!-- end of Featured Projects pagination control -->
-    <!-- end of Featured Projecst container hosting card group-->
-  </section>
-  <!-- End of Featured Projects section -->
-
-  <!-- TODO: Browse by About Us section -->
-  <!-- Start of About Us section -->
-  <section class="container-fluid bg-secondary-subtle">
-    <div class="row row-cols-2 py-4">
-      <div class="col d-flex flex-column justify-content-around text-secondary px-4">
-        <h4>Learn more</h4>
-        <h2>About Us</h2>
-        <br>
-        <h5>
-          VOLTARA is the ultimate online community for electronics and microcontroller enthusiasts. Whether you’re
-          just starting your journey or an experienced hobbyist to share your knowledge, this is your space to
-          connect, create, and collaborate.
-        </h5>
-        <a class="btn btn-primary" href="#" role="button">Join the Community</a>
-      </div>
-      <div class="col d-flex justify-content-end pe-4">
-        <img src="https://placehold.co/400x300/0F0F0F/FFFFFF/png" alt="">
-      </div>
-    </div>
-  </section>
-  <!-- End of About Us section -->
-
-  <!-- TODO: Browse by Curated Collections section -->
-  <!-- Start of Curated Collections section -->
-  <section>
-  <section class="border">
-    <div class="fs-2 text-black text-start fw-semibold pt-4 pb-1 mx-4">
-      Curated Collections
-    </div>
-    <!-- Container hosting card group for Curated Collections -->
-    <div id="curated-projects" class="container-fluid mt-2 mb-4 px-4">
-      <!-- curatedProjectCardGroup is the parent container ID that is used as the reference starting point for DOM manipulation in addCard() function in script.js -->
-      <div id="curatedProjectCardGroup" class="row row-cols-3 row-cols-md-3 row-cols-sm-2 g-4 justify-content-between">
-
-        <!-- Curated Projects cards is dinamically inserted here 
-        by addCard() function in script.js -->
-
-      </div>
-    </div>
-  </section>
-  <!-- End of Curated Projects section -->
-
-  <!-- TODO: Browse by About Us section -->
-  <!-- Start of About Us section -->
-  <section class="row border border-top-0 border-bottom">
-    <div class="col-sm-6 px-5">
-      <h4>Learn more</h4>
-      <h2>About Us</h2>
-      <br>
-      <h5>
-        VOLTARA is the ultimate online community for electronics and microcontroller enthusiasts. Whether you’re
-        just starting your journey or an experienced hobbyist to share your knowledge, this is your space to
-        connect, create, and collaborate.
-      </h5>
-      <a class="btn btn-primary" href="#" role="button">Join the Community</a>
-    </div>
-    <div class="col-sm-6 d-flex flex-column p-3 mx-auto">
-      <img class="m-4" src="https://placehold.co/400x300" alt="">
-    </div>
-
-  </section>
-  <!-- End of Curated Projects section -->
-
-  <!-- Start of Newletter and Social Media section -->
-  <section class="container py-4">
-    <div class="row">
-      <!-- Newsletter section  -->
-      <div class="col-sm-6">
-          <div class="d-flex flex-column">
-            <div class="col-sm-11 ms-0">
-              <div class="text-black text-start fw-medium pt-1 pb-2">
+      <!-- Newsletter & Social Media section  -->
+      <section class="container-fluid">
+        <div class="row justify-items-start">
+          <div class="col-md-6 ">
+            <!-- Container hosting the newsletter form -->
+            <div class="container ms-4">
+              <div class="text-secondary text-start fs-6 pt-2 pb-2">
                 Subscribe to our Newsletter:
               </div>
-
               <!-- Newsletter section contains form for email and button -->
               <!-- submitForm() function (in script.js) is invoked everytime the subscribe button is clicked -->
               <!-- the purpose is for email validation with toast notifications -->
               <form id="newsletter-form" action="" method="post" onsubmit="submitForm(event);">
-                <div class="input-group mb-3">
-  <!-- Start of Footer section -->
-  <footer class="container-fluid bg-primary">
-    <div class="">
-      <div class="row">
-        <!-- Footer - Logo section  -->
-        <div class="col">
-          <img src="assets/voltara-logo-transparent.png" alt="Voltara Logo" width="150" />
-          <p class="ms-3 fw-light text-black">&copy 2025 Voltara</p>
-        </div>
-
-        <!-- Company navbar section -->
-        <div class="col text-black pt-3 ps-4">
-          <h5>Company</h5>
-          <div class="list-group">
-            <a href="#" class="text-black text-decoration-none">Home</a>
-            <a href="#" class="text-black text-decoration-none">About</a>
-            <a href="#" class="text-black text-decoration-none">Privacy</a>
-          </div>
-        </div>
-        <!-- end of Company navbar section -->
-
-        <!-- Help navbar section -->
-        <div class="col text-black pt-3 ps-4">
-          <h5>Help</h5>
-          <div class="list-group">
-            <a href="#" class="text-black text-decoration-none">Help Center</a>
-            <a href="#" class="text-black text-decoration-none">FAQ</a>
-            <a href="#" class="text-black text-decoration-none">Contact</a>
-          </div>
-        </div>
-
-        <!-- Footer - Newsletter & Social Media section  -->
-        <div class="col-6 pt-3">
-          <!-- Container hosting the newsletter form -->
-          <div class="container ms-4">
-            <div class="d-flex flex-column">
-              <div class="col-sm-11 ms-0">
-
-                <div class="text-black text-start fw-medium pt-1 pb-2">
-                  Subscribe to our Newsletter:
+                <div class="input-group mb-1">
+                  <input id="txtEmail" type="text" class="form-control rounded-3" placeholder="e.g. john@email.com"
+                    aria-label="Recipient's username" aria-describedby="button-addon2" />
+                  <button class="btn btn-dark ms-4 rounded-2" type="submit" id="button-addon2">
+                    <i class="fa-solid fa-newspaper"></i>
+                    Subscribe
+                  </button>
                 </div>
-                <!-- Newsletter section contains form for email and button -->
-                <!-- submitForm() function (in script.js) is invoked everytime the subscribe button is clicked -->
-                <!-- the purpose is for email validation with toast notifications -->
-                <form id="newsletter-form" action="" method="post" onsubmit="submitForm(event);">
-                  <div class="input-group mb-1">
-                    <input id="txtEmail" type="text" class="form-control rounded-3" placeholder="e.g. john@email.com"
-                      aria-label="Recipient's username" aria-describedby="button-addon2" />
-                    <button class="btn btn-dark ms-4 rounded-2" type="submit" id="button-addon2">
-                      <i class="fa-solid fa-newspaper"></i>
-                      Subscribe
-                    </button>
-                  </div>
-                </form>
-
-              </div>
+              </form>
             </div>
           </div>
-      </div>
-      <!-- Social Media section -->      
-      <div class="nav col-sm-6 pt-2 justify-content-evenly align-items-center small">
-        <a href="#" class="text-dark text-decoration-none">
-          <i class="fa-brands fa-square-facebook text-info"></i>
-          Facebook
-        </a>
-        <a href="#" class="text-dark text-decoration-none">
-          <i class="fa-brands fa-instagram text-danger"></i>
-          Instagram
-        </a>
-        <a href="#" class="text-dark text-decoration-none">
-          <i class="fa-brands fa-x-twitter text-black"></i>
-          Twitter
-        </a>
-        <a href="#" class="text-dark text-decoration-none">
-          <i class="fa-brands fa-youtube text-danger"></i>
-          YouTube
-        </a>
           <!-- end of Newsletter form section -->
 
-          <!-- Footer - Social Media section  -->
-          <div class="nav justify-content-evenly pt-4">
+          <!-- Social Media section  -->
+          <div class="nav col-sm-6 d-flex flex-nowrap justify-content-evenly small pt-4 fs-6">
             <a href="#" class="text-dark text-decoration-none">
               <i class="fa-brands fa-square-facebook text-info"></i>
               Facebook</a>
@@ -690,79 +460,62 @@
             <a href="#" class="text-dark text-decoration-none">
               <i class="fa-brands fa-youtube text-danger"></i>
               YouTube</a>
-
           </div>
         </div>
-        <!-- end of Social Media section -->
+      </section>
+      <!-- End of Newletter and Social Media section -->
 
-      </div>
-    </div>
-  </section>
-  <!-- End of Newletter and Social Media section -->
 
-  <!-- Updated Footer section -->
-  <footer
-    class="d-flex bg-dark text-white-50 justify-content-between align-items-center p-3 border-top"
-  >
-    <p class="col-md-4 mb-0">© 2025 Voltara.</p>
-    <a
-      href="/"
-      class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none"
-      aria-label="Bootstrap"
-    >
-      <img
-        src="assets/voltara-logo-transparent.png"
-        alt="Voltara Logo"
-        class="navbar-logo"
-      />
-    </a>
-    <ul class="nav col-md-4 justify-content-end flex-nowrap">
-      <li class="nav-item">
-        <a href="#" class="nav-link px-2 text-white-50">Home</a>
-      </li>
-      <li class="nav-item">
-        <a href="#" class="nav-link px-2 text-white-50">Explore</a>
-      </li>
-      <li class="nav-item">
-        <a href="#" class="nav-link px-2 text-white-50">Articles</a>
-      </li>
-      <li class="nav-item">
-        <a href="#" class="nav-link px-2 text-white-50">Activity</a>
-      </li>
-      <li class="nav-item">
-        <a href="#" class="nav-link px-2 text-white-50">Forum</a>
-      </li>
-    </ul>
-  </footer>
-  <!-- End of Updated Footer section -->
+      <!-- Updated Footer section -->
+      <footer class="d-flex bg-dark text-white-50 justify-content-between align-items-center p-3 border-top">
+        <p class="col-md-4 mb-0">© 2025 Voltara.</p>
+        <a href="/"
+          class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none"
+          aria-label="Bootstrap">
+          <img src="assets/voltara-logo-transparent.png" alt="Voltara Logo" class="navbar-logo" />
+        </a>
+        <ul class="nav col-md-4 justify-content-end flex-nowrap">
+          <li class="nav-item">
+            <a href="#" class="nav-link px-2 text-white-50">Home</a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link px-2 text-white-50">Explore</a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link px-2 text-white-50">Articles</a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link px-2 text-white-50">Activity</a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link px-2 text-white-50">Forum</a>
+          </li>
+        </ul>
+      </footer>
+      <!-- End of Updated Footer section -->
 
-  <!-- TOAST CONTAINER SECTION -->
-  <!-- Toast Container -->
-  <!-- TOAST CONTAINER SECTION  -->
-  <!-- the toast can be activated by invoking the showToast() function (in script.js)  -->
-  <!-- refer to showToast() section in script.js for more details -->
-  <div id="toast-container" class="position-fixed top-0 start-50 translate-middle-x p-3">
-    <div id="msg-toast" class="toast align-items-center mt-2 text-white" role="alert" aria-live="assertive"
-      aria-atomic="true" data-bs-autohide="true" data-bs-delay="4000">
-      <div class="d-flex">
-        <div id="msg-toast-body" class="toast-body">
-          <!-- Message displayed here -->
+      <!-- Toast Container -->
+      <!-- the toast can be activated by invoking the showToast() function (in script.js)  -->
+      <div id="toast-container" class="position-fixed top-0 start-50 translate-middle-x p-3">
+        <div id="msg-toast" class="toast align-items-center mt-2 text-white" role="alert" aria-live="assertive"
+          aria-atomic="true" data-bs-autohide="true" data-bs-delay="4000">
+          <div class="d-flex">
+            <div id="msg-toast-body" class="toast-body">
+              <!-- Message displayed here -->
+            </div>
+            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>
         </div>
-        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
       </div>
-    </div>
-  </div>
 
-  <!-- include the javascript script.js -->
-  <script src="./src/components/listprojects.js"></script>
-  <script src="./src/components/script.js"></script>
+      <!-- include the javascript script.js -->
+      <script src="./src/components/listprojects.js"></script>
+      <script src="./src/components/script.js"></script>
 
-  <!-- JavaScript Bundle with Popper -->
-  <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-    crossorigin="anonymous"
-  ></script>
+      <!-- JavaScript Bundle with Popper -->
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
 
 </body>
 

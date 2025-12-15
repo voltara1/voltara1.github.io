@@ -53,9 +53,9 @@ function addCard(item) {
 
     //start adding each html element
     const colDiv = document.createElement('div');
-    colDiv.className = 'col';
+    colDiv.className = 'col col-12 col-md-6 col-lg-4 mb-4';
     const cardDiv = document.createElement('div');
-    cardDiv.className = 'card w-100 h-100 ms-0 rounded-4';
+    cardDiv.className = 'card h-100 ms-0 rounded-4';
     // anchor tag for a clickable hyperlink applies to the whole card area
     const anchor = document.createElement('a');
     anchor.href = '#';
