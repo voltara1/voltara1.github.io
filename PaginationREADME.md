@@ -927,6 +927,6 @@ The code is production-ready, well-documented, and follows industry best practic
 
 ---
 
-*Last Updated: December 2024*  
+*Last Updated: December 2025*  
 *Project: Voltara - IoT Community Platform*  
 *Developer: Mona Hamid*
