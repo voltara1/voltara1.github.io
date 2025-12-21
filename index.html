@@ -62,9 +62,15 @@
         </form>
 
         <ul class="navbar-nav nav-fill w-10 nav-pills">
-          <li class="nav-item"><a class="nav-link active" href="#">Login</a></li>
+         
+          <li class="nav-item"> <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginSignupModal">Login</button></li>
+
+          <!-- temporarily commented out for login button, converting a link to a button
+                    <a class="nav-link active" href="#">Login</a>
           <li class="nav-item"><a class="nav-link" href="#">Sign-Up</a></li>
-        </ul>
+          -->
+
+          </ul>
       </div>
     </div>
   </nav>
@@ -428,7 +434,67 @@
 
       </div>
     </div>
-  </section>
+    <div class="modal fade" id="loginSignupModal" tabindex="-1" aria-labelledby="loginSignupModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="loginSignupModalLabel">Authentication</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Pills Navigation for switching forms -->
+        <ul class="nav nav-pills nav-fill mb-3" id="pills-tab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="pills-login-tab" data-bs-toggle="pill" data-bs-target="#pills-login" type="button" role="tab" aria-controls="pills-login" aria-selected="true">Login</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="pills-signup-tab" data-bs-toggle="pill" data-bs-target="#pills-signup" type="button" role="tab" aria-controls="pills-signup" aria-selected="false">Sign Up</button>
+          </li>
+        </ul>
+        <!-- Tab Content (Forms) -->
+        <div class="tab-content" id="pills-tabContent">
+          <!-- Login Form Tab -->
+          <div class="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="pills-login-tab">
+            <form>
+              <div class="mb-3">
+                <label for="loginEmail" class="form-label">Email address</label>
+                <input type="email" class="form-control" id="loginEmail" aria-describedby="emailHelp" placeholder="Enter email">
+              </div>
+              <div class="mb-3">
+                <label for="loginPassword" class="form-label">Password</label>
+                <input type="password" class="form-control" id="loginPassword" placeholder="Password">
+              </div>
+              <button type="submit" class="btn btn-primary w-100">Login</button>
+            </form>
+          </div>
+
+          <!-- Sign Up Form Tab -->
+          <div class="tab-pane fade" id="pills-signup" role="tabpanel" aria-labelledby="pills-signup-tab">
+            <form>
+              <div class="mb-3">
+                <label for="signupName" class="form-label">Full Name</label>
+                <input type="text" class="form-control" id="signupName" placeholder="Full Name">
+              </div>
+              <div class="mb-3">
+                <label for="signupEmail" class="form-label">Email address</label>
+                <input type="email" class="form-control" id="signupEmail" placeholder="Enter email">
+              </div>
+              <div class="mb-3">
+                <label for="signupPassword" class="form-label">Password</label>
+                <input type="password" class="form-control" id="signupPassword" placeholder="Password">
+                <div id="passwordHelpBlock" class="form-text">
+                  Your password must be 8-20 characters long.
+                </div>
+              </div>
+              <button type="submit" class="btn btn-success w-100">Sign Up</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
 
   <!-- Start of Footer section -->
   <footer class="container-fluid bg-primary">
