@@ -202,12 +202,11 @@ body {
 }
 
 .category-item {
-  margin: 0;
+  /* margin: 0; */
+  margin: 0.25rem 0.5rem;
 }
 
 .category-item .btn {
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
   transition: all 0.3s ease;
 }
 
@@ -215,12 +214,12 @@ body {
 .category-item .btn.active {
   background-color: var(--primary-blue) !important;
   border-color: var(--primary-blue) !important;
-  transform: scale(1.05);
+  transform: scale(1.25);
   box-shadow: 0 4px 8px rgba(16, 137, 255, 0.3);
 }
 
 .category-item .btn:hover {
-  transform: scale(1.05);
+  transform: scale(1.25);
   transition: all 0.3s ease;
 }
 
