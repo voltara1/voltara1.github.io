@@ -129,6 +129,8 @@ function setupCategoryButtons() {
             
             // Filter projects by this category
             filterProjectsByCategory(category);
+
+            updateCuratedCollections(category);
             
             // Update active state (makes clicked button look selected)
             categoryButtons.forEach(btn => btn.classList.remove('active'));
