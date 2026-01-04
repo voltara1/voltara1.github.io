@@ -1,27 +1,28 @@
-/* ========================================================================== */
-// fetch project data for display on the landing page dynamically
-// at the moment data from dummyjson.com are used for testing purpose
-// function to fetch project data from dummyjson.com with asynchronous fetch()
-// no API key is required
-
-// the JSON has the following format:
+/* ========================================================================== 
+    fetch project data for display on the landing page dynamically
+    at the moment data from dummyjson.com are used for testing purpose
+    function to fetch project data from dummyjson.com with asynchronous fetch()
+    no API key is required
+*/
 /*
-        {
+    the JSON data has the following format:
+    {
         "products": [
-            { "id": 1, "title": "Product 1", "description": "product1 description." , images": [ "URL1", "URL2",...]},
-            { "id": 2, "title": "Product 2", "description": "product2 description.""images": [ "URL1"] }
+            { "id": 1, "title": "Product 1", "description": "product1 description.", images": [ "URL1", "URL2",...]},
+            { "id": 2, "title": "Product 2", "description": "product2 description.", images": [ "URL1"] }
         ]
-        }
+    }
 */
 
 let projectData = []; /* global variable */
 
 async function fetchProjectData() {
-    const response = await fetch('https://dummyjson.com/products');/* fetch only resource named "products" */
-    const data = await response.json(); /* store the resulting json format data in variable named "data" */
-    projectData = data.products; /* fetched data is in the format of arrays of products */
-    numberofProjects = data.products.length; /* get total number of projects */
-    displayCuratedProjectCard();   /* render all cards on the first page */
+    const response = await fetch('https://dummyjson.com/products');//fetch only resource named "products" 
+    const data = await response.json(); //store the resulting json format data in variable named "data"
+    projectData = data.products; //fetched data is in the format of arrays of products 
+    numberofProjects = data.products.length; //get total number of projects
+
+    displayCuratedProjectCard();   //render all cards on the first page
 }
 
 /*
@@ -100,6 +101,7 @@ function displayCuratedProjectCard() {
     const cardGroup = document.getElementById('curatedProjectCardGroup');
     cardGroup.innerHTML = ''; // clear existing card group before rendering new card group
     const maxNumberOfCuratedCard = 3; // maximum number of cards is set to 3;
+
     //populate the curated collection cards
     updateCuratedCollections("ALL");
 }
@@ -132,7 +134,7 @@ id                  <--- id
 title               <--- title
 description         <--- description
 category            <--- category       
-proficiency         <--- returnPolicy
+proficiencyLevel    <--- returnPolicy
     - Basic         <--- No return policy 
     - Intermediate  <--- 7 days return policy
     - Advanced      <--- 30 days return policies
@@ -145,6 +147,7 @@ function fieldNameMapping(index) {
     let curated = false;
     const likes = "rating";
 
+    //map "returnPolicy" field in JSON to represent the "proficiencyLevel"
     switch (projectData[index].returnPolicy) {
         case "No return policy":
             proficiencyLevel = "Basic";
@@ -156,6 +159,7 @@ function fieldNameMapping(index) {
             proficiencyLevel = "Advanced";
     }
 
+//map "availabilityStatus" field in JSON to represent the "proficiencyLevel"
     if (projectData[index].availabilityStatus == "In Stock")
         curated = true;
     else
@@ -177,10 +181,10 @@ function updateCuratedCollections(category) {
     //get the temporarily mapped category until our DB is ready;
     let selectedCategory = categoryMapping(category);
 
-    let listBASIC = [];
-    let listINTERMEDIATE = [];
-    let listADVANCED = [];
-    let listALL = [];
+    let curatedBASIC = [];        //array for tutorials with proficiencyLevel= "Basic" and curated flag = true
+    let curatedINTERMEDIATE = []; //array for tutorials with proficiencyLevel= "Intermediate" and curated flag = true
+    let curatedADVANCED = [];     //array for tutorials with proficiencyLevel= "Advanced" and curated flag = true
+    let curatedALL = [];          //array for tutorials with curated flag = true  (for any proficiencyLevel)
 
     //iterate all items and check if each one meets the set conditions:  
     for (let i = 0; i < projectData.length; i++) {
@@ -200,31 +204,33 @@ function updateCuratedCollections(category) {
             1. category as selected/filtered.
             2. curated flag is true,
             3. proficiency level is of Basic, Intermediate or Advanced.
+        if conditions are met, save the tutorial index and number of likes into respective arrays.
         */
-        if (tutorial.category === selectedCategory && curated) {
+        if (selectedCategory === tutorial.category && curated) {
             switch (proficiencyLevel) {
                 case "Basic":
-                    listBASIC.push([i, tutorial[likes]]);
+                    curatedBASIC.push([i, tutorial[likes]]);
                     break;
                 case "Intermediate":
-                    listINTERMEDIATE.push([i, tutorial[likes]]);
+                    curatedINTERMEDIATE.push([i, tutorial[likes]]);
                     break;
                 case "Advanced":
-                    listADVANCED.push([i, tutorial[likes]]);
+                    curatedADVANCED.push([i, tutorial[likes]]);
                     break;
             }
         }
 
-        if (selectedCategory == "ALL" && curated) {
-            listALL.push([i]);
+        //if "ALL" is selected save the tutorial index only to curatedALL[] array
+        if (selectedCategory === "ALL" && curated) {
+            curatedALL.push([i]);
         }
 
     }
 
-    //sort all 3 arrays based on number of likes (rating)
-    listBASIC.sort((a, b) => b[1] - a[1]);
-    listINTERMEDIATE.sort((a, b) => b[1] - a[1]);
-    listADVANCED.sort((a, b) => b[1] - a[1]);
+    //sort all 3 arrays based on number of likes (rating), descending order
+    curatedBASIC.sort((a, b) => b[1] - a[1]);
+    curatedINTERMEDIATE.sort((a, b) => b[1] - a[1]);
+    curatedADVANCED.sort((a, b) => b[1] - a[1]);
 
     // target the parent container as the reference starting point for DOM manipulation
     const cardGroup = document.getElementById('curatedProjectCardGroup');
@@ -232,10 +238,10 @@ function updateCuratedCollections(category) {
 
     /* set the preference for each card:
     index [0]: first row is the preference for Left card.
-               if no tutorial is available (in listBASIC[] array), 
-               the logic will try to take from listINTERMEDIATE[],
-               if no tutorial is available (in listINTERMEDIATE[] array), 
-               the logic will try to take from listADVANCED[].
+               if no tutorial is available (in curatedBASIC[] array), 
+               the logic will try to take from curatedINTERMEDIATE[],
+               if no tutorial is available (in curatedINTERMEDIATE[] array), 
+               the logic will try to take from curatedADVANCED[].
     index [1]: second row is the preference for middle card.
     index [3]: third row is the preference for right card.
     */
@@ -245,41 +251,41 @@ function updateCuratedCollections(category) {
         ['adv', 'inter', 'basic']
     ];
 
-    for (let slot = 0; slot < 3; slot++) {
+    for (let position = 0; position < 3; position++) {
         //iterate through the preferences of all 3 cards/slots
-        const preference = slotPreferences[slot];
+        const preference = slotPreferences[position];
         let tutorial;
 
         //for each card/slot check if the 1st preference (most preferred) is met
         //if not met, use the next preference in the list.
         for (let i = 0; i < preference.length; i++) {
-            const listName = preference[i];
+            const curatedArrName = preference[i];
 
-            if (listName === 'basic' && listBASIC.length > 0) {
-                tutorial = projectData[listBASIC[0][0]];
+            if (curatedArrName === 'basic' && curatedBASIC.length > 0) {
+                tutorial = projectData[curatedBASIC[0][0]];
                 //remove tutorial index from array once it is used/displayed
-                listBASIC.shift();
+                curatedBASIC.shift();
                 break;
             }
 
-            if (listName === 'inter' && listINTERMEDIATE.length > 0) {
-                tutorial = projectData[listINTERMEDIATE[0][0]];
+            if (curatedArrName === 'inter' && curatedINTERMEDIATE.length > 0) {
+                tutorial = projectData[curatedINTERMEDIATE[0][0]];
                 //remove tutorial index from array once it is used/displayed
-                listINTERMEDIATE.shift();
+                curatedINTERMEDIATE.shift();
                 break;
             }
 
-            if (listName === 'adv' && listADVANCED.length > 0) {
-                tutorial = projectData[listADVANCED[0][0]];
+            if (curatedArrName === 'adv' && curatedADVANCED.length > 0) {
+                tutorial = projectData[curatedADVANCED[0][0]];
                 //remove tutorial index from array once it is used/displayed
-                listADVANCED.shift();
+                curatedADVANCED.shift();
                 break;
             }
         }
 
         //render the tutorial on the respective position if tutorial is not falsy.
         if (tutorial) {
-            addCard(tutorial, slot);
+            addCard(tutorial, position);
         }
     }
 
@@ -288,14 +294,14 @@ function updateCuratedCollections(category) {
     It is possible to have 0 tutorial marked as curated
     No duplication of tutorial to be displayed on the 3 card/slot
     */
-    const minIndex = Math.min(listALL.length, 3);
-    if (listALL.length > 0) {
-        for (let slot = 0; slot < minIndex; slot++) {
-            const randomIndex = Math.floor(Math.random() * listALL.length);
-            const tutorial = projectData[listALL[randomIndex]];
+    const minIndex = Math.min(curatedALL.length, 3);
+    if (curatedALL.length > 0) {
+        for (let position = 0; position < minIndex; position++) {
+            const randomIndex = Math.floor(Math.random() * curatedALL.length);
+            const tutorial = projectData[curatedALL[randomIndex]];
             //remove tutorial index from array to prevent duplication
-            listALL.splice(randomIndex, 1);
-            addCard(tutorial, slot);
+            curatedALL.splice(randomIndex, 1);
+            addCard(tutorial, position);
         }
     }
 
