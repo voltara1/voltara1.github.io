@@ -14,13 +14,9 @@
     }
 */
 
-let projectData = []; /* global variable */
-
-async function fetchProjectData() {
-    const response = await fetch('https://dummyjson.com/products');//fetch only resource named "products" 
-    const data = await response.json(); //store the resulting json format data in variable named "data"
-    projectData = data.products; //fetched data is in the format of arrays of products 
-    numberofProjects = data.products.length; //get total number of projects
+function fetchProjectData() {
+    projectData = mockProjects; //fetched tutorial data from mockProjects 
+    numberofProjects = projectData.length; //get total number of projects
 
     displayCuratedProjectCard();   //render all cards on the first page
 }
@@ -49,7 +45,7 @@ the following html elements will be added dynamically by addCard()
 -----------------------------------------------------------
 */
 
-function addCard(item, position) {
+function addCard(tutorial, position, category) {
     // target the parent of all cards to obtain the starting point
     const cardGroup = document.getElementById('curatedProjectCardGroup');
 
@@ -66,19 +62,20 @@ function addCard(item, position) {
     // add an image from source data array locally named 'item'  
     const curatedProjectImage = document.createElement('img');
     curatedProjectImage.id = "curatedCardImage-" + position;
-    curatedProjectImage.src = item.images[0]; //get image from 'images' data field
+    //TODO: to change to actual image source
+    curatedProjectImage.src = `https://placehold.co/400x300/23374D/FFFFFF?text=${tutorial.category}`; 
     curatedProjectImage.className = 'card-img-top w-100 -100 rounded-top-3';
-    curatedProjectImage.alt = item.title;
+    curatedProjectImage.alt = tutorial.title;
 
     const curatedProjectTitle = document.createElement('h5');
     curatedProjectTitle.id = "curatedCardTitle-" + position;
-    curatedProjectTitle.className = 'card-title text-secondary fw-bold px-3';
-    curatedProjectTitle.innerText = item.title; //get title from 'title' data field
+    curatedProjectTitle.className = 'card-title text-secondary fw-bolder px-3 pt-3';
+    curatedProjectTitle.innerText = tutorial.title; //get title from 'title' data field
 
     const curatedProjectDesc = document.createElement('p');
     curatedProjectDesc.id = "curatedCardDesc-" + position;
     curatedProjectDesc.className = 'card-text text-dark fw-light small px-3  pb-2';
-    curatedProjectDesc.innerText = item.description; //get description from 'description' data field
+    curatedProjectDesc.innerText = tutorial.description; //get description from 'description' data field
 
     const curatedLikesLogo = document.createElement('span');
     curatedLikesLogo.className = 'fa-slab fa-regular fa-heart text-secondary fw-light ps-3 pb-2';
@@ -86,7 +83,7 @@ function addCard(item, position) {
     const curatedLikesCount = document.createElement('span');
     curatedLikesCount.id = "curatedCardLikes-" + position;
     curatedLikesCount.className = 'card-title text-secondary fw-normal ps-1 pb-2';
-    curatedLikesCount.innerText = item.rating; //get rating from 'rating' data field
+    curatedLikesCount.innerText = tutorial.likes; //get rating from 'likes' data field
 
     // append all elements to the anchor tag
     anchor.append(curatedProjectImage, curatedProjectTitle, curatedLikesLogo, curatedLikesCount, curatedProjectDesc);
@@ -106,116 +103,39 @@ function displayCuratedProjectCard() {
     updateCuratedCollections("ALL");
 }
 
-//TODO: remove this function once our database is ready
-//temporary function until our tutorial database is ready
-//function to route the selected category to the available categories in the JSON data
-function categoryMapping(category) {
-    let mappedCategory;
-    if (category === "Arduino" || category === "Raspberry Pi") {
-        mappedCategory = "beauty";
-    } else if (category === "ESP32" || category === "Robotics") {
-        mappedCategory = "fragrances";
-    } else if (category === "IoT" || category === "Sensors") {
-        mappedCategory = "furniture";
-    } else if (category === "PCB Design" || category === "STM32") {
-        mappedCategory = "groceries";
-    } else {
-        mappedCategory = "ALL";
-    }
-    return mappedCategory
-}
 
-//TODO: remove this function once our database is ready
-// Temporary object data mapping until our database is ready function to map
-/*
-Field name mapping:
-in this JavaScript   --  from dummyjson products resource
-id                  <--- id
-title               <--- title
-description         <--- description
-category            <--- category       
-proficiencyLevel    <--- returnPolicy
-    - Basic         <--- No return policy 
-    - Intermediate  <--- 7 days return policy
-    - Advanced      <--- 30 days return policies
-curated = true      <--- availabilityStatus = "In Stock" 
-number of likes     <--- rating 
-*/
-function fieldNameMapping(index) {
-
-    let proficiencyLevel = "";
-    let curated = false;
-    const likes = "rating";
-
-    //map "returnPolicy" field in JSON to represent the "proficiencyLevel"
-    switch (projectData[index].returnPolicy) {
-        case "No return policy":
-            proficiencyLevel = "Basic";
-            break;
-        case "7 days return policy":
-            proficiencyLevel = "Intermediate";
-            break;
-        default:
-            proficiencyLevel = "Advanced";
-    }
-
-//map "availabilityStatus" field in JSON to represent the "proficiencyLevel"
-    if (projectData[index].availabilityStatus == "In Stock")
-        curated = true;
-    else
-        curated = false;
-
-    return {
-        proficiencyLevel,
-        curated,
-        likes
-    }
-}
-
-
-/*
-Function to iterate all tutorials, check if it meets all conditions.
-If conditions are met, stored its index and rating in array corresponding to its proficiency level and finally rank(sort) them based of number of likes.
-*/
 function updateCuratedCollections(category) {
     //get the temporarily mapped category until our DB is ready;
-    let selectedCategory = categoryMapping(category);
+    let selectedCategory = category;
 
-    let curatedBASIC = [];        //array for tutorials with proficiencyLevel= "Basic" and curated flag = true
-    let curatedINTERMEDIATE = []; //array for tutorials with proficiencyLevel= "Intermediate" and curated flag = true
-    let curatedADVANCED = [];     //array for tutorials with proficiencyLevel= "Advanced" and curated flag = true
-    let curatedALL = [];          //array for tutorials with curated flag = true  (for any proficiencyLevel)
+    let curatedBASIC = [];
+    let curatedINTERMEDIATE = [];
+    let curatedADVANCED = [];
+    let curatedALL = [];
 
     //iterate all items and check if each one meets the set conditions:  
     for (let i = 0; i < projectData.length; i++) {
         const tutorial = projectData[i];
 
         //TODO: this is a temporary variable assignment, to be replaced with actual assignment once our database is ready.
-        //get the proficiency Level, curated flag and likes count
-        let {
-            proficiencyLevel,
-            curated,
-            likes
-        }
-            = fieldNameMapping(i);
 
-        /*
-        check for the following conditions:
-            1. category as selected/filtered.
-            2. curated flag is true,
-            3. proficiency level is of Basic, Intermediate or Advanced.
-        if conditions are met, save the tutorial index and number of likes into respective arrays.
-        */
+        proficiencyLevel = tutorial.proficiency;
+        curated = tutorial.curated;
+        likes = tutorial.likes;
+
+        //    alert(`processing id: ${tutorial.id}\n tutorial category: ${tutorial.category} - selected: ${selectedCategory} \n Level: ${proficiencyLevel} \n curated: ${curated} \n likes: ${likes}`);
+
         if (selectedCategory === tutorial.category && curated) {
             switch (proficiencyLevel) {
-                case "Basic":
-                    curatedBASIC.push([i, tutorial[likes]]);
+                case "BEGINNER":
+                    curatedBASIC.push([i, likes]);
                     break;
-                case "Intermediate":
-                    curatedINTERMEDIATE.push([i, tutorial[likes]]);
+                case "INTERMEDIATE":
+                    curatedINTERMEDIATE.push([i, likes]);
                     break;
-                case "Advanced":
-                    curatedADVANCED.push([i, tutorial[likes]]);
+                case "ADVANCED":
+                    curatedADVANCED.push([i, likes]);
+
                     break;
             }
         }
@@ -224,7 +144,6 @@ function updateCuratedCollections(category) {
         if (selectedCategory === "ALL" && curated) {
             curatedALL.push([i]);
         }
-
     }
 
     //sort all 3 arrays based on number of likes (rating), descending order
@@ -236,14 +155,14 @@ function updateCuratedCollections(category) {
     const cardGroup = document.getElementById('curatedProjectCardGroup');
     cardGroup.innerHTML = ''; // clear existing card group before rendering new card group
 
-    /* set the preference for each card:
-    index [0]: first row is the preference for Left card.
+    /* set the preference for each slot position:
+    index [0]: first row is the preference for Left slot.
                if no tutorial is available (in curatedBASIC[] array), 
                the logic will try to take from curatedINTERMEDIATE[],
                if no tutorial is available (in curatedINTERMEDIATE[] array), 
                the logic will try to take from curatedADVANCED[].
-    index [1]: second row is the preference for middle card.
-    index [3]: third row is the preference for right card.
+    index [1]: second row is the preference for middle slot.
+    index [2]: third row is the preference for right slot.
     */
     const slotPreferences = [
         ['basic', 'inter', 'adv'],
@@ -256,36 +175,34 @@ function updateCuratedCollections(category) {
         const preference = slotPreferences[position];
         let tutorial;
 
-        //for each card/slot check if the 1st preference (most preferred) is met
+        //for each slot check if the 1st preference (most preferred) is met
         //if not met, use the next preference in the list.
         for (let i = 0; i < preference.length; i++) {
             const curatedArrName = preference[i];
 
             if (curatedArrName === 'basic' && curatedBASIC.length > 0) {
                 tutorial = projectData[curatedBASIC[0][0]];
-                //remove tutorial index from array once it is used/displayed
+                //remove tutorial index from array once it is used/displayed to prevent duplication
                 curatedBASIC.shift();
                 break;
             }
 
             if (curatedArrName === 'inter' && curatedINTERMEDIATE.length > 0) {
                 tutorial = projectData[curatedINTERMEDIATE[0][0]];
-                //remove tutorial index from array once it is used/displayed
                 curatedINTERMEDIATE.shift();
                 break;
             }
 
             if (curatedArrName === 'adv' && curatedADVANCED.length > 0) {
                 tutorial = projectData[curatedADVANCED[0][0]];
-                //remove tutorial index from array once it is used/displayed
                 curatedADVANCED.shift();
                 break;
             }
         }
 
-        //render the tutorial on the respective position if tutorial is not falsy.
+        //render the tutorial on the respective position if tutorial is not falsy (array is empty).
         if (tutorial) {
-            addCard(tutorial, position);
+            addCard(tutorial, position, category);
         }
     }
 
@@ -301,7 +218,7 @@ function updateCuratedCollections(category) {
             const tutorial = projectData[curatedALL[randomIndex]];
             //remove tutorial index from array to prevent duplication
             curatedALL.splice(randomIndex, 1);
-            addCard(tutorial, position);
+            addCard(tutorial, position, category);
         }
     }
 
