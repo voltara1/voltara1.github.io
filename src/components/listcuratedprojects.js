@@ -1,19 +1,4 @@
-/* ========================================================================== 
-    fetch project data for display on the landing page dynamically
-    at the moment data from dummyjson.com are used for testing purpose
-    function to fetch project data from dummyjson.com with asynchronous fetch()
-    no API key is required
-*/
-/*
-    the JSON data has the following format:
-    {
-        "products": [
-            { "id": 1, "title": "Product 1", "description": "product1 description.", images": [ "URL1", "URL2",...]},
-            { "id": 2, "title": "Product 2", "description": "product2 description.", images": [ "URL1"] }
-        ]
-    }
-*/
-
+// Data source is mockProjects object array in mockData.js
 function fetchProjectData() {
     projectData = mockProjects; //fetched tutorial data from mockProjects 
     numberofProjects = projectData.length; //get total number of projects
