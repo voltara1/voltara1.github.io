@@ -41,14 +41,14 @@ function addCard(tutorial, position, category) {
     cardDiv.className = 'card h-100 ms-0 rounded-4 mb-3';
     // anchor tag for a clickable hyperlink applies to the whole card area
     const anchor = document.createElement('a');
-    anchor.href = '#';
+    anchor.href = `project-details.html?id=${tutorial.id}`;
     anchor.className = 'text-decoration-none';
 
     // add an image from source data array locally named 'item'  
     const curatedProjectImage = document.createElement('img');
     curatedProjectImage.id = "curatedCardImage-" + position;
     //TODO: to change to actual image source
-    curatedProjectImage.src = `https://placehold.co/400x300/23374D/FFFFFF?text=${tutorial.category}`; 
+    curatedProjectImage.src = `https://placehold.co/400x300/23374D/FFFFFF?text=${tutorial.category.name}`; 
     curatedProjectImage.className = 'card-img-top w-100 -100 rounded-top-3';
     curatedProjectImage.alt = tutorial.title;
 
@@ -81,7 +81,7 @@ function addCard(tutorial, position, category) {
 function displayCuratedProjectCard() {
     // target the parent container as the reference starting point for DOM manipulation
     const cardGroup = document.getElementById('curatedProjectCardGroup');
-    cardGroup.innerHTML = ''; // clear existing card group before rendering new card group
+    cardGroup.textContent = ''; // clear existing card group before rendering new card group
     const maxNumberOfCuratedCard = 3; // maximum number of cards is set to 3;
 
     //populate the curated collection cards
@@ -108,9 +108,7 @@ function updateCuratedCollections(category) {
         curated = tutorial.curated;
         likes = tutorial.likes;
 
-        //    alert(`processing id: ${tutorial.id}\n tutorial category: ${tutorial.category} - selected: ${selectedCategory} \n Level: ${proficiencyLevel} \n curated: ${curated} \n likes: ${likes}`);
-
-        if (selectedCategory === tutorial.category && curated) {
+        if (selectedCategory === tutorial.category.name && curated) {
             switch (proficiencyLevel) {
                 case "BEGINNER":
                     curatedBASIC.push([i, likes]);
