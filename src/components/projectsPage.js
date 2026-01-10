@@ -13,7 +13,7 @@ function renderExploreProjectCard(project) {
                     <img src="${project.imageUrl}" 
                          class="card-img-top rounded-top-3" 
                          alt="${project.title}"
-                         onerror="this.src='https://placehold.co/400x300/23374D/FFFFFF?text=${encodeURIComponent(project.category)}'" />
+                         onerror="this.src='https://placehold.co/400x300/23374D/FFFFFF?text=${encodeURIComponent(project.category.name)}'" />
                     <div class="card-body">
                         <h5 class="card-title text-secondary fw-bolder">
                             ${project.title}
@@ -41,7 +41,7 @@ function filterExploreProjects(category) {
     } else {
         // Filter projects that match the selected category
         filteredProjects = mockProjects.filter(project => 
-            project.category.toLowerCase() === category.toLowerCase()
+            project.category.name.toLowerCase() === category.toLowerCase()
         );
     }
     
