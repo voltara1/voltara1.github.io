@@ -6,11 +6,13 @@
  * @returns {string} HTML code for the project card
  */
 function renderExploreProjectCard(project) {
+    const imageSrc = project.imageMain || `https://placehold.co/400x300/23374D/FFFFFF?text=${encodeURIComponent(project.category.name)}`;
+
     return `
         <div class="col">
             <div class="card ms-0 rounded-4 border bg-light">
                 <a href="project-details.html?id=${project.id}" class="text-decoration-none">
-                    <img src="${project.imageUrl}" 
+                    <img src="${imageSrc}" 
                          class="card-img-top rounded-top-3" 
                          alt="${project.title}"
                          onerror="this.src='https://placehold.co/400x300/23374D/FFFFFF?text=${encodeURIComponent(project.category.name)}'" />
@@ -37,10 +39,10 @@ function filterExploreProjects(category) {
     
     // If "ALL" or no category, show all projects
     if (!category || category === 'ALL') {
-        filteredProjects = mockProjects;
+        filteredProjects = voltaraTutorials;
     } else {
         // Filter projects that match the selected category
-        filteredProjects = mockProjects.filter(project => 
+        filteredProjects = voltaraTutorials.filter(project => 
             project.category.name.toLowerCase() === category.toLowerCase()
         );
     }
@@ -88,9 +90,9 @@ function setupFilterButtons() {
  * Set up and start the pagination for the Explore Projects page
  */
 function startExploreProjects() {
-    // Check if mockProjects exists
-    if (typeof mockProjects === 'undefined') {
-        console.error('Error: Project data (mockProjects) not found. Make sure mockData.js is loaded.');
+    // Check if voltaraTutorials exists
+    if (typeof voltaraTutorials === 'undefined') {
+        console.error('Error: Project data (voltaraTutorials) not found. Make sure voltara-db.js is loaded.');
         return;
     }
 

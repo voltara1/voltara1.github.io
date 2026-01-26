@@ -19,20 +19,20 @@ function getProjectIdFromURL() {
  * @returns {Object} The project object, or undefined if not found
  */
 function getProjectById(id) {
-    // Search through all projects and return the one with matching ID
-    return mockProjects.find(project => project.id === id);
+    // Search through all projects from backend-shaped data and return the one with matching ID
+    return voltaraTutorials.find(project => project.id === id);
 }
 
 /**
  * Get other projects created by the same author
  * 
- * @param {string} author - The author's name
+ * @param {string} authorName - The author's display name (user.user_name)
  * @param {number} excludeId - The current project ID to exclude
  * @returns {Array} Up to 3 other projects by this author
  */
-function getProjectsByAuthor(author, excludeId) {
-    return mockProjects
-        .filter(project => project.author === author && project.id !== excludeId)
+function getProjectsByAuthor(authorName, excludeId) {
+    return voltaraTutorials
+        .filter(project => project.user && project.user.user_name === authorName && project.id !== excludeId)
         .slice(0, 3); // Only get the first 3
 }
 
@@ -74,11 +74,16 @@ function loadProjectDetails() {
  * Display the project title and tags
  */
 function renderProjectHeader(project) {
-    // Create HTML for the title and tags
+    // Derive simple tags from backend-shaped data (category, proficiency, curated status)
+    const tags = [];
+    if (project.category && project.category.name) tags.push(project.category.name);
+    if (project.proficiency) tags.push(project.proficiency);
+    if (typeof project.curated === 'boolean') tags.push(project.curated ? 'Curated' : 'Community');
+
     const headerHTML = `
         <h1 class="project-title mb-4">${project.title}</h1>
         <div class="project-tags mb-4">
-            ${project.tags.map(tag => `<span class="badge bg-secondary me-2 mb-2">${tag}</span>`).join('')}
+            ${tags.map(tag => `<span class="badge bg-secondary me-2 mb-2">${tag}</span>`).join('')}
         </div>
     `;
     
@@ -90,9 +95,10 @@ function renderProjectHeader(project) {
  * Display the main project image
  */
 function renderMainImage(project) {
-    // Create a placeholder image with the project title
+    const imageSrc = project.imageMain || `https://placehold.co/1200x400/FF6B35/FFFFFF?text=${encodeURIComponent(project.title)}`;
+
     const imageHTML = `
-        <img src="https://placehold.co/1200x400/FF6B35/FFFFFF?text=${encodeURIComponent(project.title)}" 
+        <img src="${imageSrc}" 
              class="img-fluid rounded" 
              alt="${project.title}"
              style="width: 100%; height: 400px; object-fit: cover;">
@@ -250,8 +256,8 @@ function updateGitHubLink(project) {
  * Shows up to 3 project cards at the bottom
  */
 function renderCreatorProjects(project) {
-    // Get other projects by this author
-    const creatorProjects = getProjectsByAuthor(project.author, project.id);
+    // Get other projects by this author (backend-shaped: project.user.user_name)
+    const creatorProjects = getProjectsByAuthor(project.user.user_name, project.id);
 
     // Check if there are any other projects
     if (creatorProjects.length === 0) {
@@ -264,10 +270,12 @@ function renderCreatorProjects(project) {
     }
 
     // Create HTML for each project card
-    const projectsHTML = creatorProjects.map(proj => `
+    const projectsHTML = creatorProjects.map(proj => {
+        const imageSrc = proj.imageMain || `https://placehold.co/400x300/23374D/FFFFFF?text=${encodeURIComponent(proj.category.name)}`;
+        return `
         <div class="col">
             <div class="card h-100 shadow-sm hover-card">
-                <img src="${proj.imageUrl}" 
+                <img src="${imageSrc}" 
                      class="card-img-top" 
                      alt="${proj.title}"
                      style="height: 250px; object-fit: cover;"
@@ -277,14 +285,6 @@ function renderCreatorProjects(project) {
                     <h5 class="card-title">${proj.title}</h5>
                     <p class="card-text text-muted flex-grow-1">${proj.description.substring(0, 100)}...</p>
                     <div class="d-flex justify-content-between align-items-center mt-3">
-                        <div>
-                            <small class="text-muted me-3">
-                                <i class="fa fa-heart text-danger me-1"></i>${proj.likes}
-                            </small>
-                            <small class="text-muted">
-                                <i class="fa fa-comment text-primary me-1"></i>${proj.comments}
-                            </small>
-                        </div>
                         <a href="project-details.html?id=${proj.id}" class="btn btn-primary btn-sm">
                             View Project
                         </a>
@@ -292,7 +292,8 @@ function renderCreatorProjects(project) {
                 </div>
             </div>
         </div>
-    `).join(''); // join('') combines all the HTML into one string
+        `;
+    }).join(''); // join('') combines all the HTML into one string
 
     // Put the cards on the page
     document.getElementById('creator-projects').innerHTML = projectsHTML;

@@ -1,6 +1,6 @@
-// Data source is mockProjects object array in mockData.js
+// Data source is voltaraTutorials object array in voltara-db.js
 function fetchProjectData() {
-    projectData = mockProjects; //fetched tutorial data from mockProjects 
+    projectData = voltaraTutorials; //fetched tutorial data from voltara-db.js 
     numberofProjects = projectData.length; //get total number of projects
 
     displayCuratedProjectCard();   //render all cards on the first page
@@ -93,9 +93,9 @@ function updateCuratedCollections(category) {
     //get the temporarily mapped category until our DB is ready;
     let selectedCategory = category;
 
-    let curatedBASIC = [];
+    let curatedBEGINNER = [];
     let curatedINTERMEDIATE = [];
-    let curatedADVANCED = [];
+    let curatedADVANCE = [];
     let curatedALL = [];
 
     //iterate all items and check if each one meets the set conditions:  
@@ -111,13 +111,13 @@ function updateCuratedCollections(category) {
         if (selectedCategory === tutorial.category.name && curated) {
             switch (proficiencyLevel) {
                 case "BEGINNER":
-                    curatedBASIC.push([i, likes]);
+                    curatedBEGINNER.push([i, likes]);
                     break;
                 case "INTERMEDIATE":
                     curatedINTERMEDIATE.push([i, likes]);
                     break;
-                case "ADVANCED":
-                    curatedADVANCED.push([i, likes]);
+                case "ADVANCE":
+                    curatedADVANCE.push([i, likes]);
 
                     break;
             }
@@ -130,9 +130,9 @@ function updateCuratedCollections(category) {
     }
 
     //sort all 3 arrays based on number of likes (rating), descending order
-    curatedBASIC.sort((a, b) => b[1] - a[1]);
+    curatedBEGINNER.sort((a, b) => b[1] - a[1]);
     curatedINTERMEDIATE.sort((a, b) => b[1] - a[1]);
-    curatedADVANCED.sort((a, b) => b[1] - a[1]);
+    curatedADVANCE.sort((a, b) => b[1] - a[1]);
 
     // target the parent container as the reference starting point for DOM manipulation
     const cardGroup = document.getElementById('curatedProjectCardGroup');
@@ -140,10 +140,10 @@ function updateCuratedCollections(category) {
 
     /* set the preference for each slot position:
     index [0]: first row is the preference for Left slot.
-               if no tutorial is available (in curatedBASIC[] array), 
+               if no tutorial is available (in curatedBEGINNER[] array), 
                the logic will try to take from curatedINTERMEDIATE[],
                if no tutorial is available (in curatedINTERMEDIATE[] array), 
-               the logic will try to take from curatedADVANCED[].
+               the logic will try to take from curatedADVANCE[].
     index [1]: second row is the preference for middle slot.
     index [2]: third row is the preference for right slot.
     */
@@ -163,10 +163,10 @@ function updateCuratedCollections(category) {
         for (let i = 0; i < preference.length; i++) {
             const curatedArrName = preference[i];
 
-            if (curatedArrName === 'basic' && curatedBASIC.length > 0) {
-                tutorial = projectData[curatedBASIC[0][0]];
+            if (curatedArrName === 'basic' && curatedBEGINNER.length > 0) {
+                tutorial = projectData[curatedBEGINNER[0][0]];
                 //remove tutorial index from array once it is used/displayed to prevent duplication
-                curatedBASIC.shift();
+                curatedBEGINNER.shift();
                 break;
             }
 
@@ -176,9 +176,9 @@ function updateCuratedCollections(category) {
                 break;
             }
 
-            if (curatedArrName === 'adv' && curatedADVANCED.length > 0) {
-                tutorial = projectData[curatedADVANCED[0][0]];
-                curatedADVANCED.shift();
+            if (curatedArrName === 'adv' && curatedADVANCE.length > 0) {
+                tutorial = projectData[curatedADVANCE[0][0]];
+                curatedADVANCE.shift();
                 break;
             }
         }
