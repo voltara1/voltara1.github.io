@@ -2000,3 +2000,170 @@ const mockProjects = [
         bom_img: "https://source.unsplash.com/400x300/?sensors,education"
     }
 ]
+
+// Get references to the input and results elements
+const searchInput = document.getElementById('search-input');
+const resultsContainer = document.getElementById('results');
+const searchProjectsGrid = document.querySelector('.search-projects-grid');
+
+// Variable to store the current search pagination instance
+let searchPagination = null;
+
+// Function to filter items based on the search query
+function search(query) {
+    return mockProjects.filter(item =>
+        item.title.toLowerCase().includes(query.toLowerCase()) ||
+        item.description.toLowerCase().includes(query.toLowerCase()) ||
+        item.category.name.toLowerCase().includes(query.toLowerCase()) ||
+        item.tags.some(tag => tag.toLowerCase().includes(query.toLowerCase()))
+    );
+}
+
+// Function to render a single search result card
+function renderSearchResultCard(project) {
+    return `
+        <div class="col">
+            <div class="card ms-0 rounded-4 border bg-light">
+                <a href="project-details.html?id=${project.id}" class="text-decoration-none">
+                    <img src="https://placehold.co/400x300/23374D/FFFFFF?text=${encodeURIComponent(project.category.name)}" 
+                         class="card-img-top rounded-top-3" 
+                         alt="${project.title}" 
+                         onerror="this.src='https://placehold.co/400x300/23374D/FFFFFF?text=${encodeURIComponent(project.category.name)}'">
+                    <div class="card-body">
+                        <h5 class="card-title text-secondary fw-bolder">
+                            ${project.title}
+                        </h5>
+                        <p class="card-text text-dark small">
+                            ${project.description}
+                        </p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    `;
+}
+
+// Function to display search results with pagination
+function displayResults(results, query) {
+    // Clear previous results and pagination
+    resultsContainer.innerHTML = '';
+
+    if (results.length === 0) {
+        resultsContainer.innerHTML = `<div class="alert alert-info my-4"> No results found for "<strong>${query}</strong>" </div>`;
+        return;
+    }
+
+    // Create container for search results
+    const searchResultsContainer = document.createElement('div');
+    searchResultsContainer.innerHTML = `
+        <h3 class="my-4">
+            Search Results for "<span class="text-primary">${query}</span>" 
+            <span class="badge bg-secondary">${results.length} found</span>
+        </h3>
+        <div id="search-results-grid" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 g-4">
+        </div>
+        <nav id="search-pagination" class="pt-4" aria-label="Search results pagination">
+            <ul class="pagination justify-content-center"></ul>
+        </nav>
+    `;
+
+    resultsContainer.appendChild(searchResultsContainer);
+
+    // Create pagination for search results
+    // Show 9 results per page
+    searchPagination = new Pagination(
+        results,
+        9,
+        'search-results-grid',
+        'search-pagination',
+        renderSearchResultCard
+    );
+
+    // Start the pagination
+    searchPagination.start();
+}
+
+// Function to clear search input and reset display, this is called when the page loads to ensure a clean state
+function clearSearchOnPageLoad() {
+    // Clear the search input value
+    if (searchInput) {
+        searchInput.value = '';
+    }
+
+    // Clear any search results
+    if (resultsContainer) {
+        resultsContainer.innerHTML = '';
+    }
+
+    // Make sure projects grid is visible
+    if (searchProjectsGrid) {
+        searchProjectsGrid.style.display = '';
+    }
+
+    // Make sure pagination is visible
+    const featuredPagination = document.getElementById('featured-projects-pagination');
+    if (featuredPagination) {
+        featuredPagination.style.display = '';
+    }
+
+    const explorePagination = document.getElementById('explore-projects-pagination');
+    if (explorePagination) {
+        explorePagination.style.display = '';
+    }
+
+    // Clear search pagination instance
+    searchPagination = null;
+
+    console.log('Search cleared on page load');
+}
+
+// Event listener for the search input
+searchInput.addEventListener('input', () => {
+    const query = searchInput.value.trim();
+
+    if (query) {
+        // Hide featured projects when searching
+        if (searchProjectsGrid) {
+            searchProjectsGrid.style.display = 'none';
+        }
+
+        // Hide featured pagination too
+        const featuredPagination = document.getElementById('featured-projects-pagination');
+        if (featuredPagination) {
+            featuredPagination.style.display = 'none';
+        }
+
+        // Hide explore pagination
+        const explorePagination = document.getElementById('explore-projects-pagination');
+        if (explorePagination) {
+            explorePagination.style.display = 'none';
+        }
+
+        const results = search(query);
+        displayResults(results, query);
+    } else {
+        // Show projects when search is empty
+        if (searchProjectsGrid) {
+            searchProjectsGrid.style.display = '';
+        }
+
+        // Show featured pagination
+        const featuredPagination = document.getElementById('featured-projects-pagination');
+        if (featuredPagination) {
+            featuredPagination.style.display = '';
+        }
+
+        // Show explore pagination
+        const explorePagination = document.getElementById('explore-projects-pagination');
+        if (explorePagination) {
+            explorePagination.style.display = '';
+        }
+
+        resultsContainer.innerHTML = '';
+
+        // Clear search pagination instance
+        searchPagination = null;
+    }
+});
+
+window.addEventListener('load', clearSearchOnPageLoad);

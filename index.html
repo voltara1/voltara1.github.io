@@ -134,8 +134,10 @@
         <!-- Right-aligned search bar and authentication buttons -->
         <div class="d-flex align-items-center gap-2">
           <!-- Search form -->
+          <!-- ! Search Function: Add id="search-input" to search input for all HTML pages -->
           <form class="d-flex" role="search">
-            <input class="form-control search-input me-2" type="search" placeholder="Search" aria-label="Search" />
+            <input class="form-control search-input me-2" id="search-input" type="search" placeholder="Search"
+              aria-label="Search" />
             <button class="btn btn-outline-light" type="submit">Search</button>
           </form>
 
@@ -255,10 +257,14 @@
     <div class="container">
       <h2 class="featured-title">Featured Projects</h2>
 
+      <!-- ! Search Function: Add this code to projects section to display search results -->
+      <div id="results"></div>
+
+      <!-- ! Search Function: Add "search-projects-grid" to project grid class -->
       <!-- Project cards container - Populated dynamically by pagination.js -->
       <!-- Bootstrap responsive grid: 1 column on mobile, 2 on small, 3 on medium+ screens -->
       <div id="featured-projects-grid"
-        class="container-fluid my-2 row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 g-4 justify-item-evenly px-3">
+        class="search-projects-grid container-fluid my-2 row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 g-4 justify-item-evenly px-3">
         <!-- Project cards will be dynamically inserted here by JavaScript -->
       </div>
 
