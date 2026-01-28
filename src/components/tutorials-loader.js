@@ -1,6 +1,6 @@
 // This asynchronous function fetches all tutorial objects from back-end API
 // HTTP method: GET
-// end-point URL: ttp://localhost:8890/api/v1/tutorial
+// end-point URL: http://localhost:8890/api/v1/tutorial
 
 
 var tutorialsFetch = null;
@@ -12,7 +12,7 @@ function ensureTutorialsLoaded() {
         return tutorialsFetch;
     }
 
-    tutorialsFetch = fetch('http://localhost:8890/api/v1/tutorial')
+    tutorialsFetch = fetch("http://localhost:8890/api/v1/tutorial")
         .then(function (response) {
             //if the response is NOT ok, throw a custom response
             if (!response.status === 403)
