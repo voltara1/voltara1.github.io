@@ -172,12 +172,14 @@ function initializeFeaturedProjects() {
 // This is the ONLY DOMContentLoaded listener
 // document.addEventListener('DOMContentLoaded', );
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function () {
 
-  // -----------------------------------------------------------------
-  // Initialize featured Projects with filtering
-  // -----------------------------------------------------------------
-  initializeFeaturedProjects();
+  ensureTutorialsLoaded().then(function () {
+    // -----------------------------------------------------------------
+    // Initialize featured Projects with filtering
+    // -----------------------------------------------------------------
+    initializeFeaturedProjects();
+  });
 
   // -----------------------------------------------------------------
   // Grab the modal instance (so we can close it programmatically)

@@ -111,5 +111,9 @@ function startExploreProjects() {
     console.log('✓ Explore Projects page with filtering initialized!');
 }
 
-// Wait for the page to fully load, then start
-document.addEventListener('DOMContentLoaded', startExploreProjects);
+// Wait for the page to fully load, then start (after tutorials are loaded)
+document.addEventListener('DOMContentLoaded', function () {
+    ensureTutorialsLoaded().then(function () {
+        startExploreProjects();
+    });
+});

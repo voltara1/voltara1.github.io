@@ -1,6 +1,6 @@
-// Data source is voltaraTutorials object array in voltara-db.js
+// Data source is voltaraTutorials, fetched from backend by tutorials-loader.js
 function fetchProjectData() {
-    projectData = voltaraTutorials; //fetched tutorial data from voltara-db.js 
+    projectData = voltaraTutorials; 
     numberofProjects = projectData.length; //get total number of projects
 
     displayCuratedProjectCard();   //render all cards on the first page
@@ -207,8 +207,12 @@ function updateCuratedCollections(category) {
 
 }
 
-// fetch project data (from dummyjson.com) when the page is loaded (script.js is executed)
-fetchProjectData();
+// fetch project data when the page and backend tutorials are ready
+document.addEventListener('DOMContentLoaded', function () {
+    ensureTutorialsLoaded().then(function () {
+        fetchProjectData();
+    });
+});
 
 /* ========================================================================== */
 

@@ -302,5 +302,10 @@ function renderCreatorProjects(project) {
 /**
  * Start everything when the page finishes loading
  * DOMContentLoaded means "the HTML is ready"
+ * but we also wait for tutorials-loader.js to load backend tutorials.
  */
-document.addEventListener('DOMContentLoaded', loadProjectDetails);
+document.addEventListener('DOMContentLoaded', function () {
+    ensureTutorialsLoaded().then(function () {
+        loadProjectDetails();
+    });
+});
