@@ -6,10 +6,11 @@ let voltaraTutorials = [];
 let tutorialsFetch = false;
 
 // if tutorial data is available in local storage, fetch them.
-const cachedTutorials = window.localStorage.getItem('voltaraTutorials');
-if (cachedTutorials) {
-  voltaraTutorials = JSON.parse(cachedTutorials);
-}
+// temporary disabled for easier testing
+// const cachedTutorials = window.localStorage.getItem('voltaraTutorials');
+// if (cachedTutorials) {
+//   voltaraTutorials = JSON.parse(cachedTutorials);
+// }
 
 async function ensureTutorialsLoaded() {
     // fetch only on first request or when html page is reloaded.
