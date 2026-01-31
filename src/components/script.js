@@ -173,13 +173,30 @@ function initializeFeaturedProjects() {
 // document.addEventListener('DOMContentLoaded', );
 
 document.addEventListener('DOMContentLoaded', function () {
+  const featuredGrid = document.getElementById('featured-projects-grid');
+  if (!featuredGrid) {
+    // Nothing to render on this page
+    return;
+  }
 
-  ensureTutorialsLoaded().then(function () {
-    // -----------------------------------------------------------------
-    // Initialize featured Projects with filtering
-    // -----------------------------------------------------------------
+  // if tutorials are already loaded, render immediately
+  // otherwise, wait for tutorials to load - show loading spinner
+  if (voltaraTutorials.length > 0) {
+    featuredGrid.innerHTML = '';
     initializeFeaturedProjects();
-  });
+  } else {
+    featuredGrid.innerHTML = '<div class="text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>';
+
+    ensureTutorialsLoaded().then(function () {
+      if (!voltaraTutorials.length) {
+        featuredGrid.innerHTML = '<div class="text-center py-5">No tutorials available.</div>';
+        return;
+      }
+
+      featuredGrid.innerHTML = '';
+      initializeFeaturedProjects();
+    });
+  }
 
   // -----------------------------------------------------------------
   // Grab the modal instance (so we can close it programmatically)

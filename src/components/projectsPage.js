@@ -36,17 +36,17 @@ function renderExploreProjectCard(project) {
  */
 function filterExploreProjects(category) {
     let filteredProjects;
-    
+
     // If "ALL" or no category, show all projects
     if (!category || category === 'ALL') {
         filteredProjects = voltaraTutorials;
     } else {
         // Filter projects that match the selected category
-        filteredProjects = voltaraTutorials.filter(project => 
+        filteredProjects = voltaraTutorials.filter(project =>
             project.category.name.toLowerCase() === category.toLowerCase()
         );
     }
-    
+
     // Create new pagination with filtered projects
     const projectsPagination = new Pagination(
         filteredProjects,                   // Use filtered projects
@@ -55,10 +55,10 @@ function filterExploreProjects(category) {
         'explore-projects-pagination',
         renderExploreProjectCard
     );
-    
+
     // Start the pagination
     projectsPagination.start();
-    
+
     // Log for debugging
     console.log(`Filtered by ${category}: Found ${filteredProjects.length} projects`);
 }
@@ -69,16 +69,16 @@ function filterExploreProjects(category) {
 function setupFilterButtons() {
     // Find all filter buttons
     const filterButtons = document.querySelectorAll('.btn-filter');
-    
+
     // Add click handler to each button
     filterButtons.forEach(button => {
         button.addEventListener('click', () => {
             // Get category from data attribute
             const category = button.getAttribute('data-category');
-            
+
             // Filter projects
             filterExploreProjects(category);
-            
+
             // Update active state
             filterButtons.forEach(btn => btn.classList.remove('active'));
             button.classList.add('active');
@@ -92,7 +92,7 @@ function setupFilterButtons() {
 function startExploreProjects() {
     // Check if voltaraTutorials exists
     if (typeof voltaraTutorials === 'undefined') {
-        console.error('Error: Project data (voltaraTutorials) not found. Make sure voltara-db.js is loaded.');
+        console.error('Error: Project data (voltaraTutorials) not found.');
         return;
     }
 
@@ -104,16 +104,37 @@ function startExploreProjects() {
 
     // Show all projects initially
     filterExploreProjects('ALL');
-    
+
     // Set up filter button click handlers
     setupFilterButtons();
-    
+
     console.log('✓ Explore Projects page with filtering initialized!');
 }
 
-// Wait for the page to fully load, then start (after tutorials are loaded)
+// Wait for the page to fully load, then either render immediately or load tutorials
 document.addEventListener('DOMContentLoaded', function () {
-    ensureTutorialsLoaded().then(function () {
+    const exploreGrid = document.getElementById('explore-projects-grid');
+    if (!exploreGrid) {
+        // Nothing to render on this page
+        return;
+    }
+
+    // if tutorials are already loaded, render immediately
+    // otherwise, wait for tutorials to load - show loading spinner
+    if (voltaraTutorials.length > 0) {
+        exploreGrid.innerHTML = '';
         startExploreProjects();
-    });
+    } else {
+        exploreGrid.innerHTML = '<div class="text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>';
+
+        ensureTutorialsLoaded().then(function () {
+            if (!voltaraTutorials.length) {
+                exploreGrid.innerHTML = '<div class="text-center py-5">No tutorials available.</div>';
+                return;
+            }
+
+            exploreGrid.innerHTML = '';
+            startExploreProjects();
+        });
+    }
 });

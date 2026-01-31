@@ -93,7 +93,7 @@
   <!-- =========================== -->
   <!-- Responsive navigation with mobile hamburger menu, centered nav links, and right-aligned search/auth buttons, using themed color -->
   <nav class="navbar navbar-expand-lg" style="background-color: #23374D;">
-    <div class="container-fluid">
+    <div class="container-fluid px-4">
       <!-- Logo/Brand - Links to homepage -->
       <a class="navbar-brand" href="index.html">
         <img src="assets/voltara-logo-transparent.png" alt="Voltara Logo" class="navbar-logo" />
@@ -147,7 +147,7 @@
   </nav>
 
       <!-- Project Details Content -->
-    <div class="container my-5">
+    <div class="container-fluid px-4 my-5">
         <div class="row">
             <!-- Main Content - Full Width -->
             <div class="col-12">
@@ -294,31 +294,32 @@
 
 
   <!-- Updated Footer section -->
-  <footer
-    class="d-flex flex-column-reverse flex-md-row bg-dark text-white-50 justify-content-between align-items-center p-3 border-top">
-    <p class="col-md-4 mb-0">© 2025 Voltara.</p>
-    <a href="/"
-      class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none"
-      aria-label="Bootstrap">
-      <img src="assets/voltara-logo-transparent.png" alt="Voltara Logo" class="navbar-logo" />
-    </a>
-    <ul class="nav col-md-4 justify-content-end flex-nowrap">
-      <li class="nav-item">
-        <a href="index.html" class="nav-link px-2 text-white-50">Home</a>
-      </li>
-      <li class="nav-item">
-        <a href="projects.html" class="nav-link px-2 text-white-50">Explore</a>
-      </li>
-      <li class="nav-item">
-        <a href="#" class="nav-link px-2 text-white-50">Articles</a>
-      </li>
-      <li class="nav-item">
-        <a href="#" class="nav-link px-2 text-white-50">Activity</a>
-      </li>
-      <li class="nav-item">
-        <a href="#" class="nav-link px-2 text-white-50">Forum</a>
-      </li>
-    </ul>
+  <footer class="bg-dark text-white-50 border-top">
+    <div class="container-fluid px-4 d-flex flex-column-reverse flex-md-row justify-content-between align-items-center p-3">
+      <p class="col-md-4 mb-0">© 2025 Voltara.</p>
+      <a href="/"
+        class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none"
+        aria-label="Bootstrap">
+        <img src="assets/voltara-logo-transparent.png" alt="Voltara Logo" class="navbar-logo" />
+      </a>
+      <ul class="nav col-md-4 justify-content-end flex-nowrap">
+        <li class="nav-item">
+          <a href="index.html" class="nav-link px-2 text-white-50">Home</a>
+        </li>
+        <li class="nav-item">
+          <a href="projects.html" class="nav-link px-2 text-white-50">Explore</a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link px-2 text-white-50">Articles</a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link px-2 text-white-50">Activity</a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link px-2 text-white-50">Forum</a>
+        </li>
+      </ul>
+    </div>
   </footer>
   <!-- End of Updated Footer section -->
 
@@ -326,12 +327,13 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
-
-    <!-- tutorials-loader.js: fetch tutorials from backend and populate voltaraTutorials -->
+    <!-- 1. tutorials-loader.js: fetch tutorials from backend and populate voltaraTutorials object array-->
     <script src="./src/components/tutorials-loader.js"></script>
-
-    <!-- Project Details Script -->
+    <!-- 2. script.js: Main application logic, event handlers, form submission -->
     <script src="./src/components/projectDetails.js"></script>
+     <!--3. seacrhprojects.js: tutorial search feature, on the navbar section -->
+  <script src="./src/components/searchprojects.js"></script>
+
 </body>
 
 </html>

@@ -1,6 +1,6 @@
 // Data source is voltaraTutorials, fetched from backend by tutorials-loader.js
 function fetchProjectData() {
-    projectData = voltaraTutorials; 
+    projectData = voltaraTutorials;
     numberofProjects = projectData.length; //get total number of projects
 
     displayCuratedProjectCard();   //render all cards on the first page
@@ -36,9 +36,9 @@ function addCard(tutorial, position, category) {
 
     //start adding each html element
     const colDiv = document.createElement('div');
-    colDiv.className = 'col col-12 col-md-6 col-lg-4 mb-4';
+    colDiv.className = 'col mb-4';
     const cardDiv = document.createElement('div');
-    cardDiv.className = 'card h-100 ms-0 rounded-4 mb-3';
+    cardDiv.className = 'card h-100 ms-0 rounded-4 border bg-light mb-3';
     // anchor tag for a clickable hyperlink applies to the whole card area
     const anchor = document.createElement('a');
     anchor.href = `project-details.html?id=${tutorial.id}`;
@@ -48,7 +48,7 @@ function addCard(tutorial, position, category) {
     const curatedProjectImage = document.createElement('img');
     curatedProjectImage.id = "curatedCardImage-" + position;
     //TODO: to change to actual image source
-    curatedProjectImage.src = `https://placehold.co/400x300/23374D/FFFFFF?text=${tutorial.category.name}`; 
+    curatedProjectImage.src = `https://placehold.co/400x300/23374D/FFFFFF?text=${tutorial.category.name}`;
     curatedProjectImage.className = 'card-img-top w-100 -100 rounded-top-3';
     curatedProjectImage.alt = tutorial.title;
 
@@ -207,11 +207,32 @@ function updateCuratedCollections(category) {
 
 }
 
-// fetch project data when the page and backend tutorials are ready
+// fetch project data when the page is ready; use cached tutorials if available
 document.addEventListener('DOMContentLoaded', function () {
-    ensureTutorialsLoaded().then(function () {
+    const curatedGrid = document.getElementById('curatedProjectCardGroup');
+    if (!curatedGrid) {
+        // Nothing to render on this page
+        return;
+    }
+
+    // if tutorials are already loaded, render immediately
+    // otherwise, wait for tutorials to load - show loading spinner
+    if (voltaraTutorials.length > 0) {
+        curatedGrid.innerHTML = '';
         fetchProjectData();
-    });
+    } else {
+        curatedGrid.innerHTML = '<div class="text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>';
+
+        ensureTutorialsLoaded().then(function () {
+            if (!voltaraTutorials.length) {
+                curatedGrid.innerHTML = '<div class="text-center py-5">No curated tutorials available.</div>';
+                return;
+            }
+
+            curatedGrid.innerHTML = '';
+            fetchProjectData();
+        });
+    }
 });
 
 /* ========================================================================== */

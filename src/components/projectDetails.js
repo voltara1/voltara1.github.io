@@ -301,11 +301,31 @@ function renderCreatorProjects(project) {
 
 /**
  * Start everything when the page finishes loading
- * DOMContentLoaded means "the HTML is ready"
- * but we also wait for tutorials-loader.js to load backend tutorials.
+ * DOMContentLoaded means "the HTML is ready".
  */
 document.addEventListener('DOMContentLoaded', function () {
-    ensureTutorialsLoaded().then(function () {
+    var header = document.getElementById('project-header');
+    if (!header) {
+        // Nothing to render on this page
+        return;
+    }
+
+    // if tutorials are already loaded, render immediately
+    // otherwise, wait for tutorials to load - show loading spinner
+    if (voltaraTutorials.length > 0) {
+        header.innerHTML = '';
         loadProjectDetails();
-    });
+    } else {
+        header.innerHTML = '<div class="text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>';
+
+        ensureTutorialsLoaded().then(function () {
+            if (!voltaraTutorials.length) {
+                header.innerHTML = '<div class="text-center py-5">Tutorial not found.</div>';
+                return;
+            }
+
+            header.innerHTML = '';
+            loadProjectDetails();
+        });
+    }
 });
