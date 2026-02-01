@@ -53,7 +53,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const updateAuthButton = () => {
     const token = localStorage.getItem('authToken');
     const loginButton = document.querySelector('.navbar-nav.nav-pills .btn-primary') || 
-                       document.querySelector('.navbar-nav.nav-pills .btn-success');
+                       document.querySelector('.navbar-nav.nav-pills .btn-success') ||
+                       document.getElementById('btnUserAuth') ;
     
     if (token && loginButton) {
       // User is logged in - show user name
@@ -158,6 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
           },
           body: JSON.stringify(requestBody)
         });
+     /*    console.log(await resp.json()); */
 
         // Check content type before parsing
         const contentType = resp.headers.get('content-type');
@@ -169,7 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const textResponse = await resp.text();
           answer = { message: textResponse || `Server returned ${resp.status} ${resp.statusText}` };
         }
-
+  
         if (!resp.ok) {
           // ---------------------------------------------------------
           // Server responded with an error (400‑500)
