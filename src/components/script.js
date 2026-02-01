@@ -52,21 +52,24 @@ function showToast({ bgColor, msg }) {
  * @returns {string} HTML for the card
  */
 function renderProjectCard(project) {
-  const imageSrc = project.imageMain || `https://placehold.co/400x300/23374D/FFFFFF?text=${encodeURIComponent(project.category.name)}`;
+  const placeholderSrc = `https://placehold.co/400x300/23374D/FFFFFF?text=${encodeURIComponent(project.category.name)}`;
+  const uploadsBasePath = 'http://127.0.0.1:8890/api/v1/uploads/';
+  const imageFileName = project.imageMain || project.image_main;
+  const imageSrc = imageFileName ? (uploadsBasePath + encodeURIComponent(imageFileName)) : placeholderSrc;
 
   return `
         <div class="col">
-            <div class="card ms-0 rounded-4 border bg-light">
+            <div class="card h-100 ms-0 rounded-4 border bg-light tutorial-card">
                 <a href="project-details.html?id=${project.id}" class="text-decoration-none">
                     <img src="${imageSrc}" 
-                         class="card-img-top rounded-top-3" 
+                         class="card-img-top rounded-top-3 tutorial-card-img" 
                          alt="${project.title}"
-                         onerror="this.src='https://placehold.co/400x300/23374D/FFFFFF?text=${encodeURIComponent(project.category.name)}'" />
-                    <div class="card-body">
-                        <h5 class="card-title text-secondary fw-bolder">
+                         onerror="this.onerror=null;this.src='${placeholderSrc}'" />
+                    <div class="card-body tutorial-card-body">
+                        <h5 class="card-title text-secondary fw-bolder tutorial-card-title">
                             ${project.title}
                         </h5>
-                        <p class="card-text text-dark small">
+                        <p class="card-text text-dark small tutorial-card-desc">
                             ${project.description}
                         </p>
                     </div>

@@ -252,7 +252,7 @@
   <!-- =========================== -->
   <!-- Displays project cards with pagination - Content is dynamically loaded via JavaScript -->
   <section class="featured-section">
-    <div class="container">
+    <div class="container-fluid px-4">
       <h2 class="featured-title">Featured Projects</h2>
 
       <!-- ! Search Function: Add this code to projects section to display search results -->
@@ -262,7 +262,7 @@
       <!-- Project cards container - Populated dynamically by pagination.js -->
       <!-- Bootstrap responsive grid: 1 column on mobile, 2 on small, 3 on medium+ screens -->
       <div id="featured-projects-grid"
-        class="search-projects-grid container-fluid my-2 row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 g-4 justify-item-evenly px-3">
+        class="search-projects-grid my-2 row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 g-4 justify-item-evenly">
         <!-- Project cards will be dynamically inserted here by JavaScript -->
       </div>
 
@@ -277,11 +277,15 @@
 
   <!-- TODO: Browse by Curated Collections section -->
   <!-- Start of Curated Collections section -->
-  <section>
+  <section class="curated-section">
     <!-- Container hosting card group for Curated Collections -->
     <div id="curated-projects" class="container-fluid mt-2 mb-4 px-4">
-      <div class="fs-2 text-black text-start fw-semibold pt-4 pb-1">
-        Curated Collections
+      <div class="row">
+        <div class="col">
+          <div class="fs-2 text-black text-start fw-semibold pt-4 pb-1">
+            Curated Collections
+          </div>
+        </div>
       </div>
       <!-- curatedProjectCardGroup is the parent container ID that is used as the reference starting point for DOM manipulation in addCard() function in script.js -->
       <div id="curatedProjectCardGroup"
@@ -297,9 +301,9 @@
 
   <!-- TODO: Browse by About Us section -->
   <!-- Start of About Us section -->
-  <section class="border-top border-bottom py-4">
+  <section class="border-top border-bottom py-4 curated-section">
     <div class="container-fluid px-4">
-      <div class="row align-items-start justify-content-center">
+      <div class="row align-items-start">
         <div class="col-12 col-md-8 p-2">
           <h2>About Us</h2>
           <h5>
@@ -320,7 +324,7 @@
   <!-- End of About Us section -->
 
   <!-- Start of Newletter and Social Media section -->
-  <section class="py-4">
+  <section class="py-4 curated-section">
     <div class="container-fluid px-4">
       <div class="row">
       <!-- Newsletter section  -->
@@ -377,8 +381,8 @@
 
 
   <!-- Updated Footer section -->
-  <footer class="bg-dark text-white-50 border-top">
-    <div class="container-fluid px-4 d-flex flex-column-reverse flex-md-row justify-content-between align-items-center p-3">
+  <footer class="bg-dark text-white-50 border-top curated-section">
+    <div class="container-fluid px-4 py-3 d-flex flex-column-reverse flex-md-row justify-content-between align-items-center">
       <p class="col-md-4 mb-0">© 2025 Voltara.</p>
       <a href="/"
         class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none"

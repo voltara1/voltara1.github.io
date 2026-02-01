@@ -38,28 +38,39 @@ function addCard(tutorial, position, category) {
     const colDiv = document.createElement('div');
     colDiv.className = 'col mb-4';
     const cardDiv = document.createElement('div');
-    cardDiv.className = 'card h-100 ms-0 rounded-4 border bg-light mb-3';
+    cardDiv.className = 'card h-100 ms-0 rounded-4 border bg-light mb-3 tutorial-card';
     // anchor tag for a clickable hyperlink applies to the whole card area
     const anchor = document.createElement('a');
     anchor.href = `project-details.html?id=${tutorial.id}`;
     anchor.className = 'text-decoration-none';
 
-    // add an image from source data array locally named 'item'  
+    // add an image using backend file name as primary source with placeholder fallback
     const curatedProjectImage = document.createElement('img');
     curatedProjectImage.id = "curatedCardImage-" + position;
-    //TODO: to change to actual image source
-    curatedProjectImage.src = `https://placehold.co/400x300/23374D/FFFFFF?text=${tutorial.category.name}`;
-    curatedProjectImage.className = 'card-img-top w-100 -100 rounded-top-3';
+
+    const placeholderSrc = `https://placehold.co/400x300/23374D/FFFFFF?text=${encodeURIComponent(tutorial.category.name)}`;
+    const uploadsBasePath = 'http://127.0.0.1:8890/api/v1/uploads/';
+    const imageFileName = tutorial.imageMain || tutorial.image_main;
+    const primarySrc = imageFileName ? (uploadsBasePath + encodeURIComponent(imageFileName)) : placeholderSrc;
+
+    curatedProjectImage.src = primarySrc;
+    curatedProjectImage.className = 'card-img-top rounded-top-3';
     curatedProjectImage.alt = tutorial.title;
+    curatedProjectImage.style.width = '100%';
+    curatedProjectImage.style.height = '300px';
+    curatedProjectImage.onerror = function () {
+        this.onerror = null;
+        this.src = placeholderSrc;
+    };
 
     const curatedProjectTitle = document.createElement('h5');
     curatedProjectTitle.id = "curatedCardTitle-" + position;
-    curatedProjectTitle.className = 'card-title text-secondary fw-bolder px-3 pt-3';
+    curatedProjectTitle.className = 'card-title text-secondary fw-bolder px-3 pt-3 tutorial-card-title';
     curatedProjectTitle.innerText = tutorial.title; //get title from 'title' data field
 
     const curatedProjectDesc = document.createElement('p');
     curatedProjectDesc.id = "curatedCardDesc-" + position;
-    curatedProjectDesc.className = 'card-text text-dark fw-light small px-3  pb-2';
+    curatedProjectDesc.className = 'card-text text-dark fw-light small px-3  pb-2 tutorial-card-desc';
     curatedProjectDesc.innerText = tutorial.description; //get description from 'description' data field
 
     const curatedLikesLogo = document.createElement('span');

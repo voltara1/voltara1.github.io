@@ -95,13 +95,17 @@ function renderProjectHeader(project) {
  * Display the main project image
  */
 function renderMainImage(project) {
-    const imageSrc = project.imageMain || `https://placehold.co/1200x400/FF6B35/FFFFFF?text=${encodeURIComponent(project.title)}`;
+    const placeholderSrc = `https://placehold.co/1200x400/FF6B35/FFFFFF?text=${encodeURIComponent(project.title)}`;
+    const uploadsBasePath = 'http://127.0.0.1:8890/api/v1/uploads/';
+    const imageFileName = project.imageMain || project.image_main;
+    const imageSrc = imageFileName ? (uploadsBasePath + encodeURIComponent(imageFileName)) : placeholderSrc;
 
     const imageHTML = `
         <img src="${imageSrc}" 
              class="img-fluid rounded" 
              alt="${project.title}"
-             style="width: 100%; height: 400px; object-fit: cover;">
+             style="width: 100%; height: 400px; object-fit: cover;"
+             onerror="this.onerror=null;this.src='${placeholderSrc}'">
     `;
     
     // Put it on the page

@@ -229,6 +229,15 @@ body {
   background-color: var(--primary-color);
 }
 
+.curated-section {
+  padding: 0 2rem;
+}
+
+.tutorial-card-img {
+  width: 100%;
+  height: 300px;
+}
+
 .featured-title {
   font-size: 1.75rem;
   font-weight: 700;
@@ -348,6 +357,31 @@ body {
   background-color: var(--off-white);
   border-color: var(--light-gray);
   cursor: not-allowed;
+}
+
+.tutorial-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.tutorial-card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.tutorial-card-title {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.tutorial-card-desc {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 /* ===== FILTER SECTION (Project Showcase Page) ===== */
@@ -527,7 +561,8 @@ body {
     padding: 2rem 1rem;
   }
 
-  .featured-section {
+  .featured-section,
+  .curated-section {
     padding: 2rem 1rem;
   }
 
