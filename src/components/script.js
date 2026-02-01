@@ -53,8 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const updateAuthButton = () => {
     const token = localStorage.getItem('authToken');
     const loginButton = document.querySelector('.navbar-nav.nav-pills .btn-primary') || 
-                       document.querySelector('.navbar-nav.nav-pills .btn-success') ||
-                       document.getElementById('btnUserAuth') ;
+                       document.querySelector('.navbar-nav.nav-pills .btn-success');
     
     if (token && loginButton) {
       // User is logged in - show user name
@@ -65,6 +64,14 @@ document.addEventListener('DOMContentLoaded', () => {
       loginButton.onclick = function() {
         window.location.href = 'userpage.html';
       };
+
+      // inject icon when the user is logged in
+      const userIcon = document.createElement("i");
+      userIcon.classList.add("pe-2");
+      userIcon.classList.add("fas");
+      userIcon.classList.add("fa-user");
+      loginButton.prepend(userIcon);
+
     } else if (loginButton) {
       // User is not logged in - show login button
       loginButton.textContent = 'Login';
