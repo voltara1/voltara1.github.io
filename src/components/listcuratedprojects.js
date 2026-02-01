@@ -73,16 +73,17 @@ function addCard(tutorial, position, category) {
     curatedProjectDesc.className = 'card-text text-dark fw-light small px-3  pb-2 tutorial-card-desc';
     curatedProjectDesc.innerText = tutorial.description; //get description from 'description' data field
 
-    const curatedLikesLogo = document.createElement('span');
-    curatedLikesLogo.className = 'fa-slab fa-regular fa-heart text-secondary fw-light ps-3 pb-2';
+    // const curatedLikesLogo = document.createElement('span');
+    // curatedLikesLogo.className = 'fa-slab fa-regular fa-heart text-secondary fw-light ps-3 pb-2';
 
-    const curatedLikesCount = document.createElement('span');
-    curatedLikesCount.id = "curatedCardLikes-" + position;
-    curatedLikesCount.className = 'card-title text-secondary fw-normal ps-1 pb-2';
-    curatedLikesCount.innerText = tutorial.likes; //get rating from 'likes' data field
+    // const curatedLikesCount = document.createElement('span');
+    // curatedLikesCount.id = "curatedCardLikes-" + position;
+    // curatedLikesCount.className = 'card-title text-secondary fw-normal ps-1 pb-2';
+    // curatedLikesCount.innerText = tutorial.likes; //get rating from 'likes' data field
 
     // append all elements to the anchor tag
-    anchor.append(curatedProjectImage, curatedProjectTitle, curatedLikesLogo, curatedLikesCount, curatedProjectDesc);
+   // anchor.append(curatedProjectImage, curatedProjectTitle, curatedLikesLogo, curatedLikesCount, curatedProjectDesc);
+    anchor.append(curatedProjectImage, curatedProjectTitle, curatedProjectDesc);
     cardDiv.append(anchor); // append the anchor tag to the card div
     colDiv.append(cardDiv); // append the card div to the column div
     cardGroup.append(colDiv); // append the column div to the card group
@@ -113,26 +114,26 @@ function updateCuratedCollections(category) {
     for (let i = 0; i < projectData.length; i++) {
         const tutorial = projectData[i];
 
-        //TODO: this is a temporary variable assignment, to be replaced with actual assignment once our database is ready.
+        //DONE: this is a temporary variable assignment, to be replaced with actual assignment once our database is ready.
 
         proficiencyLevel = tutorial.proficiency;
         curated = tutorial.curated;
-        likes = tutorial.likes;
+       // likes = tutorial.likes;
 
-        if (selectedCategory === tutorial.category.name && curated) {
-            switch (proficiencyLevel) {
-                case "BEGINNER":
-                    curatedBEGINNER.push([i, likes]);
-                    break;
-                case "INTERMEDIATE":
-                    curatedINTERMEDIATE.push([i, likes]);
-                    break;
-                case "ADVANCE":
-                    curatedADVANCE.push([i, likes]);
+        // if (selectedCategory === tutorial.category.name && curated) {
+        //     switch (proficiencyLevel) {
+        //         case "BEGINNER":
+        //             curatedBEGINNER.push([i, likes]);
+        //             break;
+        //         case "INTERMEDIATE":
+        //             curatedINTERMEDIATE.push([i, likes]);
+        //             break;
+        //         case "ADVANCE":
+        //             curatedADVANCE.push([i, likes]);
 
-                    break;
-            }
-        }
+        //             break;
+        //     }
+        // }
 
         //if "ALL" is selected save the tutorial index only to curatedALL[] array
         if (selectedCategory === "ALL" && curated) {
@@ -141,9 +142,9 @@ function updateCuratedCollections(category) {
     }
 
     //sort all 3 arrays based on number of likes (rating), descending order
-    curatedBEGINNER.sort((a, b) => b[1] - a[1]);
-    curatedINTERMEDIATE.sort((a, b) => b[1] - a[1]);
-    curatedADVANCE.sort((a, b) => b[1] - a[1]);
+    // curatedBEGINNER.sort((a, b) => b[1] - a[1]);
+    // curatedINTERMEDIATE.sort((a, b) => b[1] - a[1]);
+    // curatedADVANCE.sort((a, b) => b[1] - a[1]);
 
     // target the parent container as the reference starting point for DOM manipulation
     const cardGroup = document.getElementById('curatedProjectCardGroup');

@@ -371,16 +371,14 @@ body {
 }
 
 .tutorial-card-title {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
+  line-height: 1.3;
+  max-height: 2.6em;
   overflow: hidden;
 }
 
 .tutorial-card-desc {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
+  line-height: 1.4;
+  max-height: 4.2em;
   overflow: hidden;
 }
 
