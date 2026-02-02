@@ -3,102 +3,6 @@
  * Handles user dashboard functionality, project management, and UI interactions
  */
 
-// Define API configuration at the top of the file
-const API_CONFIG = {
-    BASE_URL: getApiBaseUrl(),
-    TUTORIAL_API: '/api/v1/tutorial',
-    USER_API: '/api/v1/user/update',
-    CATEGORY_API: '/api/v1/category'
-};
-
-// Store categories globally once loaded
-let categories = [];
-
-/**
- * Determines the correct API base URL based on current origin
- * @returns {string} The correct base URL for API requests
- */
-function getApiBaseUrl() {
-    // Check if we're running in development mode (common port 5500 for live server)
-    const isDevelopment = window.location.port === '5500';
-    
-    // In development, use proxy URL if available
-    if (isDevelopment && window.location.hostname === '127.0.0.1') {
-        // Return the backend URL directly for development
-        return 'http://localhost:8890';
-    } else {
-        // For production, use the same origin as the frontend
-        return `${window.location.protocol}//${window.location.host}`;
-    }
-}
-
-/**
- * Checks if a URL is cross-origin compared to the current page
- * @param {string} url - The URL to check
- * @returns {boolean} True if the URL is cross-origin
- */
-function isCrossOrigin(url) {
-    const parsedUrl = new URL(url, window.location.origin);
-    return parsedUrl.origin !== window.location.origin;
-}
-
-/**
- * Shows a detailed CORS error message to help users fix the issue
- * @param {string} apiUrl - The URL that caused the CORS error
- */
-function showCorsErrorMessage(apiUrl) {
-    const corsMessage = `
-        <div style="text-align: left; line-height: 1.5">
-            <h4 style="color: #e74c3c; margin-top: 0;">CORS Error Detected</h4>
-            <p>
-                Your application is trying to access the API at:
-                <code style="background: #f8f9fa; padding: 2px 5px; border-radius: 3px;">${apiUrl}</code>
-            </p>
-            <p>
-                But your browser is blocking this request because it's from a different origin.
-            </p>
-            <h5 style="color: #3498db;">How to fix this:</h5>
-            <ol style="padding-left: 20px;">
-                <li><strong>For Development:</strong> Update your backend's CORS configuration to allow requests from <code>http://127.0.0.1:5500</code></li>
-                <li>Add these headers to your backend response:
-                    <pre style="background: #f8f9fa; padding: 10px; border-radius: 5px; overflow-x: auto;">
-Access-Control-Allow-Origin: http://127.0.0.1:5500
-Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
-Access-Control-Allow-Headers: Authorization, Content-Type
-Access-Control-Allow-Credentials: true</pre>
-                </li>
-                <li><strong>Alternative Development Fix:</strong> Add a proxy to your development server (e.g., in vite.config.js or webpack.config.js)</li>
-                <li><strong>For Production:</strong> Ensure your backend allows requests from your production domain</li>
-            </ol>
-            <p><strong>Important:</strong> Never use wildcard (*) in production for Access-Control-Allow-Origin</p>
-        </div>
-    `;
-    
-    const notification = document.getElementById('notification');
-    if (notification) {
-        notification.innerHTML = corsMessage;
-        notification.className = 'notification error show';
-        
-        // Add a close button
-        const closeButton = document.createElement('button');
-        closeButton.className = 'btn-close float-end';
-        closeButton.innerHTML = '&times;';
-        closeButton.style.position = 'absolute';
-        closeButton.style.top = '10px';
-        closeButton.style.right = '10px';
-        closeButton.onclick = () => {
-            notification.classList.remove('show');
-        };
-        
-        notification.appendChild(closeButton);
-        
-        // Set timer to hide after 10 seconds
-        setTimeout(() => {
-            notification.classList.remove('show');
-        }, 10000);
-    }
-}
-
 /**
  * Initializes the user page when DOM is loaded
  */
@@ -121,160 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Setup profile modal event handlers
     setupProfileModalHandlers();
-    
-    // Load categories for the dropdown
-    loadCategories();
 });
-
-/**
- * Load categories from the database
- */
-function loadCategories() {
-    showNotification('Loading categories...', 'info');
-    
-    // Check if this is a cross-origin request
-    const apiUrl = API_CONFIG.BASE_URL + API_CONFIG.CATEGORY_API;
-    if (isCrossOrigin(apiUrl)) {
-        // Show a specific CORS error message
-        showCorsErrorMessage(apiUrl);
-        return;
-    }
-    
-    fetch(apiUrl, {
-        method: 'GET',
-        headers: getAuthHeaders()
-    })
-    .then(response => {
-        if (!response.ok) {
-            if (response.status === 0) {
-                // This typically indicates a CORS issue
-                showCorsErrorMessage(apiUrl);
-                throw new Error('CORS error: Request failed due to cross-origin restrictions');
-            }
-            throw new Error('Failed to load categories');
-        }
-        return response.json();
-    })
-    .then(categoryList => {
-        categories = categoryList;
-        setupCategoryDropdown();
-        showNotification('Categories loaded successfully', 'success');
-    })
-    .catch(error => {
-        console.error('Error loading categories:', error);
-        
-        // Check if this was a CORS error
-        if (error.message.includes('CORS') || error.message.includes('Failed to fetch')) {
-            showCorsErrorMessage(apiUrl);
-        } else {
-            showNotification('Failed to load categories: ' + error.message, 'error');
-        }
-        
-        // Fallback: add some default categories
-        categories = [
-            {id: 1, name: 'Arduino', description: 'All tutorials related to Arduino microcontrollers'},
-            {id: 2, name: 'ESP32', description: 'All tutorials related to ESP32 microcontrollers'},
-            {id: 3, name: 'IoT', description: 'All tutorials related to IoT'},
-            {id: 4, name: 'PCB Design', description: 'All tutorials related to PCB Design'},
-            {id: 5, name: 'Raspberry Pi', description: 'All tutorials related to Raspberry Pi microcontrollers'},
-            {id: 6, name: 'Robotics', description: 'All tutorials related to robotics'},
-            {id: 7, name: 'Sensors', description: 'All tutorials related to sensors'},
-            {id: 8, name: 'STM32', description: 'All tutorials related to STM32 microcontrollers'}
-        ];
-        setupCategoryDropdown();
-    });
-}
-
-// Rest of your userpage.js code remains the same...
-// (All other functions stay unchanged)
-
-/**
- * Checks if the user is currently authenticated
- * @returns {boolean} True if user is authenticated and token is valid
- */
-function isAuthenticated() {
-    const token = localStorage.getItem('authToken');
-    
-    // No token means not authenticated
-    if (!token) return false;
-    
-    try {
-        // Decode JWT token to check expiration
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        const expirationTime = payload.exp;
-        const currentTime = Math.floor(Date.now() / 1000);
-        
-        // Return true if token hasn't expired
-        return expirationTime > currentTime;
-    } catch (e) {
-        console.error('Error decoding token:', e);
-        return false;
-    }
-}
-
-/**
- * Sets up the profile modal functionality
- */
-function setupProfileModal() {
-    const profileModal = document.getElementById('profileModal');
-    
-    // Close modal when clicking outside
-    window.addEventListener('click', function(event) {
-        if (profileModal && event.target === profileModal) {
-            profileModal.style.display = 'none';
-        }
-    });
-}
-
-/**
- * Checks if the user is currently authenticated
- * @returns {boolean} True if user is authenticated and token is valid
- */
-function isAuthenticated() {
-    const token = localStorage.getItem('authToken');
-    
-    // No token means not authenticated
-    if (!token) return false;
-    
-    try {
-        // Decode JWT token to check expiration
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        const expirationTime = payload.exp;
-        const currentTime = Math.floor(Date.now() / 1000);
-        
-        // Return true if token hasn't expired
-        return expirationTime > currentTime;
-    } catch (e) {
-        console.error('Error decoding token:', e);
-        return false;
-    }
-}
-
-/**
- * Gets the user ID from the authentication token
- * @returns {string|null} User ID if available, null otherwise
- */
-function getUserIdFromToken() {
-    const token = localStorage.getItem('authToken');
-    if (!token) return null;
-    
-    try {
-        // Access the payload (second part of the JWT)
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        
-        // Spring Security usually stores the user identifier in 'sub'
-        const id = payload.sub; 
-
-        if (id) {
-            localStorage.setItem('userId', id); // Sync numeric ID to storage for easy access
-            return id;
-        }
-        return null;
-    } catch (e) {
-        console.error('Error decoding token:', e);
-        return null;
-    }
-}
 
 /**
  * Updates user information in the UI
@@ -304,78 +55,8 @@ function updateUserInfo(userName, userEmail) {
     const emailInput = document.getElementById('profileEmail');
     
     if (usernameInput) usernameInput.value = userName;
-    if (emailInput) emailInput.value = userEmail;
+    if (emailInput) emailInput.value = userEmail || '';
 }
-
-/**
- * Gets authentication headers
- * @returns {Object} Headers object with Authorization token
- */
-function getAuthHeaders() {
-    const token = localStorage.getItem('authToken');
-    return {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-    };
-}
-
-/**
- * Formats a date string for display
- * @param {string} dateString - Date string to format
- * @returns {string} Formatted date string
- */
-function formatDate(dateString) {
-    if (!dateString) return 'N/A';
-    
-    const options = { year: 'numeric', month: 'short', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString(undefined, options);
-}
-
-/**
- * Shows a notification message to the user
- * @param {string} message - Message to display
- * @param {string} type - Type of notification (success, error, info, etc.)
- */
-function showNotification(message, type) {
-    const notification = document.getElementById('notification');
-    if (notification) {
-        notification.textContent = message;
-        notification.className = `notification ${type} show`;
-        
-        // Automatically hide notification after 3 seconds for success/info, 5 seconds for error
-        const duration = type === 'error' ? 5000 : 3000;
-        setTimeout(() => {
-            notification.classList.remove('show');
-        }, duration);
-    }
-}
-
-/**
- * Initializes the user page when DOM is loaded
- */
-document.addEventListener('DOMContentLoaded', function() {
-    // Verify authentication before proceeding
-    if (!isAuthenticated()) {
-        window.location.href = 'index.html';
-        return;
-    }
-    
-    // Get user information from localStorage
-    const userName = localStorage.getItem('userName') || 'User';
-    const userEmail = localStorage.getItem('userEmail') || '';
-    
-    // Update UI with user information
-    updateUserInfo(userName, userEmail);
-    
-    // Initialize all page functionality
-    initializePage();
-    
-    // Setup profile modal event handlers
-    setupProfileModalHandlers();
-    
-    // Load categories for the dropdown
-    loadCategories();
-});
 
 /**
  * Initializes all page functionality and event listeners
@@ -394,9 +75,6 @@ function initializePage() {
     const backToUpload = document.getElementById('backToUpload');
     const backToProjects = document.getElementById('backToProjects');
     const logoutBtn = document.getElementById('logoutBtn');
-    
-    // Add category dropdown to the UI
-    setupCategoryDropdown();
     
     // Setup form submission handler
     if (projectForm) {
@@ -468,70 +146,6 @@ function initializePage() {
 }
 
 /**
- * Setup category dropdown for the project form
- */
-function setupCategoryDropdown() {
-    const platformSelect = document.getElementById('projectPlatform');
-    if (!platformSelect) return;
-    
-    // Clear existing options
-    platformSelect.innerHTML = '<option value="">Select a category</option>';
-    
-    // Add categories to the dropdown
-    categories.forEach(category => {
-        const option = document.createElement('option');
-        option.value = category.id;
-        option.textContent = category.name;
-        platformSelect.appendChild(option);
-    });
-    
-    // Set first category as default if none selected
-    if (platformSelect.value === "" && categories.length > 0) {
-        platformSelect.value = categories[0].id;
-    }
-}
-
-/**
- * Load categories from the database
- */
-function loadCategories() {
-    showNotification('Loading categories...', 'info');
-    
-    // Use the correct API endpoint for categories
-    fetch(API_CONFIG.BASE_URL + API_CONFIG.CATEGORY_API, {
-        method: 'GET',
-        headers: getAuthHeaders()
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Failed to load categories');
-        }
-        return response.json();
-    })
-    .then(categoryList => {
-        categories = categoryList;
-        setupCategoryDropdown();
-        showNotification('Categories loaded successfully', 'success');
-    })
-    .catch(error => {
-        console.error('Error loading categories:', error);
-        showNotification('Failed to load categories: ' + error.message, 'error');
-        // Fallback: add some default categories
-        categories = [
-            {id: 1, name: 'Arduino', description: 'All tutorials related to Arduino microcontrollers'},
-            {id: 2, name: 'ESP32', description: 'All tutorials related to ESP32 microcontrollers'},
-            {id: 3, name: 'IoT', description: 'All tutorials related to IoT'},
-            {id: 4, name: 'PCB Design', description: 'All tutorials related to PCB Design'},
-            {id: 5, name: 'Raspberry Pi', description: 'All tutorials related to Raspberry Pi microcontrollers'},
-            {id: 6, name: 'Robotics', description: 'All tutorials related to robotics'},
-            {id: 7, name: 'Sensors', description: 'All tutorials related to sensors'},
-            {id: 8, name: 'STM32', description: 'All tutorials related to STM32 microcontrollers'}
-        ];
-        setupCategoryDropdown();
-    });
-}
-
-/**
  * Setup profile modal event handlers
  */
 function setupProfileModalHandlers() {
@@ -594,30 +208,28 @@ function setupProfileModalHandlers() {
             // Add password if provided
             if (newPassword) {
                 userData.password = newPassword;
-                userData.currentPassword = currentPassword;
             }
+            
+            // Create FormData for multipart request
+            const formData = new FormData();
+            formData.append('data', JSON.stringify(userData));
             
             // Show loading notification
             showNotification('Updating profile...', 'info');
             
-            // Update user profile via backend API using JSON
-            fetch(API_CONFIG.BASE_URL + API_CONFIG.USER_API, {
+            // Update user profile via backend API
+            fetch('http://localhost:8890/api/v1/user/update', {
                 method: 'PUT',
                 headers: {
-                    'Authorization': getAuthHeaders().Authorization,
-                    'Content-Type': 'application/json'
+                    'Authorization': getAuthHeaders().Authorization
+                    // Don't set Content-Type, let browser set it with boundary for FormData
                 },
-                body: JSON.stringify(userData)
+                body: formData
             })
             .then(response => {
                 if (!response.ok) {
-                    return response.text().then(text => {
-                        try {
-                            const errorData = JSON.parse(text);
-                            throw new Error(errorData.message || 'Failed to update profile');
-                        } catch (e) {
-                            throw new Error(text || 'Failed to update profile');
-                        }
+                    return response.json().then(errorData => {
+                        throw new Error(errorData.message || 'Failed to update profile');
                     });
                 }
                 return response.json();
@@ -642,26 +254,23 @@ function setupProfileModalHandlers() {
                     localStorage.setItem('userEmail', email);
                 }
                 
+                // Update token if provided in response
+                if (data.token) {
+                    localStorage.setItem('authToken', data.token);
+                }
+                
                 // Clear password fields
                 document.getElementById('currentPassword').value = '';
                 document.getElementById('newPassword').value = '';
                 document.getElementById('confirmPassword').value = '';
                 
-                // Show specific success message for password update
+                // Show success message with specific details
+                let successMessage = 'Profile updated successfully!';
                 if (newPassword) {
-                    showNotification('Password updated successfully! You will be logged out for security.', 'success');
-                    
-                    // Clear authentication tokens and redirect to login
-                    localStorage.removeItem('authToken');
-                    localStorage.removeItem('refreshToken');
-                    localStorage.removeItem('userId');
-                    
-                    setTimeout(() => {
-                        window.location.href = 'index.html';
-                    }, 3000);
-                } else {
-                    showNotification('Profile updated successfully!', 'success');
+                    successMessage = 'Profile and password updated successfully!';
                 }
+                
+                showNotification(successMessage, 'success');
                 
                 // Close modal
                 if (profileModal) profileModal.style.display = 'none';
@@ -669,13 +278,20 @@ function setupProfileModalHandlers() {
             .catch(error => {
                 console.error('Error updating profile:', error);
                 let errorMessage = 'Failed to update profile';
-                if (error.message.includes('Invalid credentials')) {
-                    errorMessage = 'Current password is incorrect. Please try again.';
+                if (newPassword) {
+                    errorMessage = 'Failed to update profile and password';
                 }
                 showNotification(errorMessage + ': ' + error.message, 'error');
             });
         });
     }
+    
+    // Close modal when clicking outside
+    window.addEventListener('click', function(event) {
+        if (profileModal && event.target === profileModal) {
+            profileModal.style.display = 'none';
+        }
+    });
 }
 
 /**
@@ -716,7 +332,8 @@ function loadUserProjects() {
     showNotification('Loading projects...', 'info');
     
     // Fetch projects for the authenticated user
-    fetch(API_CONFIG.BASE_URL + API_CONFIG.TUTORIAL_API, {
+    // The backend will identify the user from the JWT token
+    fetch('http://localhost:8890/api/v1/tutorial', {
         method: 'GET',
         headers: getAuthHeaders()
     })
@@ -728,8 +345,16 @@ function loadUserProjects() {
     })
     .then(projects => {
         // Filter projects to show only those belonging to the current user
-        renderProjectsTable(projects);
-        setupProjectsPagination(projects);
+        // In a real implementation, the backend would do this filtering
+        const userId = getUserIdFromToken();
+        const userProjects = projects.filter(project => {
+            // This is a workaround since we don't have user ID in the project object
+            // In a real app, the backend would return only the user's projects
+            return true; // For now, show all projects
+        });
+        
+        renderProjectsTable(userProjects);
+        setupProjectsPagination(userProjects);
         showNotification('Projects loaded successfully', 'success');
     })
     .catch(error => {
@@ -749,15 +374,22 @@ function renderProjectsTable(projects) {
     let tableHTML = '';
     
     projects.forEach(project => {
-        // Determine category name from ID
-        const category = categories.find(c => c.id == project.category?.id);
-        const categoryName = category ? category.name : project.category_id;
+        // Determine platform display name
+        let platformName = '';
+        switch(project.platform) {
+            case 'stm32': platformName = 'STM32'; break;
+            case 'arduino': platformName = 'Arduino'; break;
+            case 'esp32': platformName = 'ESP32'; break;
+            case 'raspberry': platformName = 'Raspberry Pi'; break;
+            case 'nodemcu': platformName = 'NodeMCU'; break;
+            default: platformName = project.platform;
+        }
         
         // Create table row for each project
         tableHTML += `
             <tr>
                 <td>${project.title || project.name || 'Untitled'}</td>
-                <td>${categoryName}</td>
+                <td>${platformName}</td>
                 <td>${formatDate(project.createdAt || project.date)}</td>
                 <td>
                     <button class="action-btn view" title="View Details" onclick="showProjectDetails(${project.id})">
@@ -783,6 +415,7 @@ function setupProjectsPagination(projects) {
     if (!projectsPagination) return;
     
     // For simplicity, we'll show all projects on one page
+    // In a real implementation, this would handle pagination
     projectsPagination.innerHTML = '';
 }
 
@@ -795,7 +428,7 @@ function showProjectDetails(projectId) {
     showNotification('Loading project details...', 'info');
     
     // Fetch project details from backend
-    fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.TUTORIAL_API}/${projectId}`, {
+    fetch(`http://localhost:8890/api/v1/tutorial/${projectId}`, {
         method: 'GET',
         headers: getAuthHeaders()
     })
@@ -826,24 +459,25 @@ function displayProjectDetails(project) {
     const detailDescription = document.getElementById('detailDescription');
     const detailPlatform = document.getElementById('detailPlatform');
     const detailDate = document.getElementById('detailDate');
-    const detailProficiency = document.getElementById('detailProficiency');
     
     // Set project title and description
     if (detailTitle) detailTitle.textContent = project.title || 'Untitled Project';
     if (detailDescription) detailDescription.textContent = project.description || 'No description available';
     
-    // Determine category name from ID
-    const category = categories.find(c => c.id == project.category?.id);
-    const categoryName = category ? category.name : project.category_id;
-    
-    // Set category information
-    if (detailPlatform) {
-        detailPlatform.innerHTML = `<i class="fas fa-microchip"></i> Category: ${categoryName}`;
+    // Determine platform display name
+    let platformName = '';
+    switch(project.platform) {
+        case 'stm32': platformName = 'STM32'; break;
+        case 'arduino': platformName = 'Arduino'; break;
+        case 'esp32': platformName = 'ESP32'; break;
+        case 'raspberry': platformName = 'Raspberry Pi'; break;
+        case 'nodemcu': platformName = 'NodeMCU'; break;
+        default: platformName = project.platform;
     }
     
-    // Set proficiency level
-    if (detailProficiency) {
-        detailProficiency.innerHTML = `<i class="fas fa-graduation-cap"></i> Proficiency: ${project.proficiency}`;
+    // Set platform information
+    if (detailPlatform) {
+        detailPlatform.innerHTML = `<i class="fas fa-microchip"></i> Platform: ${platformName}`;
     }
     
     // Set creation date
@@ -931,106 +565,57 @@ function addProject() {
     const projectName = document.getElementById('projectName');
     const projectPlatform = document.getElementById('projectPlatform');
     const projectDescription = document.getElementById('projectDescription');
-    const projectContent = document.getElementById('projectContent');
-    const projectProficiency = document.getElementById('projectProficiency');
     const bomInput = document.getElementById('bomFiles');
     
     // Validate form elements exist
-    if (!projectName || !projectPlatform || !projectDescription || 
-        !projectContent || !projectProficiency || !bomInput) {
+    if (!projectName || !projectPlatform || !projectDescription || !bomInput) {
         showNotification('Form elements not found', 'error');
         return;
     }
     
     // Validate required fields
-    if (!projectName.value || !projectPlatform.value || !projectDescription.value || 
-        !projectContent.value || !projectProficiency.value || bomInput.files.length === 0) {
+    if (!projectName.value || !projectPlatform.value || !projectDescription.value || bomInput.files.length === 0) {
         showNotification('Please fill in all required fields and upload at least one BOM file', 'error');
         return;
     }
     
-    // Get current user ID from authentication context
-    const userId = getUserIdFromToken();
+    // Prepare form data for upload
+    const formData = new FormData();
     
-    if (!userId) {
-        showNotification('Authentication error. Please log in again.', 'error');
-        window.location.href = 'index.html';
-        return;
+    // Add tutorial data as JSON
+    const tutorialData = {
+        title: projectName.value,
+        description: projectDescription.value,
+        content: projectDescription.value, // Using description as content for now
+        platform: projectPlatform.value,
+        // Add other required fields as needed
+    };
+    
+    formData.append('data', JSON.stringify(tutorialData));
+    formData.append('bill_of_materials', bomInput.files[0]);
+    
+    // Add other files if present
+    const imageInput = document.getElementById('projectImages');
+    if (imageInput && imageInput.files.length > 0) {
+        formData.append('image_main', imageInput.files[0]);
     }
     
     // Show loading notification
     showNotification('Uploading project...', 'info');
     
-    // Prepare tutorial data in the correct format
-    const tutorialData = {
-        user: {
-            id: userId
-        },
-        category: {
-            id: parseInt(projectPlatform.value)
-        },
-        title: projectName.value,
-        description: projectDescription.value,
-        content: projectContent.value,
-        curated: false,
-        proficiency: projectProficiency.value
-    };
-    
-    // Create FormData and add tutorial data as JSON
-    const formData = new FormData();
-    formData.append('data', JSON.stringify(tutorialData));
-    
-    // Add BOM file (required)
-    formData.append('bill_of_materials', bomInput.files[0]);
-    
-    // Add other files if present (always include all fields even if empty)
-    const imageInput = document.getElementById('projectImages');
-    if (imageInput && imageInput.files.length > 0) {
-        formData.append('image_main', imageInput.files[0]);
-    } else {
-        // Add empty file for image_main to satisfy backend requirement
-        const emptyFile = new File([''], 'empty_image_main.txt', {type: 'text/plain'});
-        formData.append('image_main', emptyFile, 'empty_image_main.txt');
-    }
-    
-    const fileInput = document.getElementById('projectFiles');
-    if (fileInput && fileInput.files.length > 0) {
-        formData.append('image_schematic', fileInput.files[0]);
-    } else {
-        // Add empty file for image_schematic
-        const emptyFile = new File([''], 'empty_image_schematic.txt', {type: 'text/plain'});
-        formData.append('image_schematic', emptyFile, 'empty_image_schematic.txt');
-    }
-    
-    // Add empty file for image_layout
-    const emptyFileLayout = new File([''], 'empty_image_layout.txt', {type: 'text/plain'});
-    formData.append('image_layout', emptyFileLayout, 'empty_image_layout.txt');
-    
-    // Check if token exists
-    const token = localStorage.getItem('authToken');
-    if (!token) {
-        showNotification('Authentication token missing. Please log in again.', 'error');
-        window.location.href = 'index.html';
-        return;
-    }
-    
     // Send to backend
-    fetch(API_CONFIG.BASE_URL + API_CONFIG.TUTORIAL_API, {
+    fetch('http://localhost:8890/api/v1/tutorial', {
         method: 'POST',
         headers: {
-            'Authorization': 'Bearer ' + token
+            'Authorization': getAuthHeaders().Authorization
+            // Don't set Content-Type, let browser set it with boundary for FormData
         },
         body: formData
     })
     .then(response => {
         if (!response.ok) {
-            return response.text().then(text => {
-                try {
-                    const errorData = JSON.parse(text);
-                    throw new Error(errorData.message || 'Failed to upload project');
-                } catch (e) {
-                    throw new Error(text || 'Failed to upload project');
-                }
+            return response.json().then(errorData => {
+                throw new Error(errorData.message || 'Failed to upload project');
             });
         }
         return response.json();
@@ -1042,9 +627,6 @@ function addProject() {
         const projectForm = document.getElementById('projectForm');
         if (projectForm) projectForm.reset();
         clearFilePreviews();
-        
-        // Reset category dropdown
-        setupCategoryDropdown();
         
         // Show projects section and reload projects
         showProjectsSection();
@@ -1070,7 +652,7 @@ function deleteProject(projectId) {
     showNotification('Deleting project...', 'info');
     
     // Send delete request to backend
-    fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.TUTORIAL_API}/${projectId}`, {
+    fetch(`http://localhost:8890/api/v1/tutorial/${projectId}`, {
         method: 'DELETE',
         headers: getAuthHeaders()
     })
@@ -1198,4 +780,49 @@ function clearFilePreviews() {
     if (bomPreview) bomPreview.innerHTML = '';
     if (imagePreview) imagePreview.innerHTML = '';
     if (filePreview) filePreview.innerHTML = '';
+}
+
+/**
+ * Sets up the profile modal functionality
+ */
+function setupProfileModal() {
+    const profileModal = document.getElementById('profileModal');
+    
+    // Close modal when clicking outside
+    window.addEventListener('click', function(event) {
+        if (profileModal && event.target === profileModal) {
+            profileModal.style.display = 'none';
+        }
+    });
+}
+
+/**
+ * Formats a date string for display
+ * @param {string} dateString - Date string to format
+ * @returns {string} Formatted date string
+ */
+function formatDate(dateString) {
+    if (!dateString) return 'N/A';
+    
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+}
+
+/**
+ * Shows a notification message to the user
+ * @param {string} message - Message to display
+ * @param {string} type - Type of notification (success, error, info, etc.)
+ */
+function showNotification(message, type) {
+    const notification = document.getElementById('notification');
+    if (notification) {
+        notification.textContent = message;
+        notification.className = `notification ${type} show`;
+        
+        // Automatically hide notification after 3 seconds for success/info, 5 seconds for error
+        const duration = type === 'error' ? 5000 : 3000;
+        setTimeout(() => {
+            notification.classList.remove('show');
+        }, duration);
+    }
 }
