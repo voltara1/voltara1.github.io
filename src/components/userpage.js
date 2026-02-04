@@ -611,26 +611,6 @@ function addProject() {
     const projectDescription = document.getElementById('projectDescription');
     const bomInput = document.getElementById('bomFiles');
     
-    // Create the tutorial data object first (before validation)
-    const userId = localStorage.getItem('userId') || 'unknown';
-    
-    // Create tutorial data object
-    const tutorialData = {
-        title: projectName ? projectName.value : 'No title',
-        description: projectDescription ? projectDescription.value : 'No description',
-        content: projectDescription ? projectDescription.value : 'No content',
-        proficiency: "BEGINNER",
-        curated: false,
-        category_id: projectPlatform ? projectPlatform.value : 'no-category',
-        user_id: userId
-    };
-    
-    // DISPLAY THE JSON DATA THAT WILL BE SUBMITTED TO THE BACKEND
-    console.log('--------------------------------------------------');
-    console.log('JSON data that will be sent to the backend:');
-    console.log(JSON.stringify(tutorialData, null, 2));
-    console.log('--------------------------------------------------');
-    
     // Validate form elements exist
     if (!projectName || !projectPlatform || !projectDescription || !bomInput) {
         showNotification('Form elements not found', 'error');
@@ -644,10 +624,29 @@ function addProject() {
     }
     
     // Get user ID from localStorage
-    if (!userId || userId === 'unknown') {
+    const userId = localStorage.getItem('userId');
+    
+    if (!userId) {
         showNotification('Authentication error: User ID not found', 'error');
         return;
     }
+    
+    // Create the tutorial data object in the exact format required by the backend
+    const tutorialData = {
+        title: projectName.value,
+        description: projectDescription.value,
+        content: projectDescription.value,
+        proficiency: "BEGINNER",
+        curated: false,
+        category_id: projectPlatform.value,
+        user_id: userId
+    };
+    
+    // DISPLAY THE JSON DATA THAT WILL BE SUBMITTED TO THE BACKEND
+    console.log('--------------------------------------------------');
+    console.log('JSON data that will be sent to the backend:');
+    console.log(JSON.stringify(tutorialData, null, 2));
+    console.log('--------------------------------------------------');
     
     // Prepare form data for upload
     const formData = new FormData();
@@ -676,14 +675,25 @@ function addProject() {
         },
         body: formData
     })
-    .then(response => {
-        if (!response.ok) {
-            return response.json().then(errorData => {
-                throw new Error(errorData.message || 'Failed to upload project');
-            });
-        }
-        return response.json();
-    })
+    .then(async response => {
+    let result;
+    const contentType = response.headers.get("content-type");
+    
+    // Check if response has JSON content-type before parsing
+    if (contentType && contentType.includes("application/json")) {
+        result = await response.json();
+    } else {
+        // Handle cases where server returns something else (HTML, plain text, etc.)
+        const text = await response.text();
+        throw new Error(`Server responded with status ${response.status}. Response body: ${text}`);
+    }
+
+    if (!response.ok) {
+        throw new Error(result.message || 'Failed to upload project');
+    }
+
+    return result;
+})
     .then(data => {
         showNotification('Project uploaded successfully!', 'success');
         
