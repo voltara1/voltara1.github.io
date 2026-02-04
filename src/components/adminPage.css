@@ -1,0 +1,59 @@
+body.admin-body {
+  background-color: var(--off-white);
+}
+
+.admin-section {
+  min-height: calc(100vh - 140px);
+}
+
+.admin-sidebar {
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.admin-sidebar-header {
+  background-color: var(--secondary-color);
+  color: var(--text-color-light);
+}
+
+.admin-menu-toggle {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+}
+
+.admin-menu-item {
+  font-size: 0.9rem;
+  padding-left: 2rem;
+}
+
+.admin-main {
+  border-radius: 0.75rem;
+  min-height: 320px;
+}
+
+.admin-main-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--secondary-color);
+}
+
+.admin-placeholder ul {
+  padding-left: 1.25rem;
+}
+
+.admin-filter-panel {
+  border-radius: 0.5rem;
+}
+
+.admin-filter-groups {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+}
+
+@media (max-width: 768px) {
+  .admin-section {
+    min-height: auto;
+  }
+}

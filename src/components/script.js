@@ -1,211 +1,46 @@
-// submitForm() function is called from onsubmit event on the index.html newsletter section
-// the purpose is to validate the email input and show a toast message accordingly.
-function submitForm(event) {
-  event.preventDefault(); /* prevent the default form submission */
 
-  const emailInput = document.getElementById('txtEmail'); /* get the email input element */
-  const email = emailInput.value;
-
-  // validate the email input
-  // if the email input is empty, show a toast message and return
-  if (email === "") {
-    showToast({ bgColor: "danger", msg: "All inputs must not be empty." });
-    return;
-  }
-
-  // validate the email format using a regular expression
-  // if the email format is invalid, show a toast message and return
-  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-  if (!emailRegex.test(email)) {
-    showToast({ bgColor: "danger", msg: "Email is invalid. Please check." });
-    return;
-  }
-
-  // if the email format is valid, show a success toast message
-  showToast({ bgColor: "success", msg: "Subscription successful!" });
-  event.target.reset();/* reset the form after successful submission */
-}
-
-/**
- * function() to display a toast message with the given message and background color
- * @param {string} bgColor the background color (success/danger/info/...)
- * @param {string} msg the message to be displayed in the toast
- */
-function showToast({ bgColor, msg }) {
-  const toastElement = document.getElementById('msg-toast');
-  const toastBodyElement = document.getElementById('msg-toast-body');
-  toastBodyElement.textContent = msg;
-  toastElement.classList.remove("bg-success", "bg-danger");
-  toastElement.classList.add("bg-" + bgColor);
-
-  const toast = new bootstrap.Toast(toastElement, { delay: 10000 });
-  toast.show(); /* display the toast message for 10 secs */
-}
-
-// ========== PAGINATION CODE ==========
-
-/**
- * renderProjectCard - Creates HTML for one project card
- * This function takes a project object and returns HTML string
- * 
- * @param {Object} project - One project with title, description, image, etc.
- * @returns {string} HTML for the card
- */
-function renderProjectCard(project) {
-  const placeholderSrc = `https://placehold.co/400x300/23374D/FFFFFF?text=${encodeURIComponent(project.category.name)}`;
-  const uploadsBasePath = 'http://127.0.0.1:8890/api/v1/uploads/';
-  const imageFileName = project.imageMain || project.image_main;
-  const imageSrc = imageFileName ? (uploadsBasePath + encodeURIComponent(imageFileName)) : placeholderSrc;
-
-  return `
-        <div class="col">
-            <div class="card h-100 ms-0 rounded-4 border bg-light tutorial-card">
-                <a href="project-details.html?id=${project.id}" class="text-decoration-none">
-                    <img src="${imageSrc}" 
-                         class="card-img-top rounded-top-3 tutorial-card-img" 
-                         alt="${project.title}"
-                         onerror="this.onerror=null;this.src='${placeholderSrc}'" />
-                    <div class="card-body tutorial-card-body">
-                        <h5 class="card-title text-secondary fw-bolder tutorial-card-title">
-                            ${project.title}
-                        </h5>
-                        <p class="card-text text-dark small tutorial-card-desc">
-                            ${project.description}
-                        </p>
-                    </div>
-                </a>
-            </div>
-        </div>
-    `;
-}
-
-// ========== CATEGORY FILTERING CODE ==========
-
-/**
- * Filter projects by category
- * @param {string} category - The category to filter by (e.g., "Arduino", "ESP32", "ALL")
- */
-function filterProjectsByCategory(category) {
-   let filteredProjects;
-
-  // If "ALL" or no category, show all projects
-  if (!category || category === 'ALL') {
-    filteredProjects = voltaraTutorials;
-  } else {
-    // Filter projects that match the selected category
-    filteredProjects = voltaraTutorials.filter(project =>
-      project.category.name.toLowerCase() === category.toLowerCase()
-    );
-  }
-
-  // Create new pagination with filtered projects
-  const featuredProjectsPagination = new Pagination(
-    filteredProjects,                   // Use filtered projects instead of all
-    9,                                  // Still show 9 per page
-    'featured-projects-grid',
-    'featured-projects-pagination',
-    renderProjectCard
-  );
-
-  // Start the pagination with filtered projects
-  featuredProjectsPagination.start();
-
-  // Log for debugging
-  console.log(`Filtered by ${category}: Found ${filteredProjects.length} projects`);
-}
-
-/**
- * Set up click handlers for category buttons
- */
-function setupCategoryButtons() {
-  // Find all category buttons
-  const categoryButtons = document.querySelectorAll('.category-item .btn');
-
-  // Add click handler to each button
-  categoryButtons.forEach(button => {
-    button.addEventListener('click', (event) => {
-      event.preventDefault(); // Prevent default link behavior
-
-      // Get the category text from the button
-      const buttonText = button.textContent.trim();
-
-      // Extract just the category name (remove icon text)
-      const category = buttonText.split('\n').pop().trim();
-
-      // Filter projects by this category
-      filterProjectsByCategory(category);
-
-      updateCuratedCollections(category);
-
-      // Update active state (makes clicked button look selected)
-      categoryButtons.forEach(btn => btn.classList.remove('active'));
-      button.classList.add('active');
-    });
-  });
-}
-
-/**
- * Initialize featured projects with filtering
- * This is the ONLY initialization function - runs when page loads
- */
-function initializeFeaturedProjects() {
-  // Check if voltaraTutorials exists
-  if (typeof voltaraTutorials === 'undefined') {
-    console.error('voltaraTutorials not loaded. Make sure voltara-db.js is included.');
-    return;
-  }
-
-  // Check if Pagination class exists
-  if (typeof Pagination === 'undefined') {
-    console.error('Pagination class not loaded. Make sure pagination.js is included.');
-    return;
-  }
-
-  // Show all projects initially
-  filterProjectsByCategory('ALL');
-
-  // Set up category button click handlers
-  setupCategoryButtons();
-
-  console.log('✓ Featured Projects with filtering initialized!');
-}
-
-// ========== START EVERYTHING ==========
-// Wait for page to load, then initialize
-// This is the ONLY DOMContentLoaded listener
-// document.addEventListener('DOMContentLoaded', );
-
-document.addEventListener('DOMContentLoaded', function () {
-  const featuredGrid = document.getElementById('featured-projects-grid');
-  if (!featuredGrid) {
-    // Nothing to render on this page
-    return;
-  }
-
-  // if tutorials are already loaded, render immediately
-  // otherwise, wait for tutorials to load - show loading spinner
-  if (voltaraTutorials.length > 0) {
-    featuredGrid.innerHTML = '';
-    initializeFeaturedProjects();
-  } else {
-    featuredGrid.innerHTML = '<div class="text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>';
-
-    ensureTutorialsLoaded().then(function () {
-      if (!voltaraTutorials.length) {
-        featuredGrid.innerHTML = '<div class="text-center py-5">No tutorials available.</div>';
-        return;
-      }
-
-      featuredGrid.innerHTML = '';
-      initializeFeaturedProjects();
-    });
-  }
-
+document.addEventListener('DOMContentLoaded', () => {
   // -----------------------------------------------------------------
   // Grab the modal instance (so we can close it programmatically)
   // -----------------------------------------------------------------
   const loginSignupModalEl = document.getElementById('loginSignupModal');
-  const loginSignupModal = bootstrap.Modal.getOrCreateInstance(loginSignupModalEl);
+  const loginSignupModal   = bootstrap.Modal.getOrCreateInstance(loginSignupModalEl);
+
+  // -----------------------------------------------------------------
+  // Function to update auth button in navbar
+  // -----------------------------------------------------------------
+  const updateAuthButton = () => {
+    const token = localStorage.getItem('authToken');
+    const loginButton = document.querySelector('.navbar-nav.nav-pills .btn-primary') || 
+                       document.querySelector('.navbar-nav.nav-pills .btn-success');
+    
+    if (token && loginButton) {
+      // User is logged in - show user name
+      const userName = localStorage.getItem('userName') || 'Account';
+      loginButton.textContent = userName;
+      loginButton.classList.remove('btn-primary');
+      loginButton.classList.add('btn-success');
+      loginButton.onclick = function() {
+        window.location.href = 'userpage.html';
+      };
+
+      // inject icon when the user is logged in
+      const userIcon = document.createElement("i");
+      userIcon.classList.add("pe-2");
+      userIcon.classList.add("fas");
+      userIcon.classList.add("fa-user");
+      loginButton.prepend(userIcon);
+
+    } else if (loginButton) {
+      // User is not logged in - show login button
+      loginButton.textContent = 'Login';
+      loginButton.classList.remove('btn-success');
+      loginButton.classList.add('btn-primary');
+      loginButton.onclick = null;
+      loginButton.setAttribute('data-bs-toggle', 'modal');
+      loginButton.setAttribute('data-bs-target', '#loginSignupModal');
+    }
+  };
 
   // -----------------------------------------------------------------
   // show a temporary alert inside the modal body
@@ -236,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function () {
       // Simple client‑side validation (HTML5 + custom rules)
       // -------------------------------------------------------------
       if (!formEl.checkValidity()) {
-        // If the browser’s native validation fails, let it show the tooltips
+        // If the browser's native validation fails, let it show the tooltips
         formEl.reportValidity();
         submitBtn.disabled = false;
         submitBtn.textContent = submitBtn.dataset.originalText || 'Submit';
@@ -261,6 +96,24 @@ document.addEventListener('DOMContentLoaded', function () {
       const formData = new FormData(formEl);
       const payload = Object.fromEntries(formData.entries());
 
+      // Map form fields to match your UserDto model exactly
+      let requestBody;
+      
+      if (endpoint.includes('signin') || endpoint.includes('login')) {
+        requestBody = {
+          email: document.getElementById('loginEmail').value.trim(),
+          password: document.getElementById('loginPassword').value.trim()
+        };
+      } else if (endpoint.includes('signup')) {
+        requestBody = {
+          userName: document.getElementById('signupName').value.trim(),
+          email: document.getElementById('signupEmail').value.trim(),
+          password: document.getElementById('signupPassword').value.trim()
+        };
+      } else {
+        requestBody = payload;
+      }
+
       // -------------------------------------------------------------
       //  Send it to the server (JSON API)
       // -------------------------------------------------------------
@@ -269,18 +122,59 @@ document.addEventListener('DOMContentLoaded', function () {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            // 'X-CSRF-Token': '<your‑token‑if‑you‑need‑it>'
           },
-          body: JSON.stringify(payload)
+          body: JSON.stringify(requestBody)
         });
 
-        const answer = await resp.json(); // assume JSON response
-
+        // Check content type before parsing
+        const contentType = resp.headers.get('content-type');
+        let answer;
+        
+        if (contentType && contentType.includes('application/json')) {
+          answer = await resp.json();
+        } else {
+          const textResponse = await resp.text();
+          answer = { message: textResponse || `Server returned ${resp.status} ${resp.statusText}` };
+        }
+  
         if (!resp.ok) {
           // ---------------------------------------------------------
           // Server responded with an error (400‑500)
           // ---------------------------------------------------------
-          const msg = answer.message || 'Something went wrong.';
+          let msg = answer.message || answer.error || `Server returned ${resp.status} ${resp.statusText}`;
+          
+          // Handle specific HTTP status codes
+          if (resp.status === 409) {
+            // Conflict - email already exists
+            msg = 'User already exists. Please use a different email address.';
+          } else if (resp.status === 403) {
+            // Forbidden - check if it's a specific security message
+            if (answer.message && (answer.message.toLowerCase().includes('email already exists') || 
+                                  answer.message.toLowerCase().includes('please use another email'))) {
+              msg = 'User already exists. Please use a different email address.';
+            } else if (answer.message && answer.message.toLowerCase().includes('access denied')) {
+              msg = 'Access forbidden. Please check your permissions.';
+            } else {
+              // Generic forbidden message
+              msg = 'Access forbidden. Please check your permissions.';
+            }
+          } else if (resp.status === 500) {
+            // Server error - might be unhandled exception
+            if (answer.message && answer.message.toLowerCase().includes('email already exists')) {
+              msg = 'User already exists. Please use a different email address.';
+            } else {
+              msg = 'Server error occurred. Please try again later.';
+            }
+          } else if (resp.status === 405) {
+            msg = 'HTTP method not allowed. Please check the endpoint URL.';
+          } else if (resp.status === 404) {
+            msg = 'Server endpoint not found. Please check the URL.';
+          } else if (resp.status === 401) {
+            msg = 'Invalid credentials.';
+          } else if (resp.status === 400) {
+            msg = answer.message || 'Please check your input.';
+          }
+          
           const alert = createAlert('danger', msg);
           formEl.prepend(alert);
         } else {
@@ -288,16 +182,59 @@ document.addEventListener('DOMContentLoaded', function () {
           // Show Message
           // ---------------------------------------------------------
           const successMsg = answer.message ||
-            (endpoint.includes('login')
+            (endpoint.includes('login') || endpoint.includes('signin')
               ? 'You are now logged in!'
               : 'Your account has been created!');
 
           const alert = createAlert('success', successMsg);
           formEl.prepend(alert);
 
-          // optional: store a token, redirect, etc.
-          // localStorage.setItem('authToken', answer.token);
-          // window.location.reload();
+          // Store token and user info if returned and update auth button
+          if (answer.token) {
+            localStorage.setItem('authToken', answer.token);
+            localStorage.setItem('refreshToken', answer.refreshToken || '');
+            localStorage.setItem('userName', answer.userName || document.getElementById('loginEmail').value.split('@')[0]);
+            
+            // NEW: Store user ID from the response
+            if (answer.id) {
+              localStorage.setItem('userId', answer.id);
+              // Show user ID in a toast notification
+              showToast({
+                bgColor: "info",
+                msg: `User ID: ${answer.id} (retrieved successfully)`
+              });
+            } else {
+              console.error('Sign-in response does not contain "id" field');
+            }
+            
+            updateAuthButton(); // Update navbar button
+          }
+
+          // Redirect to userpage.html on successful login
+          if (endpoint.includes('login') || endpoint.includes('signin')) {
+            setTimeout(() => {
+              window.location.href = 'userpage.html';
+            }, 1500);
+          } else if (endpoint.includes('signup')) {
+            // Clear the signup form
+            document.getElementById('signupName').value = '';
+            document.getElementById('signupEmail').value = '';
+            document.getElementById('signupPassword').value = '';
+            
+            // Automatically switch to login tab after successful signup
+            setTimeout(() => {
+              const loginTab = document.querySelector('#pills-login-tab');
+              if (loginTab) {
+                new bootstrap.Tab(loginTab).show();
+                
+                // Pre-fill email in login form for convenience
+                const signupEmail = document.getElementById('signupEmail').value;
+                if (signupEmail) {
+                  document.getElementById('loginEmail').value = signupEmail;
+                }
+              }
+            }, 1000);
+          }
 
           // Give the user a short moment to read the message,
           // then hide the modal and reset the forms
@@ -312,9 +249,18 @@ document.addEventListener('DOMContentLoaded', function () {
         // -------------------------------------------------------------
         // Network or unexpected error
         // -------------------------------------------------------------
-        const alert = createAlert('danger', 'Network error – try again later.');
+        console.error('Fetch error details:', err);
+        let msg = 'Network error – try again later.';
+        
+        // Provide more specific error messages
+        if (err instanceof TypeError && err.message.includes('fetch')) {
+          msg = 'Unable to connect to server. Please check if the server is running.';
+        } else if (err.name === 'AbortError') {
+          msg = 'Request timed out. Please try again.';
+        }
+        
+        const alert = createAlert('danger', msg);
         formEl.prepend(alert);
-        console.error(err);
       } finally {
         // -------------------------------------------------------------
         // Re‑enable the button no matter what happened
@@ -326,17 +272,101 @@ document.addEventListener('DOMContentLoaded', function () {
   };
 
   // -------------------------------------------------------------
+  // Pagination functions for Featured Projects
+  // -------------------------------------------------------------
+  const projectsContainer = document.querySelector('.container-fluid.my-2.row');
+  const paginationContainer = document.querySelector('.pagination');
+  
+  // Get all project cards
+  if (projectsContainer && paginationContainer) {
+    const allProjects = Array.from(projectsContainer.querySelectorAll('.col'));
+    const itemsPerPage = 8;
+    let currentPage = 1;
+    const totalPages = Math.ceil(allProjects.length / itemsPerPage);
+
+    const showPage = (page) => {
+      currentPage = page;
+      
+      // Hide all projects
+      allProjects.forEach(project => {
+        project.style.display = 'none';
+      });
+      
+      // Show projects for current page
+      const startIndex = (page - 1) * itemsPerPage;
+      const endIndex = startIndex + itemsPerPage;
+      
+      for (let i = startIndex; i < endIndex && i < allProjects.length; i++) {
+        allProjects[i].style.display = 'block';
+      }
+      
+      // Update pagination controls
+      updatePagination();
+    };
+
+    const updatePagination = () => {
+      paginationContainer.innerHTML = '';
+      
+      // Previous button
+      const prevLi = document.createElement('li');
+      prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
+      prevLi.innerHTML = '<a class="page-link" href="#" tabindex="-1">Previous</a>';
+      if (currentPage > 1) {
+        prevLi.addEventListener('click', (e) => {
+          e.preventDefault();
+          showPage(currentPage - 1);
+        });
+      }
+      paginationContainer.appendChild(prevLi);
+      
+      // Page numbers
+      for (let i = 1; i <= totalPages; i++) {
+        const li = document.createElement('li');
+        li.className = `page-item ${i === currentPage ? 'active' : ''}`;
+        li.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+        
+        if (i !== currentPage) {
+          li.addEventListener('click', (e) => {
+            e.preventDefault();
+            showPage(i);
+          });
+        }
+        
+        paginationContainer.appendChild(li);
+      }
+      
+      // Next button
+      const nextLi = document.createElement('li');
+      nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
+      nextLi.innerHTML = '<a class="page-link" href="#">Next</a>';
+      if (currentPage < totalPages) {
+        nextLi.addEventListener('click', (e) => {
+          e.preventDefault();
+          showPage(currentPage + 1);
+        });
+      }
+      paginationContainer.appendChild(nextLi);
+    };
+
+    // Initialize pagination
+    if (allProjects.length > 0) {
+      showPage(1);
+    }
+  }
+
+  // -------------------------------------------------------------
   // Merge data
   // -------------------------------------------------------------
-  const loginForm = document.querySelector('#pills-login form');
-  const signupForm = document.querySelector('#pills-signup form');
+  const loginForm   = document.querySelector('#pills-login form');
+  const signupForm  = document.querySelector('#pills-signup form');
 
   // Store the original button text so we can restore it later
-  loginForm.querySelector('button[type="submit"]').dataset.originalText = 'Login';
-  signupForm.querySelector('button[type="submit"]').dataset.originalText = 'Sign Up';
+  loginForm.querySelector('button[type="submit"]').dataset.originalText   = 'Login';
+  signupForm.querySelector('button[type="submit"]').dataset.originalText  = 'Sign Up';
 
-  bindForm(loginForm, '/api/login');   // <-- change to your real endpoint
-  bindForm(signupForm, '/api/signup'); // <-- change to your real endpoint
+  // Update these to match your actual endpoints
+  bindForm(loginForm,  'http://localhost:8890/api/v1/public/signin');   
+  bindForm(signupForm, 'http://localhost:8890/api/v1/public/signup'); 
 
   // -------------------------------------------------------------
   //  clear alerts when the user switches tabs
@@ -348,4 +378,30 @@ document.addEventListener('DOMContentLoaded', function () {
     const currentlyVisiblePane = document.querySelector(event.target.getAttribute('data-bs-target'));
     currentlyVisiblePane.querySelectorAll('.alert').forEach(a => a.remove());
   });
+
+  // -------------------------------------------------------------
+  // Check authentication status on page load
+  // -------------------------------------------------------------
+  const checkAuthStatus = () => {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      updateAuthButton();
+    }
+  };
+
+  checkAuthStatus();
+
+  // -------------------------------------------------------------
+  // Logout function
+  // -------------------------------------------------------------
+  window.logout = function() {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('userName');
+    localStorage.removeItem('userId'); // Remove user ID on logout
+    updateAuthButton(); // Switch back to login button
+    
+    // Show success message
+    showToast({ bgColor: "success", msg: "You have been logged out successfully." });
+  };
 });

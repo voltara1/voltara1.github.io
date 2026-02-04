@@ -54,10 +54,8 @@ function addCard(tutorial, position, category) {
     const primarySrc = imageFileName ? (uploadsBasePath + encodeURIComponent(imageFileName)) : placeholderSrc;
 
     curatedProjectImage.src = primarySrc;
-    curatedProjectImage.className = 'card-img-top rounded-top-3';
+    curatedProjectImage.className = 'card-img-top rounded-top-3 tutorial-card-img';
     curatedProjectImage.alt = tutorial.title;
-    curatedProjectImage.style.width = '100%';
-    curatedProjectImage.style.height = '300px';
     curatedProjectImage.onerror = function () {
         this.onerror = null;
         this.src = placeholderSrc;
@@ -65,12 +63,12 @@ function addCard(tutorial, position, category) {
 
     const curatedProjectTitle = document.createElement('h5');
     curatedProjectTitle.id = "curatedCardTitle-" + position;
-    curatedProjectTitle.className = 'card-title text-secondary fw-bolder px-3 pt-3 tutorial-card-title';
+    curatedProjectTitle.className = 'card-title text-secondary fw-bolder tutorial-card-title';
     curatedProjectTitle.innerText = tutorial.title; //get title from 'title' data field
 
     const curatedProjectDesc = document.createElement('p');
     curatedProjectDesc.id = "curatedCardDesc-" + position;
-    curatedProjectDesc.className = 'card-text text-dark fw-light small px-3  pb-2 tutorial-card-desc';
+    curatedProjectDesc.className = 'card-text text-dark small tutorial-card-desc';
     curatedProjectDesc.innerText = tutorial.description; //get description from 'description' data field
 
     // const curatedLikesLogo = document.createElement('span');
@@ -81,9 +79,12 @@ function addCard(tutorial, position, category) {
     // curatedLikesCount.className = 'card-title text-secondary fw-normal ps-1 pb-2';
     // curatedLikesCount.innerText = tutorial.likes; //get rating from 'likes' data field
 
+    const cardBody = document.createElement('div');
+    cardBody.className = 'card-body tutorial-card-body';
+    cardBody.append(curatedProjectTitle, curatedProjectDesc);
+
     // append all elements to the anchor tag
-   // anchor.append(curatedProjectImage, curatedProjectTitle, curatedLikesLogo, curatedLikesCount, curatedProjectDesc);
-    anchor.append(curatedProjectImage, curatedProjectTitle, curatedProjectDesc);
+    anchor.append(curatedProjectImage, cardBody);
     cardDiv.append(anchor); // append the anchor tag to the card div
     colDiv.append(cardDiv); // append the card div to the column div
     cardGroup.append(colDiv); // append the column div to the card group
@@ -118,22 +119,22 @@ function updateCuratedCollections(category) {
 
         proficiencyLevel = tutorial.proficiency;
         curated = tutorial.curated;
-       // likes = tutorial.likes;
+       likes = tutorial.likes;
 
-        // if (selectedCategory === tutorial.category.name && curated) {
-        //     switch (proficiencyLevel) {
-        //         case "BEGINNER":
-        //             curatedBEGINNER.push([i, likes]);
-        //             break;
-        //         case "INTERMEDIATE":
-        //             curatedINTERMEDIATE.push([i, likes]);
-        //             break;
-        //         case "ADVANCE":
-        //             curatedADVANCE.push([i, likes]);
+        if (selectedCategory === tutorial.category.name && curated) {
+            switch (proficiencyLevel) {
+                case "BEGINNER":
+                    curatedBEGINNER.push([i, likes]);
+                    break;
+                case "INTERMEDIATE":
+                    curatedINTERMEDIATE.push([i, likes]);
+                    break;
+                case "ADVANCE":
+                    curatedADVANCE.push([i, likes]);
 
-        //             break;
-        //     }
-        // }
+                    break;
+            }
+        }
 
         //if "ALL" is selected save the tutorial index only to curatedALL[] array
         if (selectedCategory === "ALL" && curated) {
@@ -142,9 +143,9 @@ function updateCuratedCollections(category) {
     }
 
     //sort all 3 arrays based on number of likes (rating), descending order
-    // curatedBEGINNER.sort((a, b) => b[1] - a[1]);
-    // curatedINTERMEDIATE.sort((a, b) => b[1] - a[1]);
-    // curatedADVANCE.sort((a, b) => b[1] - a[1]);
+    curatedBEGINNER.sort((a, b) => b[1] - a[1]);
+    curatedINTERMEDIATE.sort((a, b) => b[1] - a[1]);
+    curatedADVANCE.sort((a, b) => b[1] - a[1]);
 
     // target the parent container as the reference starting point for DOM manipulation
     const cardGroup = document.getElementById('curatedProjectCardGroup');
