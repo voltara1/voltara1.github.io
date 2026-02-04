@@ -609,16 +609,18 @@ function addProject() {
     const projectName = document.getElementById('projectName');
     const projectPlatform = document.getElementById('projectPlatform');
     const projectDescription = document.getElementById('projectDescription');
+    const projectContent = document.getElementById('projectContent'); // Added this
+    const projectProficiency = document.getElementById('projectProficiency'); // Added this
     const bomInput = document.getElementById('bomFiles');
     
     // Validate form elements exist
-    if (!projectName || !projectPlatform || !projectDescription || !bomInput) {
+    if (!projectName || !projectPlatform || !projectDescription || !projectContent || !projectProficiency || !bomInput) {
         showNotification('Form elements not found', 'error');
         return;
     }
     
     // Validate required fields
-    if (!projectName.value || !projectPlatform.value || !projectDescription.value || bomInput.files.length === 0) {
+    if (!projectName.value || !projectPlatform.value || !projectDescription.value || !projectContent.value || !projectProficiency.value || bomInput.files.length === 0) {
         showNotification('Please fill in all required fields and upload at least one BOM file', 'error');
         return;
     }
@@ -631,15 +633,15 @@ function addProject() {
         return;
     }
     
-    // Create the tutorial data object in the exact format required by the backend
+    // Create the tutorial data object in the EXACT format required by the backend
     const tutorialData = {
         title: projectName.value,
         description: projectDescription.value,
-        content: projectDescription.value,
-        proficiency: "BEGINNER",
-        curated: false,
-        category_id: projectPlatform.value,
-        user_id: userId
+        content: projectContent.value, // Use the actual content field
+        user: { id: parseInt(userId) }, // Wrap in object as required
+        category: { id: parseInt(projectPlatform.value) }, // Wrap in object as required
+        proficiency: projectProficiency.value, // Use the selected proficiency
+        curated: false
     };
     
     // DISPLAY THE JSON DATA THAT WILL BE SUBMITTED TO THE BACKEND
@@ -651,7 +653,7 @@ function addProject() {
     // Prepare form data for upload
     const formData = new FormData();
     
-    // Add tutorial data as JSON
+    // Add tutorial data as JSON string
     formData.append('data', JSON.stringify(tutorialData));
     
     // Add BOM file
@@ -676,24 +678,24 @@ function addProject() {
         body: formData
     })
     .then(async response => {
-    let result;
-    const contentType = response.headers.get("content-type");
-    
-    // Check if response has JSON content-type before parsing
-    if (contentType && contentType.includes("application/json")) {
-        result = await response.json();
-    } else {
-        // Handle cases where server returns something else (HTML, plain text, etc.)
-        const text = await response.text();
-        throw new Error(`Server responded with status ${response.status}. Response body: ${text}`);
-    }
+        let result;
+        const contentType = response.headers.get("content-type");
+        
+        // Check if response has JSON content-type before parsing
+        if (contentType && contentType.includes("application/json")) {
+            result = await response.json();
+        } else {
+            // Handle cases where server returns something else (HTML, plain text, etc.)
+            const text = await response.text();
+            throw new Error(`Server responded with status ${response.status}. Response body: ${text}`);
+        }
 
-    if (!response.ok) {
-        throw new Error(result.message || 'Failed to upload project');
-    }
+        if (!response.ok) {
+            throw new Error(result.message || 'Failed to upload project');
+        }
 
-    return result;
-})
+        return result;
+    })
     .then(data => {
         showNotification('Project uploaded successfully!', 'success');
         
