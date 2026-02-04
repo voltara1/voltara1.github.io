@@ -1,31 +1,326 @@
 /**
  * User Page Management System
- * Handles user dashboard functionality, project management, and UI interactions
+ * Handles user dashboard functionality and tutorial management
  */
 
-/**
- * Initializes the user page when DOM is loaded
- */
+// Verify authentication before proceeding
 document.addEventListener('DOMContentLoaded', function() {
-    // Verify authentication before proceeding
     if (!isAuthenticated()) {
         window.location.href = 'index.html';
         return;
     }
     
-    // Get user information from localStorage
     const userName = localStorage.getItem('userName') || 'User';
     const userEmail = localStorage.getItem('userEmail') || '';
-    
-    // Update UI with user information
     updateUserInfo(userName, userEmail);
     
-    // Initialize all page functionality
     initializePage();
-    
-    // Setup profile modal event handlers
-    setupProfileModalHandlers();
+    loadUserTutorials();
 });
+
+// Create category mapping based on categories.csv
+const categoryMap = {
+    '1': 'Arduino',
+    '2': 'ESP32',
+    '3': 'IoT',
+    '4': 'PCB Design',
+    '5': 'Raspberry Pi',
+    '6': 'Robotics',
+    '7': 'Sensors',
+    '8': 'STM32'
+};
+
+/**
+ * Loads the current user's tutorials from the backend API
+ */
+function loadUserTutorials() {
+    const loadingElement = document.getElementById('loading');
+    if (loadingElement) loadingElement.style.display = 'block';
+    
+    // Get the user ID directly from localStorage (which was saved on login)
+    const userId = localStorage.getItem('userId');
+    
+    if (!userId) {
+        showNotification('Authentication error: User ID not found', 'error');
+        if (loadingElement) loadingElement.style.display = 'none';
+        return;
+    }
+    
+    console.log(`Loading tutorials for user ID: ${userId}`);
+    
+    // Get tutorials using the user ID
+    fetch(`http://localhost:8890/api/v1/tutorial/user/${userId}`, {
+        method: 'GET',
+        headers: getAuthHeaders()
+    })
+    .then(response => {
+        if (!response.ok) {
+            if (response.status === 401) {
+                logout();
+                throw new Error('Unauthorized - please log in again');
+            }
+            throw new Error(`Failed to load tutorials: ${response.statusText}`);
+        }
+        return response.json();
+    })
+    .then(tutorials => {
+        console.log(`Successfully loaded ${tutorials.length} tutorials`);
+        renderTutorialsTable(tutorials);
+        if (loadingElement) loadingElement.style.display = 'none';
+    })
+    .catch(error => {
+        console.error('Error loading tutorials:', error);
+        showNotification(`Failed to load tutorials: ${error.message}`, 'error');
+        if (loadingElement) loadingElement.style.display = 'none';
+    });
+}
+
+/**
+ * Renders the tutorials in a table format
+ * @param {Array} tutorials - Array of tutorial objects
+ */
+function renderTutorialsTable(tutorials) {
+    const tableBody = document.getElementById('projectsTableBody');
+    if (!tableBody) return;
+    
+    if (tutorials.length === 0) {
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="4" class="text-center py-4">
+                    <i class="fas fa-folder-open fa-2x mb-3"></i>
+                    <h5>No tutorials found</h5>
+                    <p class="text-muted">Create your first tutorial to get started</p>
+                </td>
+            </tr>
+        `;
+        return;
+    }
+    
+    let html = '';
+    
+    tutorials.forEach(tutorial => {
+        // Extract category name safely
+        const categoryName = tutorial.category ? 
+            categoryMap[tutorial.category.id] || `Category ${tutorial.category.id}` : 
+            'Uncategorized';
+        
+        // Format proficiency level with appropriate badge
+        const proficiencyClass = tutorial.proficiency === 'BEGINNER' ? 'bg-success' : 
+                                tutorial.proficiency === 'INTERMEDIATE' ? 'bg-warning text-dark' : 
+                                'bg-danger';
+        
+        html += `
+            <tr>
+                <td>${tutorial.title || 'Untitled Tutorial'}</td>
+                <td><span class="badge bg-primary">${categoryName}</span></td>
+                <td><span class="badge ${proficiencyClass}">${tutorial.proficiency || 'N/A'}</span></td>
+                <td>${formatDate(tutorial.createdAt)}</td>
+                <td>
+                    <button class="action-btn view" title="View Details" onclick="showTutorialDetails(${tutorial.id})">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="action-btn delete" title="Delete Tutorial" onclick="deleteTutorial(${tutorial.id})">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        `;
+    });
+    
+    tableBody.innerHTML = html;
+}
+
+/**
+ * Shows details for a specific tutorial
+ * @param {number} tutorialId - ID of the tutorial to display
+ */
+function showTutorialDetails(tutorialId) {
+    showNotification('Loading tutorial details...', 'info');
+    
+    // API request for a single tutorial
+    fetch(`http://localhost:8890/api/v1/tutorial/${tutorialId}`, {
+        method: 'GET',
+        headers: getAuthHeaders()
+    })
+    .then(response => {
+        if (!response.ok) {
+            if (response.status === 401) {
+                logout();
+                throw new Error('Unauthorized - please log in again');
+            }
+            throw new Error('Failed to load tutorial details');
+        }
+        return response.json();
+    })
+    .then(tutorial => {
+        displayTutorialDetails(tutorial);
+        showProjectDetailSection();
+        showNotification('Tutorial details loaded successfully', 'success');
+    })
+    .catch(error => {
+        console.error('Error loading tutorial details:', error);
+        showNotification(`Failed to load tutorial details: ${error.message}`, 'error');
+    });
+}
+
+/**
+ * Displays tutorial details in the detail view
+ * @param {Object} tutorial - Tutorial object to display
+ */
+function displayTutorialDetails(tutorial) {
+    const detailTitle = document.getElementById('detailTitle');
+    const detailDescription = document.getElementById('detailDescription');
+    const detailCategory = document.getElementById('detailCategory');
+    const detailProficiency = document.getElementById('detailProficiency');
+    const detailDate = document.getElementById('detailDate');
+    
+    if (detailTitle) detailTitle.textContent = tutorial.title || 'Untitled Tutorial';
+    if (detailDescription) detailDescription.textContent = tutorial.description || 'No description available';
+    
+    // Display category information
+    if (detailCategory) {
+        const categoryName = tutorial.category ? 
+            categoryMap[tutorial.category.id] || `Category ${tutorial.category.id}` : 
+            'Uncategorized';
+        detailCategory.innerHTML = `<i class="fas fa-layer-group"></i> Category: ${categoryName}`;
+    }
+    
+    // Display proficiency
+    if (detailProficiency) {
+        const proficiencyClass = tutorial.proficiency === 'BEGINNER' ? 'bg-success' : 
+                                tutorial.proficiency === 'INTERMEDIATE' ? 'bg-warning text-dark' : 
+                                'bg-danger';
+        detailProficiency.innerHTML = `<span class="badge ${proficiencyClass}">${tutorial.proficiency || 'N/A'}</span>`;
+    }
+    
+    // Display creation date
+    if (detailDate) {
+        detailDate.innerHTML = `<i class="far fa-calendar"></i> Created: ${formatDate(tutorial.createdAt)}`;
+    }
+    
+    // Populate tutorial files
+    populateTutorialFiles(tutorial);
+}
+
+/**
+ * Populates tutorial files in the detail view
+ * @param {Object} tutorial - Tutorial object containing file information
+ */
+function populateTutorialFiles(tutorial) {
+    // Get file grid elements
+    const bomFilesGrid = document.getElementById('bomFilesGrid');
+    const imageFilesGrid = document.getElementById('imageFilesGrid');
+    
+    // Clear existing content
+    if (bomFilesGrid) bomFilesGrid.innerHTML = '';
+    if (imageFilesGrid) imageFilesGrid.innerHTML = '';
+    
+    // Populate BOM files if available
+    if (bomFilesGrid && tutorial.fileBom) {
+        const fileName = tutorial.fileBom.split('/').pop();
+        const fileType = fileName.split('.').pop().toLowerCase();
+        let icon = 'fa-file';
+        if (fileType === 'pdf') icon = 'fa-file-pdf';
+        if (['xls', 'xlsx', 'csv'].includes(fileType)) icon = 'fa-file-excel';
+        
+        const fileCard = document.createElement('div');
+        fileCard.className = 'file-card';
+        fileCard.innerHTML = `
+            <i class="fas ${icon} file-icon"></i>
+            <div class="file-name">${fileName}</div>
+            <div class="file-type">${fileType.toUpperCase()} File</div>
+        `;
+        fileCard.addEventListener('click', () => downloadFile(tutorial.fileBom));
+        bomFilesGrid.appendChild(fileCard);
+    } else if (bomFilesGrid) {
+        bomFilesGrid.innerHTML = '<p>No BOM files available</p>';
+    }
+    
+    // Populate image files if available
+    if (imageFilesGrid && tutorial.imageMain) {
+        const fileName = tutorial.imageMain.split('/').pop();
+        const fileCard = document.createElement('div');
+        fileCard.className = 'file-card';
+        fileCard.innerHTML = `
+            <i class="fas fa-image file-icon"></i>
+            <div class="file-name">${fileName}</div>
+            <div class="file-type">Image File</div>
+        `;
+        fileCard.addEventListener('click', () => downloadFile(tutorial.imageMain));
+        imageFilesGrid.appendChild(fileCard);
+    } else if (imageFilesGrid) {
+        imageFilesGrid.innerHTML = '<p>No images available</p>';
+    }
+}
+
+/**
+ * Deletes a tutorial from the system
+ * @param {number} tutorialId - ID of the tutorial to delete
+ */
+function deleteTutorial(tutorialId) {
+    if (!confirm('Are you sure you want to delete this tutorial? This action cannot be undone.')) {
+        return;
+    }
+    
+    showNotification('Deleting tutorial...', 'info');
+    
+    // API request to delete the tutorial
+    fetch(`http://localhost:8890/api/v1/tutorial/${tutorialId}`, {
+        method: 'DELETE',
+        headers: getAuthHeaders()
+    })
+    .then(response => {
+        if (!response.ok) {
+            if (response.status === 401) {
+                logout();
+                throw new Error('Unauthorized - please log in again');
+            }
+            return response.json().then(errorData => {
+                throw new Error(errorData.message || 'Failed to delete tutorial');
+            });
+        }
+        showNotification('Tutorial deleted successfully!', 'success');
+        loadUserTutorials(); // Reload tutorials
+    })
+    .catch(error => {
+        console.error('Error deleting tutorial:', error);
+        showNotification(`Failed to delete tutorial: ${error.message}`, 'error');
+    });
+}
+
+// The following functions are also defined in userauth.js
+// They're included here for completeness but should be in userauth.js
+
+/**
+ * Gets authentication headers with JWT token
+ * @returns {Object} Headers object with authorization token
+ */
+function getAuthHeaders() {
+    const token = localStorage.getItem('authToken');
+    return {
+        'Authorization': token ? `Bearer ${token}` : '',
+        'Content-Type': 'application/json'
+    };
+}
+
+/**
+ * Checks if user is authenticated
+ * @returns {boolean} True if authenticated, false otherwise
+ */
+function isAuthenticated() {
+    return !!localStorage.getItem('authToken');
+}
+
+/**
+ * Logs out the current user
+ */
+function logout() {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('userName');
+    localStorage.removeItem('userEmail');
+    window.location.href = 'index.html';
+}
 
 /**
  * Updates user information in the UI
@@ -140,158 +435,31 @@ function initializePage() {
         });
     }
     
-    // Load user's projects and setup profile modal
-    loadUserProjects();
-    setupProfileModal();
+    // Setup profile modal event handlers (now handled by profilemodal.js)
+    
+    // Populate the projectPlatform dropdown with category values
+    populatePlatformDropdown();
 }
 
 /**
- * Setup profile modal event handlers
+ * Populates the projectPlatform dropdown with category values
  */
-function setupProfileModalHandlers() {
-    // Setup profile settings button
-    const profileSettingsBtn = document.getElementById('profileSettingsBtn');
-    const profileModal = document.getElementById('profileModal');
-    const closeProfileModal = document.getElementById('closeProfileModal');
-    const cancelProfile = document.getElementById('cancelProfile');
-    const saveProfileBtn = document.getElementById('saveProfileBtn');
+function populatePlatformDropdown() {
+    const projectPlatform = document.getElementById('projectPlatform');
+    if (!projectPlatform) return;
     
-    if (profileSettingsBtn && profileModal) {
-        profileSettingsBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            profileModal.style.display = 'flex';
-            
-            // Pre-fill user data
-            const usernameInput = document.getElementById('profileUsername');
-            const emailInput = document.getElementById('profileEmail');
-            const userName = localStorage.getItem('userName') || 'User';
-            const userEmail = localStorage.getItem('userEmail') || '';
-            
-            if (usernameInput) usernameInput.value = userName;
-            if (emailInput) emailInput.value = userEmail;
-        });
+    // Clear existing options (except the first one which is the default)
+    while (projectPlatform.options.length > 1) {
+        projectPlatform.remove(1);
     }
     
-    if (closeProfileModal) {
-        closeProfileModal.addEventListener('click', function() {
-            if (profileModal) profileModal.style.display = 'none';
-        });
+    // Add options for each category in the map
+    for (const [id, name] of Object.entries(categoryMap)) {
+        const option = document.createElement('option');
+        option.value = id;
+        option.textContent = name;
+        projectPlatform.appendChild(option);
     }
-    
-    if (cancelProfile) {
-        cancelProfile.addEventListener('click', function() {
-            if (profileModal) profileModal.style.display = 'none';
-        });
-    }
-    
-    if (saveProfileBtn) {
-        saveProfileBtn.addEventListener('click', function() {
-            // Get form values
-            const username = document.getElementById('profileUsername').value;
-            const email = document.getElementById('profileEmail').value;
-            const currentPassword = document.getElementById('currentPassword').value;
-            const newPassword = document.getElementById('newPassword').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            
-            // Validate passwords match if new password is provided
-            if (newPassword && newPassword !== confirmPassword) {
-                showNotification('New passwords do not match!', 'error');
-                return;
-            }
-            
-            // Prepare user data for update
-            const userData = {
-                userName: username,
-                email: email
-            };
-            
-            // Add password if provided
-            if (newPassword) {
-                userData.password = newPassword;
-            }
-            
-            // Create FormData for multipart request
-            const formData = new FormData();
-            formData.append('data', JSON.stringify(userData));
-            
-            // Show loading notification
-            showNotification('Updating profile...', 'info');
-            
-            // Update user profile via backend API
-            fetch('http://localhost:8890/api/v1/user/update', {
-                method: 'PUT',
-                headers: {
-                    'Authorization': getAuthHeaders().Authorization
-                    // Don't set Content-Type, let browser set it with boundary for FormData
-                },
-                body: formData
-            })
-            .then(response => {
-                if (!response.ok) {
-                    return response.json().then(errorData => {
-                        throw new Error(errorData.message || 'Failed to update profile');
-                    });
-                }
-                return response.json();
-            })
-            .then(data => {
-                // Update localStorage with new values
-                if (username) {
-                    localStorage.setItem('userName', username);
-                    document.getElementById('userNameDisplay').textContent = username;
-                    
-                    // Update navbar button
-                    const navButton = document.querySelector('.navbar-nav.nav-pills .btn-success');
-                    if (navButton) {
-                        navButton.textContent = username;
-                        const userIcon = document.createElement('i');
-                        userIcon.classList.add('fas', 'fa-user', 'pe-2');
-                        navButton.prepend(userIcon);
-                    }
-                }
-                
-                if (email) {
-                    localStorage.setItem('userEmail', email);
-                }
-                
-                // Update token if provided in response
-                if (data.token) {
-                    localStorage.setItem('authToken', data.token);
-                }
-                
-                // Clear password fields
-                document.getElementById('currentPassword').value = '';
-                document.getElementById('newPassword').value = '';
-                document.getElementById('confirmPassword').value = '';
-                
-                // Show success message with specific details
-                let successMessage = 'Profile updated successfully!';
-                if (newPassword) {
-                    successMessage = 'Profile and password updated successfully!';
-                }
-                
-                showNotification(successMessage, 'success');
-                
-                // Close modal
-                if (profileModal) profileModal.style.display = 'none';
-            })
-            .catch(error => {
-                console.error('Error updating profile:', error);
-                let errorMessage = 'Failed to update profile';
-                if (newPassword) {
-                    errorMessage = 'Failed to update profile and password';
-                }
-                showNotification(errorMessage + ': ' + error.message, 'error');
-            });
-        });
-    }
-    
-    // Close modal when clicking outside
-    window.addEventListener('click', function(event) {
-        if (profileModal && event.target === profileModal) {
-            profileModal.style.display = 'none';
-        }
-    });
 }
 
 /**
@@ -312,7 +480,7 @@ function showProjectsSection() {
     document.getElementById('projectsSection').style.display = 'block';
     
     // Reload projects when showing projects section
-    loadUserProjects();
+    loadUserTutorials();
 }
 
 /**
@@ -322,355 +490,6 @@ function showProjectDetailSection() {
     document.getElementById('uploadSection').style.display = 'none';
     document.getElementById('projectsSection').style.display = 'none';
     document.getElementById('projectDetailSection').style.display = 'block';
-}
-
-/**
- * Loads user's projects from the backend API
- */
-function loadUserProjects() {
-    // Show loading notification
-    showNotification('Loading projects...', 'info');
-    
-    // Fetch projects for the authenticated user
-    // The backend will identify the user from the JWT token
-    fetch('http://localhost:8890/api/v1/tutorial', {
-        method: 'GET',
-        headers: getAuthHeaders()
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Failed to load projects');
-        }
-        return response.json();
-    })
-    .then(projects => {
-        // Filter projects to show only those belonging to the current user
-        // In a real implementation, the backend would do this filtering
-        const userId = getUserIdFromToken();
-        const userProjects = projects.filter(project => {
-            // This is a workaround since we don't have user ID in the project object
-            // In a real app, the backend would return only the user's projects
-            return true; // For now, show all projects
-        });
-        
-        renderProjectsTable(userProjects);
-        setupProjectsPagination(userProjects);
-        showNotification('Projects loaded successfully', 'success');
-    })
-    .catch(error => {
-        console.error('Error loading projects:', error);
-        showNotification('Failed to load projects: ' + error.message, 'error');
-    });
-}
-
-/**
- * Renders the projects table with data from backend
- * @param {Array} projects - Array of project objects
- */
-function renderProjectsTable(projects) {
-    const projectsTableBody = document.getElementById('projectsTableBody');
-    if (!projectsTableBody) return;
-    
-    let tableHTML = '';
-    
-    projects.forEach(project => {
-        // Determine platform display name
-        let platformName = '';
-        switch(project.platform) {
-            case 'stm32': platformName = 'STM32'; break;
-            case 'arduino': platformName = 'Arduino'; break;
-            case 'esp32': platformName = 'ESP32'; break;
-            case 'raspberry': platformName = 'Raspberry Pi'; break;
-            case 'nodemcu': platformName = 'NodeMCU'; break;
-            default: platformName = project.platform;
-        }
-        
-        // Create table row for each project
-        tableHTML += `
-            <tr>
-                <td>${project.title || project.name || 'Untitled'}</td>
-                <td>${platformName}</td>
-                <td>${formatDate(project.createdAt || project.date)}</td>
-                <td>
-                    <button class="action-btn view" title="View Details" onclick="showProjectDetails(${project.id})">
-                        <i class="fas fa-eye"></i>
-                    </button>
-                    <button class="action-btn delete" title="Delete Project" onclick="deleteProject(${project.id})">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </td>
-            </tr>
-        `;
-    });
-    
-    projectsTableBody.innerHTML = tableHTML;
-}
-
-/**
- * Sets up pagination controls for projects
- * @param {Array} projects - Array of project objects
- */
-function setupProjectsPagination(projects) {
-    const projectsPagination = document.getElementById('projectsPagination');
-    if (!projectsPagination) return;
-    
-    // For simplicity, we'll show all projects on one page
-    // In a real implementation, this would handle pagination
-    projectsPagination.innerHTML = '';
-}
-
-/**
- * Shows details for a specific project
- * @param {number} projectId - ID of the project to display
- */
-function showProjectDetails(projectId) {
-    // Show loading notification
-    showNotification('Loading project details...', 'info');
-    
-    // Fetch project details from backend
-    fetch(`http://localhost:8890/api/v1/tutorial/${projectId}`, {
-        method: 'GET',
-        headers: getAuthHeaders()
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Failed to load project details');
-        }
-        return response.json();
-    })
-    .then(project => {
-        displayProjectDetails(project);
-        showProjectDetailSection();
-        showNotification('Project details loaded successfully', 'success');
-    })
-    .catch(error => {
-        console.error('Error loading project details:', error);
-        showNotification('Failed to load project details: ' + error.message, 'error');
-    });
-}
-
-/**
- * Displays project details in the detail view
- * @param {Object} project - Project object to display
- */
-function displayProjectDetails(project) {
-    // Get DOM elements for project details
-    const detailTitle = document.getElementById('detailTitle');
-    const detailDescription = document.getElementById('detailDescription');
-    const detailPlatform = document.getElementById('detailPlatform');
-    const detailDate = document.getElementById('detailDate');
-    
-    // Set project title and description
-    if (detailTitle) detailTitle.textContent = project.title || 'Untitled Project';
-    if (detailDescription) detailDescription.textContent = project.description || 'No description available';
-    
-    // Determine platform display name
-    let platformName = '';
-    switch(project.platform) {
-        case 'stm32': platformName = 'STM32'; break;
-        case 'arduino': platformName = 'Arduino'; break;
-        case 'esp32': platformName = 'ESP32'; break;
-        case 'raspberry': platformName = 'Raspberry Pi'; break;
-        case 'nodemcu': platformName = 'NodeMCU'; break;
-        default: platformName = project.platform;
-    }
-    
-    // Set platform information
-    if (detailPlatform) {
-        detailPlatform.innerHTML = `<i class="fas fa-microchip"></i> Platform: ${platformName}`;
-    }
-    
-    // Set creation date
-    if (detailDate) {
-        detailDate.innerHTML = `<i class="far fa-calendar"></i> Date: ${formatDate(project.createdAt || project.date)}`;
-    }
-    
-    // Populate project files
-    populateProjectFiles(project);
-}
-
-/**
- * Populates project files in the detail view
- * @param {Object} project - Project object containing file information
- */
-function populateProjectFiles(project) {
-    // Get file grid elements
-    const bomFilesGrid = document.getElementById('bomFilesGrid');
-    const imageFilesGrid = document.getElementById('imageFilesGrid');
-    const docFilesGrid = document.getElementById('docFilesGrid');
-    
-    // Clear existing content
-    if (bomFilesGrid) bomFilesGrid.innerHTML = '';
-    if (imageFilesGrid) imageFilesGrid.innerHTML = '';
-    if (docFilesGrid) docFilesGrid.innerHTML = '';
-    
-    // Populate BOM files if available
-    if (bomFilesGrid && project.fileBom) {
-        const fileName = project.fileBom.split('/').pop();
-        const fileType = fileName.split('.').pop().toLowerCase();
-        let icon = 'fa-file';
-        if (fileType === 'pdf') icon = 'fa-file-pdf';
-        if (['xls', 'xlsx', 'csv'].includes(fileType)) icon = 'fa-file-excel';
-        
-        const fileCard = document.createElement('div');
-        fileCard.className = 'file-card';
-        fileCard.innerHTML = `
-            <i class="fas ${icon} file-icon"></i>
-            <div class="file-name">${fileName}</div>
-            <div class="file-type">${fileType.toUpperCase()} File</div>
-        `;
-        fileCard.addEventListener('click', () => downloadFile(project.fileBom));
-        bomFilesGrid.appendChild(fileCard);
-    } else if (bomFilesGrid) {
-        bomFilesGrid.innerHTML = '<p>No BOM files available</p>';
-    }
-    
-    // Populate image files if available
-    if (imageFilesGrid && project.imageMain) {
-        const fileName = project.imageMain.split('/').pop();
-        const fileCard = document.createElement('div');
-        fileCard.className = 'file-card';
-        fileCard.innerHTML = `
-            <i class="fas fa-image file-icon"></i>
-            <div class="file-name">${fileName}</div>
-            <div class="file-type">Image File</div>
-        `;
-        fileCard.addEventListener('click', () => downloadFile(project.imageMain));
-        imageFilesGrid.appendChild(fileCard);
-    } else if (imageFilesGrid) {
-        imageFilesGrid.innerHTML = '<p>No images available</p>';
-    }
-    
-    // Populate documentation files (placeholder)
-    if (docFilesGrid) {
-        docFilesGrid.innerHTML = '<p>No documentation files available</p>';
-    }
-}
-
-/**
- * Handles downloading of project files
- * @param {string} filePath - Path to the file to download
- */
-function downloadFile(filePath) {
-    // In a real implementation, this would download the file
-    showNotification(`Downloading file...`, 'success');
-    console.log('Download file:', filePath);
-}
-
-/**
- * Adds a new project to the system
- */
-function addProject() {
-    // Get form elements
-    const projectName = document.getElementById('projectName');
-    const projectPlatform = document.getElementById('projectPlatform');
-    const projectDescription = document.getElementById('projectDescription');
-    const bomInput = document.getElementById('bomFiles');
-    
-    // Validate form elements exist
-    if (!projectName || !projectPlatform || !projectDescription || !bomInput) {
-        showNotification('Form elements not found', 'error');
-        return;
-    }
-    
-    // Validate required fields
-    if (!projectName.value || !projectPlatform.value || !projectDescription.value || bomInput.files.length === 0) {
-        showNotification('Please fill in all required fields and upload at least one BOM file', 'error');
-        return;
-    }
-    
-    // Prepare form data for upload
-    const formData = new FormData();
-    
-    // Add tutorial data as JSON
-    const tutorialData = {
-        title: projectName.value,
-        description: projectDescription.value,
-        content: projectDescription.value, // Using description as content for now
-        platform: projectPlatform.value,
-        // Add other required fields as needed
-    };
-    
-    formData.append('data', JSON.stringify(tutorialData));
-    formData.append('bill_of_materials', bomInput.files[0]);
-    
-    // Add other files if present
-    const imageInput = document.getElementById('projectImages');
-    if (imageInput && imageInput.files.length > 0) {
-        formData.append('image_main', imageInput.files[0]);
-    }
-    
-    // Show loading notification
-    showNotification('Uploading project...', 'info');
-    
-    // Send to backend
-    fetch('http://localhost:8890/api/v1/tutorial', {
-        method: 'POST',
-        headers: {
-            'Authorization': getAuthHeaders().Authorization
-            // Don't set Content-Type, let browser set it with boundary for FormData
-        },
-        body: formData
-    })
-    .then(response => {
-        if (!response.ok) {
-            return response.json().then(errorData => {
-                throw new Error(errorData.message || 'Failed to upload project');
-            });
-        }
-        return response.json();
-    })
-    .then(data => {
-        showNotification('Project uploaded successfully!', 'success');
-        
-        // Reset form and previews
-        const projectForm = document.getElementById('projectForm');
-        if (projectForm) projectForm.reset();
-        clearFilePreviews();
-        
-        // Show projects section and reload projects
-        showProjectsSection();
-        loadUserProjects();
-    })
-    .catch(error => {
-        console.error('Error uploading project:', error);
-        showNotification('Failed to upload project: ' + error.message, 'error');
-    });
-}
-
-/**
- * Deletes a project from the system
- * @param {number} projectId - ID of the project to delete
- */
-function deleteProject(projectId) {
-    // Confirm deletion with user
-    if (!confirm('Are you sure you want to delete this project? This action cannot be undone.')) {
-        return;
-    }
-    
-    // Show loading notification
-    showNotification('Deleting project...', 'info');
-    
-    // Send delete request to backend
-    fetch(`http://localhost:8890/api/v1/tutorial/${projectId}`, {
-        method: 'DELETE',
-        headers: getAuthHeaders()
-    })
-    .then(response => {
-        if (!response.ok) {
-            return response.json().then(errorData => {
-                throw new Error(errorData.message || 'Failed to delete project');
-            });
-        }
-        showNotification('Project deleted successfully!', 'success');
-        
-        // Reload projects after deletion
-        loadUserProjects();
-    })
-    .catch(error => {
-        console.error('Error deleting project:', error);
-        showNotification('Failed to delete project: ' + error.message, 'error');
-    });
 }
 
 /**
@@ -783,16 +602,103 @@ function clearFilePreviews() {
 }
 
 /**
- * Sets up the profile modal functionality
+ * Adds a new project to the system
  */
-function setupProfileModal() {
-    const profileModal = document.getElementById('profileModal');
+function addProject() {
+    // Get form elements
+    const projectName = document.getElementById('projectName');
+    const projectPlatform = document.getElementById('projectPlatform');
+    const projectDescription = document.getElementById('projectDescription');
+    const bomInput = document.getElementById('bomFiles');
     
-    // Close modal when clicking outside
-    window.addEventListener('click', function(event) {
-        if (profileModal && event.target === profileModal) {
-            profileModal.style.display = 'none';
+    // Create the tutorial data object first (before validation)
+    const userId = localStorage.getItem('userId') || 'unknown';
+    
+    // Create tutorial data object
+    const tutorialData = {
+        title: projectName ? projectName.value : 'No title',
+        description: projectDescription ? projectDescription.value : 'No description',
+        content: projectDescription ? projectDescription.value : 'No content',
+        proficiency: "BEGINNER",
+        curated: false,
+        category_id: projectPlatform ? projectPlatform.value : 'no-category',
+        user_id: userId
+    };
+    
+    // DISPLAY THE JSON DATA THAT WILL BE SUBMITTED TO THE BACKEND
+    console.log('--------------------------------------------------');
+    console.log('JSON data that will be sent to the backend:');
+    console.log(JSON.stringify(tutorialData, null, 2));
+    console.log('--------------------------------------------------');
+    
+    // Validate form elements exist
+    if (!projectName || !projectPlatform || !projectDescription || !bomInput) {
+        showNotification('Form elements not found', 'error');
+        return;
+    }
+    
+    // Validate required fields
+    if (!projectName.value || !projectPlatform.value || !projectDescription.value || bomInput.files.length === 0) {
+        showNotification('Please fill in all required fields and upload at least one BOM file', 'error');
+        return;
+    }
+    
+    // Get user ID from localStorage
+    if (!userId || userId === 'unknown') {
+        showNotification('Authentication error: User ID not found', 'error');
+        return;
+    }
+    
+    // Prepare form data for upload
+    const formData = new FormData();
+    
+    // Add tutorial data as JSON
+    formData.append('data', JSON.stringify(tutorialData));
+    
+    // Add BOM file
+    formData.append('bill_of_materials', bomInput.files[0]);
+    
+    // Add other files if present
+    const imageInput = document.getElementById('projectImages');
+    if (imageInput && imageInput.files.length > 0) {
+        formData.append('image_main', imageInput.files[0]);
+    }
+    
+    // Show loading notification
+    showNotification('Uploading project...', 'info');
+    
+    // Send to backend
+    fetch('http://localhost:8890/api/v1/tutorial', {
+        method: 'POST',
+        headers: {
+            'Authorization': getAuthHeaders().Authorization
+            // Don't set Content-Type, let browser set it with boundary for FormData
+        },
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(errorData => {
+                throw new Error(errorData.message || 'Failed to upload project');
+            });
         }
+        return response.json();
+    })
+    .then(data => {
+        showNotification('Project uploaded successfully!', 'success');
+        
+        // Reset form and previews
+        const projectForm = document.getElementById('projectForm');
+        if (projectForm) projectForm.reset();
+        clearFilePreviews();
+        
+        // Show projects section and reload projects
+        showProjectsSection();
+        loadUserTutorials();
+    })
+    .catch(error => {
+        console.error('Error uploading project:', error);
+        showNotification('Failed to upload project: ' + error.message, 'error');
     });
 }
 
@@ -825,4 +731,5 @@ function showNotification(message, type) {
             notification.classList.remove('show');
         }, duration);
     }
+    console.log(`[${type.toUpperCase()}] ${message}`);
 }

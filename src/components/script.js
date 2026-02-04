@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // Simple client‑side validation (HTML5 + custom rules)
       // -------------------------------------------------------------
       if (!formEl.checkValidity()) {
-        // If the browser’s native validation fails, let it show the tooltips
+        // If the browser's native validation fails, let it show the tooltips
         formEl.reportValidity();
         submitBtn.disabled = false;
         submitBtn.textContent = submitBtn.dataset.originalText || 'Submit';
@@ -166,7 +166,6 @@ document.addEventListener('DOMContentLoaded', () => {
           },
           body: JSON.stringify(requestBody)
         });
-     /*    console.log(await resp.json()); */
 
         // Check content type before parsing
         const contentType = resp.headers.get('content-type');
@@ -236,6 +235,19 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('authToken', answer.token);
             localStorage.setItem('refreshToken', answer.refreshToken || '');
             localStorage.setItem('userName', answer.userName || document.getElementById('loginEmail').value.split('@')[0]);
+            
+            // NEW: Store user ID from the response
+            if (answer.id) {
+              localStorage.setItem('userId', answer.id);
+              // Show user ID in a toast notification
+              showToast({
+                bgColor: "info",
+                msg: `User ID: ${answer.id} (retrieved successfully)`
+              });
+            } else {
+              console.error('Sign-in response does not contain "id" field');
+            }
+            
             updateAuthButton(); // Update navbar button
           }
 
@@ -427,6 +439,7 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.removeItem('authToken');
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('userName');
+    localStorage.removeItem('userId'); // Remove user ID on logout
     updateAuthButton(); // Switch back to login button
     
     // Show success message
