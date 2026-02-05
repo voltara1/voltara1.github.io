@@ -1,44 +1,97 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   // -----------------------------------------------------------------
-  // Grab the modal instance (so we can close it programmatically)
+  // Grab the modal instance (if present) so we can close it programmatically
   // -----------------------------------------------------------------
   const loginSignupModalEl = document.getElementById('loginSignupModal');
-  const loginSignupModal   = bootstrap.Modal.getOrCreateInstance(loginSignupModalEl);
+  const loginSignupModal   = loginSignupModalEl ? bootstrap.Modal.getOrCreateInstance(loginSignupModalEl) : null;
+
+  // -----------------------------------------------------------------
+  // Hero CTA: Share Tutorial button behavior
+  // -----------------------------------------------------------------
+  const shareTutorialBtn = document.getElementById('share-tutorial-btn');
+  if (shareTutorialBtn) {
+    shareTutorialBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const token = localStorage.getItem('authToken');
+      if (token) {
+        window.location.href = 'userpage.html';
+      } else if (loginSignupModal) {
+        loginSignupModal.show();
+      }
+    });
+  }
 
   // -----------------------------------------------------------------
   // Function to update auth button in navbar
   // -----------------------------------------------------------------
   const updateAuthButton = () => {
     const token = localStorage.getItem('authToken');
-    const loginButton = document.querySelector('.navbar-nav.nav-pills .btn-primary') || 
-                       document.querySelector('.navbar-nav.nav-pills .btn-success');
-    
+    const loginButton = document.getElementById('authButton');
+    const dropdownMenu = document.getElementById('authDropdownMenu');
+    const dashboardLink = document.getElementById('nav-dashboard-link');
+    const profileLink = document.getElementById('nav-profile-link');
+    const logoutLink = document.getElementById('nav-logout-link');
+
     if (token && loginButton) {
-      // User is logged in - show user name
       const userName = localStorage.getItem('userName') || 'Account';
-      loginButton.textContent = userName;
-      loginButton.classList.remove('btn-primary');
+      const isAdmin = localStorage.getItem('isAdmin') === 'true';
+
+      // Configure button appearance
+      loginButton.innerHTML = '';
+      const userIcon = document.createElement('i');
+      userIcon.classList.add('pe-2', 'fas', 'fa-user');
+      loginButton.appendChild(userIcon);
+      loginButton.appendChild(document.createTextNode(userName));
+
+      loginButton.classList.remove('btn-secondary');
       loginButton.classList.add('btn-success');
-      loginButton.onclick = function() {
-        window.location.href = 'userpage.html';
-      };
+      loginButton.setAttribute('data-bs-toggle', 'dropdown');
+      loginButton.removeAttribute('data-bs-target');
+      loginButton.onclick = null; // let Bootstrap handle dropdown
 
-      // inject icon when the user is logged in
-      const userIcon = document.createElement("i");
-      userIcon.classList.add("pe-2");
-      userIcon.classList.add("fas");
-      userIcon.classList.add("fa-user");
-      loginButton.prepend(userIcon);
+      // Configure dropdown menu if present
+      if (dropdownMenu) {
+        dropdownMenu.classList.remove('d-none');
+      }
+      if (dashboardLink) {
+        // Pages like index.html, projects.html, project-details.html
+        dashboardLink.textContent = isAdmin ? 'Admin Dashboard' : 'My Tutorials';
+        dashboardLink.onclick = function (e) {
+          e.preventDefault();
+          window.location.href = isAdmin ? 'adminPage.html' : 'userpage.html';
+        };
+      }
 
+      if (profileLink) {
+        // Pages like adminPage.html where we only want Update Profile + Logout
+        profileLink.textContent = 'Update Profile';
+        profileLink.onclick = function (e) {
+          e.preventDefault();
+          // Placeholder: profile update not implemented yet
+        };
+      }
+      if (logoutLink) {
+        logoutLink.onclick = function (e) {
+          e.preventDefault();
+          if (typeof window.logout === 'function') {
+            window.logout();
+          }
+        };
+      }
     } else if (loginButton) {
-      // User is not logged in - show login button
-      loginButton.textContent = 'Login';
+      // User is not logged in - show login/signup button
+      loginButton.textContent = 'Login / Signup';
       loginButton.classList.remove('btn-success');
-      loginButton.classList.add('btn-primary');
+      loginButton.classList.add('btn-secondary');
       loginButton.onclick = null;
       loginButton.setAttribute('data-bs-toggle', 'modal');
       loginButton.setAttribute('data-bs-target', '#loginSignupModal');
+
+      // Hide dropdown menu if present
+      if (dropdownMenu) {
+        dropdownMenu.classList.add('d-none');
+      }
     }
   };
 
@@ -194,6 +247,19 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('authToken', answer.token);
             localStorage.setItem('refreshToken', answer.refreshToken || '');
             localStorage.setItem('userName', answer.userName || document.getElementById('loginEmail').value.split('@')[0]);
+
+            // Detect admin role from response and persist a simple flag
+            let isAdminFlag = false;
+            const roleCandidates = [answer.roles, answer.authorities, answer.role, answer.userRole, answer.scope];
+            for (const val of roleCandidates) {
+              if (!val) continue;
+              if (typeof val === 'string') {
+                if (val.toUpperCase().includes('ADMIN')) { isAdminFlag = true; break; }
+              } else if (Array.isArray(val)) {
+                if (val.some(r => typeof r === 'string' && r.toUpperCase().includes('ADMIN'))) { isAdminFlag = true; break; }
+              }
+            }
+            localStorage.setItem('isAdmin', isAdminFlag ? 'true' : 'false');
             
             // NEW: Store user ID from the response
             if (answer.id) {
@@ -210,10 +276,10 @@ document.addEventListener('DOMContentLoaded', () => {
             updateAuthButton(); // Update navbar button
           }
 
-          // Redirect to userpage.html on successful login
+          // Redirect to home page (index.html) on successful login
           if (endpoint.includes('login') || endpoint.includes('signin')) {
             setTimeout(() => {
-              window.location.href = 'userpage.html';
+              window.location.href = 'index.html';
             }, 1500);
           } else if (endpoint.includes('signup')) {
             // Clear the signup form
@@ -360,24 +426,31 @@ document.addEventListener('DOMContentLoaded', () => {
   const loginForm   = document.querySelector('#pills-login form');
   const signupForm  = document.querySelector('#pills-signup form');
 
-  // Store the original button text so we can restore it later
-  loginForm.querySelector('button[type="submit"]').dataset.originalText   = 'Login';
-  signupForm.querySelector('button[type="submit"]').dataset.originalText  = 'Sign Up';
+  if (loginForm && signupForm) {
+    // Store the original button text so we can restore it later
+    const loginSubmitBtn = loginForm.querySelector('button[type="submit"]');
+    const signupSubmitBtn = signupForm.querySelector('button[type="submit"]');
+    if (loginSubmitBtn) loginSubmitBtn.dataset.originalText = 'Login';
+    if (signupSubmitBtn) signupSubmitBtn.dataset.originalText = 'Sign Up';
 
-  // Update these to match your actual endpoints
-  bindForm(loginForm,  'http://localhost:8890/api/v1/public/signin');   
-  bindForm(signupForm, 'http://localhost:8890/api/v1/public/signup'); 
+    // Update these to match your actual endpoints
+    bindForm(loginForm,  'http://localhost:8890/api/v1/public/signin');   
+    bindForm(signupForm, 'http://localhost:8890/api/v1/public/signup'); 
 
-  // -------------------------------------------------------------
-  //  clear alerts when the user switches tabs
-  // -------------------------------------------------------------
-  const pills = document.getElementById('pills-tab');
-  pills.addEventListener('shown.bs.tab', (event) => {
-    // event.target   = newly‑shown tab button
-    // event.relatedTarget = previous tab button
-    const currentlyVisiblePane = document.querySelector(event.target.getAttribute('data-bs-target'));
-    currentlyVisiblePane.querySelectorAll('.alert').forEach(a => a.remove());
-  });
+    // -----------------------------------------------------------
+    //  clear alerts when the user switches tabs
+    // -----------------------------------------------------------
+    const pills = document.getElementById('pills-tab');
+    if (pills) {
+      pills.addEventListener('shown.bs.tab', (event) => {
+        const targetPaneSelector = event.target.getAttribute('data-bs-target');
+        if (!targetPaneSelector) return;
+        const currentlyVisiblePane = document.querySelector(targetPaneSelector);
+        if (!currentlyVisiblePane) return;
+        currentlyVisiblePane.querySelectorAll('.alert').forEach(a => a.remove());
+      });
+    }
+  }
 
   // -------------------------------------------------------------
   // Check authentication status on page load
@@ -399,9 +472,15 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('userName');
     localStorage.removeItem('userId'); // Remove user ID on logout
+    localStorage.removeItem('isAdmin');
     updateAuthButton(); // Switch back to login button
     
-    // Show success message
-    showToast({ bgColor: "success", msg: "You have been logged out successfully." });
+    // Show success message if toast helper is available
+    if (typeof showToast === 'function') {
+      showToast({ bgColor: "success", msg: "You have been logged out successfully." });
+    }
+
+    // Redirect to home page
+    window.location.href = 'index.html';
   };
 });

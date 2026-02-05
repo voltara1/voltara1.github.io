@@ -120,9 +120,6 @@
             <a class="nav-link text-white fw-semibold" href="#">ARTICLES</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link text-white fw-semibold" href="#">ACTIVITY</a>
-          </li>
-          <li class="nav-item">
             <a class="nav-link text-white fw-semibold" href="#">FORUM</a>
           </li>
         </ul>
@@ -135,11 +132,18 @@
             <button class="btn btn-outline-light" type="submit">Search</button>
           </form>
 
-          <!-- Authentication buttons -->
-          <button type="button" class="btn btn-secondary text-nowrap" data-bs-toggle="modal"
-            data-bs-target="#loginSignupModal">
-            Login / Signup
-          </button>
+          <!-- Authentication dropdown -->
+          <div class="dropdown">
+            <button id="authButton" type="button" class="btn btn-secondary dropdown-toggle text-nowrap" data-bs-toggle="modal"
+              data-bs-target="#loginSignupModal" aria-expanded="false">
+              Login / Signup
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" id="authDropdownMenu">
+              <li><a class="dropdown-item" href="#" id="nav-dashboard-link">Dashboard</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="#" id="nav-logout-link">Logout</a></li>
+            </ul>
+          </div>
         </div>
 
       </div>
@@ -307,9 +311,6 @@
           <a href="#" class="nav-link px-2 text-white-50">Articles</a>
         </li>
         <li class="nav-item">
-          <a href="#" class="nav-link px-2 text-white-50">Activity</a>
-        </li>
-        <li class="nav-item">
           <a href="#" class="nav-link px-2 text-white-50">Forum</a>
         </li>
       </ul>
@@ -323,9 +324,11 @@
         crossorigin="anonymous"></script>
     <!-- 1. tutorials-loader.js: fetch tutorials from backend and populate voltaraTutorials object array-->
     <script src="./src/components/tutorials-loader.js"></script>
-    <!-- 2. script.js: Main application logic, event handlers, form submission -->
+    <!-- 2. user.js: Shared login/signup + navbar auth behavior -->
+    <script src="./src/components/script.js"></script>
+    <!-- 3. projectDetails.js: Project details page-specific logic -->
     <script src="./src/components/projectDetails.js"></script>
-     <!--3. seacrhprojects.js: tutorial search feature, on the navbar section -->
+     <!--4. seacrhprojects.js: tutorial search feature, on the navbar section -->
   <script src="./src/components/searchprojects.js"></script>
 
 </body>

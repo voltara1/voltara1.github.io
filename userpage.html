@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Voltara - Learn IoT</title>
+    <title>Voltara - Learn Microcontroller</title>
 
     <link rel="icon" href="assets/favicon.ico" />
     <!-- Import Bootstrap 5's utility classes and components via its CDN -->
@@ -32,7 +32,7 @@
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" href="index.html">
           <img
             src="assets/voltara-logo-transparent.png"
             alt="Voltara Logo"
@@ -54,16 +54,13 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav nav-fill nav-pills w-70 me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Home</a>
+              <a class="nav-link active" aria-current="page" href="index.html">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Explore</a>
+              <a class="nav-link" href="projects.html">Explore</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#">Articles</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Activity</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#">Forum</a>
@@ -93,7 +90,7 @@
                 </button>
                 <div class="user-dropdown-content">
                   <a href="#" id="profileSettingsBtn">
-                    <i class="fas fa-cog"></i> Profile Settings
+                    <i class="fas fa-cog"></i> Update Profile
                   </a>
                   <a href="#" class="logout-btn" onclick="logout()">
                     <i class="fas fa-sign-out-alt"></i> Logout
@@ -119,8 +116,8 @@
               in a supportive and collaborative environment.
             </h6>
             <div class="header-buttons">
-              <a class="btn-voltara" href="#" role="button">Explore Projects</a>
-              <a class="btn-voltara" href="#" role="button">Create Project</a>
+              <a class="btn-voltara" href="#" role="button">Explore Tutorials</a>
+              <a class="btn-voltara" href="#" role="button">Create Tutorial</a>
             </div>
           </div>
         </div>
@@ -134,12 +131,12 @@
           <ul class="nav-links">
             <li>
               <a href="#" id="uploadLink"
-                ><i class="fas fa-upload"></i> Upload Projects</a
+                ><i class="fas fa-upload"></i> Upload Tutorial</a
               >
             </li>
             <li>
               <a href="#" id="projectsLink"
-                ><i class="fas fa-th-large"></i> My Projects</a
+                ><i class="fas fa-th-large"></i> My Tutorials</a
               >
             </li>
             <li>
@@ -152,7 +149,7 @@
 
         <main class="content-section" id="uploadSection">
           <div class="section-title">
-            <h2>Upload New IoT Project</h2>
+            <h2>Upload New Tutorial</h2>
           </div>
 
           <form class="upload-form" id="projectForm">
@@ -182,7 +179,7 @@
               <textarea
                 id="projectDescription"
                 class="form-control"
-                placeholder="Describe your IoT project in detail..."
+                placeholder="Describe your tutorial in detail..."
                 required
                 rows="3"
               ></textarea>
@@ -264,7 +261,7 @@
             </div>
 
             <button type="submit" class="btn btn-primary">
-              <i class="fas fa-cloud-upload-alt"></i> Upload Project
+              <i class="fas fa-cloud-upload-alt"></i> Upload Tutorial
             </button>
           </form>
         </main>
@@ -272,7 +269,7 @@
         <!-- Projects Page -->
         <main class="content-section projects-page" id="projectsSection">
           <div class="section-title">
-            <h2>My IoT Projects</h2>
+            <h2>My Tutorials</h2>
             <div>
               <input
                 type="text"
@@ -286,7 +283,7 @@
           <table class="project-table">
             <thead>
               <tr>
-                <th>Project Name</th>
+                <th>Tutorial Name</th>
                 <th>Category</th>
                 <th>Date</th>
                 <th>Actions</th>
@@ -444,7 +441,7 @@
     </div>
 
     <footer>
-      <p>&copy; 2026 Voltara - IoT Learning Platform. All rights reserved.</p>
+      <p>&copy; 2026 Voltara - Learning Platform for microcontroller, IoT and more. All rights reserved.</p>
     </footer>
 
     <div class="notification" id="notification"></div>
@@ -469,6 +466,26 @@
         const userNameDisplay = document.getElementById("userNameDisplay");
         if (userNameDisplay) {
           userNameDisplay.textContent = userName;
+        }
+
+        // Setup user dropdown toggle (click to open/close)
+        const userDropdown = document.querySelector(".user-dropdown");
+        const userProfileBtn = document.getElementById("userProfileBtn");
+        const userDropdownContent = document.querySelector(".user-dropdown-content");
+
+        if (userDropdown && userProfileBtn && userDropdownContent) {
+          userProfileBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            userDropdown.classList.toggle("open");
+          });
+
+          // Close dropdown when clicking outside
+          document.addEventListener("click", function (e) {
+            if (!userDropdown.contains(e.target)) {
+              userDropdown.classList.remove("open");
+            }
+          });
         }
 
         // Setup profile settings button

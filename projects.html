@@ -119,9 +119,6 @@
             <a class="nav-link text-white fw-semibold" href="#">ARTICLES</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link text-white fw-semibold" href="#">ACTIVITY</a>
-          </li>
-          <li class="nav-item">
             <a class="nav-link text-white fw-semibold" href="#">FORUM</a>
           </li>
         </ul>
@@ -134,10 +131,17 @@
             <button class="btn btn-outline-light" type="submit">Search</button>
           </form>
 
-          <!-- Authentication buttons -->
-          <button type="button" class="btn btn-secondary text-nowrap" data-bs-toggle="modal" data-bs-target="#loginSignupModal">
-            Login / Signup
-          </button>
+          <!-- Authentication dropdown -->
+          <div class="dropdown">
+            <button id="authButton" type="button" class="btn btn-secondary dropdown-toggle text-nowrap" data-bs-toggle="modal" data-bs-target="#loginSignupModal" aria-expanded="false">
+              Login / Signup
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" id="authDropdownMenu">
+              <li><a class="dropdown-item" href="#" id="nav-dashboard-link">Dashboard</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="#" id="nav-logout-link">Logout</a></li>
+            </ul>
+          </div>
         </div>
 
       </div>
@@ -222,9 +226,6 @@
           <a href="#" class="nav-link px-2 text-white-50">Articles</a>
         </li>
         <li class="nav-item">
-          <a href="#" class="nav-link px-2 text-white-50">Activity</a>
-        </li>
-        <li class="nav-item">
           <a href="#" class="nav-link px-2 text-white-50">Forum</a>
         </li>
       </ul>
@@ -243,7 +244,9 @@
   <script src="./src/components/pagination.js"></script>
   <!-- 3. projectsPage.js: Projects page-specific logic (filtering, event handlers) -->
   <script src="./src/components/projectsPage.js"></script>
-  <!-- 4. seacrhprojects.js: tutorial search feature, on the navbar section -->
+  <!-- 4. user.js: Shared login/signup + navbar auth behavior -->
+  <script src="./src/components/script.js"></script>
+  <!-- 5. seacrhprojects.js: tutorial search feature, on the navbar section -->
   <script src="./src/components/searchprojects.js"></script>
   
   <!-- Bootstrap Bundle: Includes Popper.js for tooltips, popovers, and dropdowns -->

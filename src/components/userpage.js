@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
     updateUserInfo(userName, userEmail);
     
     initializePage();
-    loadUserTutorials();
+    // Do not load tutorials on initial page load; they will be fetched when the My Tutorials section is opened.
 });
 
 // Create category mapping based on categories.csv
@@ -70,7 +70,7 @@ function loadUserTutorials() {
     })
     .catch(error => {
         console.error('Error loading tutorials:', error);
-        showNotification(`Failed to load tutorials: ${error.message}`, 'error');
+        // Suppress the toast; errors are logged to the console instead.
         if (loadingElement) loadingElement.style.display = 'none';
     });
 }
@@ -697,14 +697,22 @@ function addProject() {
         return result;
     })
     .then(data => {
+        // Show success toast/notification
         showNotification('Project uploaded successfully!', 'success');
+
+        // If backend returned the new tutorial ID, wait 2 seconds then redirect
+        if (data && data.id) {
+            setTimeout(() => {
+                window.location.href = `project-details.html?id=${data.id}`;
+            }, 2000);
+            return;
+        }
         
-        // Reset form and previews
+        // Fallback: reset form and show projects list
         const projectForm = document.getElementById('projectForm');
         if (projectForm) projectForm.reset();
         clearFilePreviews();
         
-        // Show projects section and reload projects
         showProjectsSection();
         loadUserTutorials();
     })

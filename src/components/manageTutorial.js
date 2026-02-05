@@ -1,13 +1,17 @@
-// Initialised admit of tutorial projects used by all admin tutorial views
-let adminProjects = [];
+// Initialised adminProjects used by all admin tutorial views
+let adminTutorials = [];
 
-// Populate adminProjects from the global voltaraTutorials array
-function buildAdminProjectsList() {
+// Populate adminProjects from the voltaraTutorials object array.
+// This normalises the raw voltaraTutorials data into a simpler shape used by admin views.
+// If there are no tutorials, adminTutorials is reset to an empty array and the function returns.
+function buildTutorialsList() {
     if (!voltaraTutorials.length) {
-        adminProjects = [];
+        adminTutorials = [];
         return;
     }
-    adminProjects = voltaraTutorials.map(tutorial => {
+    // Deconstruct each tutorial object into a flat structure (id, title, category, proficiency,
+    // curated flag and numeric likes) suitable for filtering and sorting in the admin UI.
+    adminTutorials = voltaraTutorials.map(function (tutorial) {
         const categoryName = tutorial.category && tutorial.category.name ? tutorial.category.name : "";
         const proficiency = tutorial.proficiency || "";
         const curated = Boolean(tutorial.curated);
@@ -23,10 +27,11 @@ function buildAdminProjectsList() {
     });
 }
 
-// Render table rows of tutorial list, in table format
-// Generate table rows HTML for a given list of tutorials
+// Render table rows of tutorial list, in table format.
+// return the HTML element (string)  
+// The returned HTML is injected into the relevant <tbody> by each view in adminpage.js
 function renderAdminProjectTable(tutorials) {
-    const rows = tutorials.map(tutorial => {
+    const rows = tutorials.map(function (tutorial) {
         return `
       <tr>
         <td>${tutorial.id}</td>
@@ -49,17 +54,24 @@ function renderAdminProjectTable(tutorials) {
 }
 
 // View 3.1: filter (checkbox) and list projects by selected categories
-// Render the admin view that filters projects by selected categories
-function renderAdminProjectsByCategoryView() {
-    if (!adminProjects.length) {
+// Render the admin view that filters projects by selected categories.
+// 1. Render category checkboxes
+// 2. Builds a table body that only includes tutorials where category matches the selected checkbox
+// 3. Re-attach curated toggle handlers every time the table contents change so that
+//  the curated checkbox column remain working after filters are applied.
+function renderCategoryView() {
+    // If there are no tutorials loaded into adminTutorials, show a friendly message and exit.
+    if (!adminTutorials.length) {
         setAdminMainContent('<p class="text-muted mb-0">No projects available.</p>');
         return;
     }
-    const html = `
-    <h2 class="admin-main-title mb-3">3.1 List projects by category</h2>
-    <div class="admin-filter-panel mb-3">
+  // HTML string for the filter by category checkboxes
+  // and for table columns/fields (ID/Title/.../proficiency/curated/)
+    const htmlElements = `
+    <h2 class="admin-main-title mb-3 fs-3 fw-bold text-secondary">List tutorials by category</h2>
+    <div class="admin-filter-panel mb-3 border rounded-3 bg-light">
       <div class="admin-filter-header small text-muted mb-1">Select one or more categories</div>
-      <div class="admin-filter-groups">
+      <div class="admin-filter-groups d-flex flex-wrap gap-2">
         <div class="form-check form-check-inline">
           <input class="form-check-input" type="checkbox" id="admin-cat-arduino" name="admin-project-category" value="Arduino" checked>
           <label class="form-check-label" for="admin-cat-arduino">Arduino</label>
@@ -114,7 +126,8 @@ function renderAdminProjectsByCategoryView() {
       </table>
     </div>
   `;
-    setAdminMainContent(html);
+    setAdminMainContent(htmlElements);
+
     const checkboxes = Array.prototype.slice.call(document.querySelectorAll('input[name="admin-project-category"]'));
     const selectAll = document.getElementById("admin-projects-category-select-all");
     const clearAll = document.getElementById("admin-projects-category-clear-all");
@@ -122,25 +135,35 @@ function renderAdminProjectsByCategoryView() {
     if (!body) {
         return;
     }
+    // Return an array of category names (e.g. "Arduino", "ESP32") for all checkboxes
+    // that are currently checked.
     function getSelectedCategories() {
-        return checkboxes.filter(cb => cb.checked).map(cb => cb.value);
+        return checkboxes
+            .filter(function (cb) { return cb.checked; })
+            .map(function (cb) { return cb.value; });
     }
+    // Rebuild the table body based on the currently selected categories.
+    // If at least one category is selected, filter adminTutorials 
+    // clear the table if no categories are selected.
     function updateTable() {
         const selected = getSelectedCategories();
-        const filtered = selected.length ? adminProjects.filter(tutorial => {
+        const filtered = selected.length ? adminTutorials.filter(function (tutorial) {
             if (!tutorial.category) {
                 return false;
             }
-            return selected.some(cat => tutorial.category.toLowerCase() === cat.toLowerCase());
+            return selected.some(function (cat) { return tutorial.category.toLowerCase() === cat.toLowerCase(); });
         }) : [];
         body.innerHTML = renderAdminProjectTable(filtered);
+        if (typeof attachCuratedToggleHandlers === "function") {
+            attachCuratedToggleHandlers();
+        }
     }
-    checkboxes.forEach(cb => {
+    checkboxes.forEach(function (cb) {
         cb.addEventListener("change", updateTable);
     });
     if (selectAll) {
         selectAll.addEventListener("click", function () {
-            checkboxes.forEach(cb => {
+            checkboxes.forEach(function (cb) {
                 cb.checked = true;
             });
             updateTable();
@@ -148,7 +171,7 @@ function renderAdminProjectsByCategoryView() {
     }
     if (clearAll) {
         clearAll.addEventListener("click", function () {
-            checkboxes.forEach(cb => {
+            checkboxes.forEach(function (cb) {
                 cb.checked = false;
             });
             updateTable();
@@ -157,16 +180,17 @@ function renderAdminProjectsByCategoryView() {
     updateTable();
 }
 
-// View 3.2: list only curated projects with sorting by likes
-// Render the admin view showing only curated projects, with likes-based sorting
-function renderAdminCuratedProjectsView(sortKey) {
-    if (!adminProjects.length) {
+// View 3.2: list only curated projects with sorting by likes.
+// Renders a table of tutorials where curated === true
+function renderCuratedView(sortKey) {
+    if (!adminTutorials.length) {
         setAdminMainContent('<p class="text-muted mb-0">No projects available.</p>');
         return;
     }
+    // Default sort is descending by likes unless an explicit sortKey is supplied.
     const sort = sortKey || "likes_desc";
-    const html = `
-    <h2 class="admin-main-title mb-3">3.2 List curated projects</h2>
+    const htmlElements = `
+    <h2 class="admin-main-title mb-3 fs-3 fw-bold text-secondary">List curated tutorials</h2>
     <div class="d-flex flex-wrap align-items-center justify-content-between mb-3 gap-2">
       <p class="mb-0 small text-muted">Showing projects marked as curated. Use sorting to change order.</p>
       <div class="d-flex align-items-center gap-2">
@@ -193,38 +217,45 @@ function renderAdminCuratedProjectsView(sortKey) {
       </table>
     </div>
   `;
-    setAdminMainContent(html);
+    setAdminMainContent(htmlElements);
     const select = document.getElementById("admin-curated-sort");
     const body = document.getElementById("admin-curated-projects-body");
     if (!select || !body) {
         return;
     }
+    // Return curated tutorials sorted by likes
     function getSorted() {
-        const tutorials = adminProjects.filter(tutorial => tutorial.curated);
+        const tutorials = adminTutorials.filter(function (tutorial) { return tutorial.curated; });
         if (select.value === "likes_asc") {
-            return tutorials.slice().sort((a, b) => a.likes - b.likes);
+          // return tutorials.slice().sort((a, b) => b.likes - a.likes);
+            return tutorials.slice().sort(function (a, b) { return a.likes - b.likes; });
         }
-        return tutorials.slice().sort((a, b) => b.likes - a.likes);
+        // return tutorials.slice().sort((a, b) => a.likes - b.likes);
+        return tutorials.slice().sort(function (a, b) { return b.likes - a.likes; });
+
     }
     function updateTable() {
         const tutorials = getSorted();
         body.innerHTML = renderAdminProjectTable(tutorials);
+        if (typeof attachCuratedToggleHandlers === "function") {
+            attachCuratedToggleHandlers();
+        }
     }
     select.value = sort;
     select.addEventListener("change", updateTable);
     updateTable();
 }
 
-// View 3.3: list only non-curated projects with sorting by likes
-// Render the admin view showing only non-curated projects, with likes-based sorting
-function renderAdminNonCuratedProjectsView(sortKey) {
-    if (!adminProjects.length) {
+// View 3.3: list only non-curated projects with sorting by likes.
+function renderNonCurated(sortKey) {
+    if (!adminTutorials.length) {
         setAdminMainContent('<p class="text-muted mb-0">No projects available.</p>');
         return;
     }
+    // Default sort is descending by likes unless an explicit sortKey is supplied.
     const sort = sortKey || "likes_desc";
-    const html = `
-    <h2 class="admin-main-title mb-3">3.3 List non-curated projects</h2>
+    const htmlElements = `
+    <h2 class="admin-main-title mb-3 fs-3 fw-bold text-secondary">List non-curated tutorials</h2>
     <div class="d-flex flex-wrap align-items-center justify-content-between mb-3 gap-2">
       <p class="mb-0 small text-muted">Showing projects that are not curated. Use sorting to change order.</p>
       <div class="d-flex align-items-center gap-2">
@@ -251,40 +282,47 @@ function renderAdminNonCuratedProjectsView(sortKey) {
       </table>
     </div>
   `;
-    setAdminMainContent(html);
+    setAdminMainContent(htmlElements);
     const select = document.getElementById("admin-noncurated-sort");
     const body = document.getElementById("admin-noncurated-projects-body");
     if (!select || !body) {
         return;
     }
+
+    // Return non-curated tutorials sorted by likes in ascending/descending order.
     function getSorted() {
-        const tutorials = adminProjects.filter(tutorial => !tutorial.curated);
+        const tutorials = adminTutorials.filter(function (tutorial) { return !tutorial.curated; });
         if (select.value === "likes_asc") {
-            return tutorials.slice().sort((a, b) => a.likes - b.likes);
+            //return tutorials.slice().sort((a, b) => b.likes - a.likes);
+            return tutorials.slice().sort(function (a, b) { return a.likes - b.likes; });
         }
-        return tutorials.slice().sort((a, b) => b.likes - a.likes);
+        //return tutorials.slice().sort((a, b) => a.likes - b.likes);
+        return tutorials.slice().sort(function (a, b) { return b.likes - a.likes; });
+        
     }
     function updateTable() {
         const tutorials = getSorted();
         body.innerHTML = renderAdminProjectTable(tutorials);
+        if (typeof attachCuratedToggleHandlers === "function") {
+            attachCuratedToggleHandlers();
+        }
     }
     select.value = sort;
     select.addEventListener("change", updateTable);
     updateTable();
 }
 
-// View 3.4: filter and list projects by proficiency level (Beginner/Intermediate/Advance)
-// Render the admin view that filters projects by proficiency level
-function renderAdminProjectsByProficiencyView() {
-    if (!adminProjects.length) {
+// View 3.4: filter and list projects by proficiency level (Beginner/Intermediate/Advance).
+function renderByProficiencyView() {
+    if (!adminTutorials.length) {
         setAdminMainContent('<p class="text-muted mb-0">No projects available.</p>');
         return;
     }
-    const html = `
-    <h2 class="admin-main-title mb-3">3.4 List projects by proficiency</h2>
-    <div class="admin-filter-panel mb-3">
+    const htmlElements = `
+    <h2 class="admin-main-title mb-3 fs-3 fw-bold text-secondary">List tutorials by proficiency</h2>
+    <div class="admin-filter-panel mb-3 border rounded-3 bg-light">
       <div class="admin-filter-header small text-muted mb-1">Select one or more proficiency levels</div>
-      <div class="admin-filter-groups">
+      <div class="admin-filter-groups d-flex flex-wrap gap-2">
         <div class="form-check form-check-inline">
           <input class="form-check-input" type="checkbox" id="admin-prof-beginner" name="admin-project-proficiency" value="BEGINNER" checked>
           <label class="form-check-label" for="admin-prof-beginner">Beginner</label>
@@ -319,7 +357,8 @@ function renderAdminProjectsByProficiencyView() {
       </table>
     </div>
   `;
-    setAdminMainContent(html);
+    setAdminMainContent(htmlElements);
+
     const checkboxes = Array.prototype.slice.call(document.querySelectorAll('input[name="admin-project-proficiency"]'));
     const selectAll = document.getElementById("admin-projects-prof-select-all");
     const clearAll = document.getElementById("admin-projects-prof-clear-all");
@@ -327,25 +366,33 @@ function renderAdminProjectsByProficiencyView() {
     if (!body) {
         return;
     }
+    // Collect the selected proficiency levels (e.g. ["BEGINNER", "INTERMEDIATE"]).
     function getSelectedLevels() {
-        return checkboxes.filter(cb => cb.checked).map(cb => cb.value);
+        return checkboxes
+            .filter(function (cb) { return cb.checked; })
+            .map(function (cb) { return cb.value; });
     }
+    // Rebuild the table based on the selected proficiency levels.
+    // Tutorials whose proficiency field is missing are excluded from the results.
     function updateTable() {
         const selected = getSelectedLevels();
-        const filtered = selected.length ? adminProjects.filter(tutorial => {
+        const filtered = selected.length ? adminTutorials.filter(function (tutorial) {
             if (!tutorial.proficiency) {
                 return false;
             }
             return selected.indexOf(tutorial.proficiency) !== -1;
         }) : [];
         body.innerHTML = renderAdminProjectTable(filtered);
+        if (typeof attachCuratedToggleHandlers === "function") {
+            attachCuratedToggleHandlers();
+        }
     }
-    checkboxes.forEach(cb => {
+    checkboxes.forEach(function (cb) {
         cb.addEventListener("change", updateTable);
     });
     if (selectAll) {
         selectAll.addEventListener("click", function () {
-            checkboxes.forEach(cb => {
+            checkboxes.forEach(function (cb) {
                 cb.checked = true;
             });
             updateTable();
@@ -353,7 +400,7 @@ function renderAdminProjectsByProficiencyView() {
     }
     if (clearAll) {
         clearAll.addEventListener("click", function () {
-            checkboxes.forEach(cb => {
+            checkboxes.forEach(function (cb) {
                 cb.checked = false;
             });
             updateTable();

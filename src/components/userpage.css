@@ -87,7 +87,9 @@ body {
   background: rgba(231, 76, 60, 0.1);
 }
 
-.user-dropdown:hover .user-dropdown-content {
+/* Show dropdown when hovering or when JS toggles the 'open' class */
+.user-dropdown:hover .user-dropdown-content,
+.user-dropdown.open .user-dropdown-content {
   display: block;
 }
 

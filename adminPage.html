@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Panel - Voltara</title>
+  <title>Admin Dashboard - Voltara</title>
   <link rel="icon" href="assets/favicon.ico">
 
   <!-- External Stylesheets -->
@@ -55,9 +55,6 @@
             <a class="nav-link text-white fw-semibold" href="#">ARTICLES</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link text-white fw-semibold" href="#">ACTIVITY</a>
-          </li>
-          <li class="nav-item">
             <a class="nav-link text-white fw-semibold" href="#">FORUM</a>
           </li>
         </ul>
@@ -70,10 +67,17 @@
             <button class="btn btn-outline-light" type="submit">Search</button>
           </form>
 
-          <!-- Authentication buttons -->
-          <button type="button" class="btn btn-secondary text-nowrap" data-bs-toggle="modal" data-bs-target="#loginSignupModal">
-            Login / Signup
-          </button>
+          <!-- Authentication dropdown -->
+          <div class="dropdown">
+            <button id="authButton" type="button" class="btn btn-secondary dropdown-toggle text-nowrap" data-bs-toggle="modal" data-bs-target="#loginSignupModal" aria-expanded="false">
+              Login / Signup
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" id="authDropdownMenu">
+              <li><a class="dropdown-item" href="#" id="nav-profile-link">Update Profile</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="#" id="nav-logout-link">Logout</a></li>
+            </ul>
+          </div>
         </div>
 
       </div>
@@ -81,44 +85,44 @@
   </nav>
 
 
-  <section class="admin-section py-4">
+  <section class="admin-section py-4 min-vh-100">
     <div class="container-fluid px-4">
       <div class="row">
         <aside class="col-12 col-md-3 col-lg-3 mb-4">
-          <div class="card admin-sidebar h-100">
-            <div class="card-header admin-sidebar-header">
-              <h5 class="mb-0">Admin Panel</h5>
+          <div class="card admin-sidebar h-100 rounded-3 overflow-hidden">
+            <div class="card-header admin-sidebar-header bg-secondary text-light">
+              <h5 class="mb-0">Admin Dashboard</h5>
             </div>
             <div class="card-body p-0">
               <div class="list-group admin-menu">
-                <button class="list-group-item list-group-item-action admin-menu-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#admin-users-menu" aria-expanded="true">
+                <button class="list-group-item list-group-item-action admin-menu-toggle fw-semibold text-uppercase small" type="button" data-bs-toggle="collapse" data-bs-target="#admin-users-menu" aria-expanded="true">
                   <span class="me-2"><i class="fa-solid fa-users"></i></span>
                   Manage users
                 </button>
                 <div class="collapse show" id="admin-users-menu">
-                  <button id="admin-users-list-all" class="list-group-item list-group-item-action admin-menu-item" type="button">
-                    2.1 List ALL users
+                  <button id="admin-users-list-all" class="list-group-item list-group-item-action admin-menu-item fs-6 ps-5" type="button">
+                    • List ALL users
                   </button>
-                  <button id="admin-users-search" class="list-group-item list-group-item-action admin-menu-item" type="button">
-                    2.2 Search users by username or email
+                  <button id="admin-users-search" class="list-group-item list-group-item-action admin-menu-item fs-6 ps-5" type="button">
+                    • Search users by username or email
                   </button>
                 </div>
-                <button class="list-group-item list-group-item-action admin-menu-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#admin-projects-menu" aria-expanded="false">
+                <button class="list-group-item list-group-item-action admin-menu-toggle fw-semibold text-uppercase small" type="button" data-bs-toggle="collapse" data-bs-target="#admin-projects-menu" aria-expanded="false">
                   <span class="me-2"><i class="fa-solid fa-grip"></i></span>
                   Manage Tutorial
                 </button>
                 <div class="collapse" id="admin-projects-menu">
-                  <button class="list-group-item list-group-item-action admin-menu-item" type="button">
-                    3.1 List projects by category
+                  <button class="list-group-item list-group-item-action admin-menu-item fs-6 ps-5" type="button">
+                    • List projects by category
                   </button>
-                  <button class="list-group-item list-group-item-action admin-menu-item" type="button">
-                    3.2 List curated projects
+                  <button class="list-group-item list-group-item-action admin-menu-item fs-6 ps-5" type="button">
+                    • List curated projects
                   </button>
-                  <button class="list-group-item list-group-item-action admin-menu-item" type="button">
-                    3.3 List non-curated projects
+                  <button class="list-group-item list-group-item-action admin-menu-item fs-6 ps-5" type="button">
+                    • List non-curated projects
                   </button>
-                  <button class="list-group-item list-group-item-action admin-menu-item" type="button">
-                    3.4 List projects by proficiency
+                  <button class="list-group-item list-group-item-action admin-menu-item fs-6 ps-5" type="button">
+                    • List projects by proficiency
                   </button>
                 </div>
               </div>
@@ -128,12 +132,12 @@
         <main class="col-12 col-md-9 col-lg-9">
           <div class="card admin-main">
             <div class="card-body" id="admin-main-content">
-              <h2 class="admin-main-title mb-3">Admin dashboard</h2>
-              <p class="text-muted mb-4">Select an action on the left to manage users or projects.</p>
+              <h2 class="admin-main-title mb-3 fs-3 fw-bold text-secondary">Admin dashboard</h2>
+              <p class="text-muted mb-4">Select an action on the left to manage users or tutorials.</p>
               <div class="admin-placeholder mb-4" id="admin-users-placeholder">
                 <h5 class="mb-2">Users management overview</h5>
-                <p class="mb-1">The option 2.1 List ALL users will show a table with:</p>
-                <ul class="mb-2">
+                <p class="mb-1">List ALL users will show a table with:</p>
+                <ul class="mb-2 ps-4">
                   <li>User id, username, email address</li>
                   <li>Creation or registration date</li>
                   <li>Number of tutorials submitted by this user</li>
@@ -142,13 +146,13 @@
                 <p class="mb-0">Sorting controls will allow ordering by user id, username, email, registration date and total likes.</p>
               </div>
               <div class="admin-placeholder" id="admin-projects-placeholder">
-                <h5 class="mb-2">Projects management overview</h5>
-                <p class="mb-1">Project options will include:</p>
+                <h5 class="mb-2">Tutorial management overview</h5>
+                <p class="mb-1"> options include:</p>
                 <ul class="mb-2">
-                  <li>List projects by category with checkboxes for Arduino, ESP32, IoT, PCB Design, Raspberry Pi, Robotics, Sensors and STM32 and controls to select or clear all categories.</li>
-                  <li>List of curated projects with sorting by number of likes in ascending or descending order.</li>
-                  <li>List of non-curated projects with sorting by number of likes in ascending or descending order.</li>
-                  <li>List of projects by proficiency with checkboxes for Beginner, Intermediate and Advance and support for multiple selections.</li>
+                  <li>List tutorials by category with checkboxes for Arduino, ESP32, IoT, PCB Design, Raspberry Pi, Robotics, Sensors and STM32 and controls to select or clear all categories.</li>
+                  <li>List of curated tutorials with sorting by number of likes in ascending or descending order.</li>
+                  <li>List of non-curated tutorials with sorting by number of likes in ascending or descending order.</li>
+                  <li>List of tutorials by proficiency with checkboxes for Beginner, Intermediate and Advance and support for multiple selections.</li>
                 </ul>
                 <p class="mb-0">Future JavaScript will render the tables and filters in this area based on the selected menu item.</p>
               </div>
@@ -183,9 +187,6 @@
           <a href="#" class="nav-link px-2 text-white-50">Articles</a>
         </li>
         <li class="nav-item">
-          <a href="#" class="nav-link px-2 text-white-50">Activity</a>
-        </li>
-        <li class="nav-item">
           <a href="#" class="nav-link px-2 text-white-50">Forum</a>
         </li>
       </ul>
@@ -200,6 +201,9 @@
 <script src="src/components/tutorials-loader.js"></script>
 <script src="src/components/manageUser.js"></script>
 <script src="src/components/manageTutorial.js"></script>
+<script src="src/components/setcurated.js"></script>
+<!-- Shared login/signup + navbar auth behavior -->
+<script src="src/components/script.js"></script>
 <script src="src/components/adminPage.js"></script>
   <!-- Bootstrap Bundle: Includes Popper.js for tooltips, popovers, and dropdowns -->
   <script
