@@ -36,10 +36,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const byProficiencyButton = document.querySelector('[data-bs-target="#admin-projects-menu"] ~ #admin-projects-menu .admin-menu-item:nth-child(4)');
 
   // Backwards-compatible aliases so older variable names still refer to the same buttons
-  const projectsByCategoryButton = byCategoryButton;
-  const curatedProjectsButton = curatedButton;
-  const nonCuratedProjectsButton = nonCuratedButton;
-  const projectsByProficiencyButton = byProficiencyButton;
+  // const projectsByCategoryButton = byCategoryButton;
+  // const curatedProjectsButton = curatedButton;
+  // const nonCuratedProjectsButton = nonCuratedButton;
+  // const projectsByProficiencyButton = byProficiencyButton;
   // if (listAllButton) {
   //   listAllButton.addEventListener("click", async function () {
   //     setAdminMainContent('<p class="text-muted mb-0">Loading users…</p>');

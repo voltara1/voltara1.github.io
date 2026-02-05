@@ -21,8 +21,8 @@ function search(query) {
     // ! Change this variable name to the variable that stores the tutorials
     return voltaraTutorials.filter(item =>
         item.title.toLowerCase().includes(query.toLowerCase()) ||
-        item.description.toLowerCase().includes(query.toLowerCase()) ||
-        item.content.toLowerCase().includes(query.toLowerCase())
+        item.description.toLowerCase().includes(query.toLowerCase())
+       // item.content.toLowerCase().includes(query.toLowerCase())
 
         // This code is used for searching through an array of objects
         // item.tags.some(tag => tag.toLowerCase().includes(query.toLowerCase()))

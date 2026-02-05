@@ -264,11 +264,13 @@ document.addEventListener('DOMContentLoaded', () => {
             // NEW: Store user ID from the response
             if (answer.id) {
               localStorage.setItem('userId', answer.id);
-              // Show user ID in a toast notification
-              showToast({
-                bgColor: "info",
-                msg: `User ID: ${answer.id} (retrieved successfully)`
-              });
+              // Show user ID in a toast notification if toast helper exists
+              if (typeof showToast === 'function') {
+                showToast({
+                  bgColor: "info",
+                  msg: `User ID: ${answer.id} (retrieved successfully)`
+                });
+              }
             } else {
               console.error('Sign-in response does not contain "id" field');
             }
