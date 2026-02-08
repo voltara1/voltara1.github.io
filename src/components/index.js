@@ -34,12 +34,37 @@ function submitForm(event) {
 function showToast({ bgColor, msg }) {
     const toastElement = document.getElementById('msg-toast');
     const toastBodyElement = document.getElementById('msg-toast-body');
+    
     toastBodyElement.textContent = msg;
-    toastElement.classList.remove("bg-success", "bg-danger");
+
+    // Remove ALL possible Bootstrap background classes to prevent color mixing
+    toastElement.classList.remove("bg-success", "bg-danger", "bg-warning", "bg-info", "bg-primary");
+    
+    // Add the new background class
     toastElement.classList.add("bg-" + bgColor);
 
+    // If using Bootstrap 5, consider adding 'text-white' for danger/success
+    // or use 'text-bg-' classes instead of 'bg-'
+    
     const toast = new bootstrap.Toast(toastElement, { delay: 10000 });
-    toast.show(); /* display the toast message for 10 secs */
+    toast.show();
+}
+
+// helper function to map different implementation of toast to use standardised showToast()
+function showNotification(message, type) {
+    let bg;
+    if (type === 'error') {
+        bg = 'danger';
+    } else if (type === 'success') {
+        bg = 'success';
+    } else if (type === 'warning') {
+        bg = 'warning';
+    } else if (type) {
+        bg = type;
+    } else {
+        bg = 'info';
+    }
+    showToast({ bgColor: bg, msg: message });
 }
 
 // ========== PAGINATION CODE ==========
@@ -53,14 +78,14 @@ function showToast({ bgColor, msg }) {
  */
 function renderProjectCard(project) {
     const placeholderSrc = `https://placehold.co/400x300/23374D/FFFFFF?text=${encodeURIComponent(project.category.name)}`;
-    const uploadsBasePath = 'http://127.0.0.1:8890/api/v1/uploads/';
+    const uploadsBasePath = UPLOADS_BASE_URL;
     const imageFileName = project.imageMain || project.image_main;
     const imageSrc = imageFileName ? (uploadsBasePath + encodeURIComponent(imageFileName)) : placeholderSrc;
 
     return `
         <div class="col">
             <div class="card h-100 ms-0 rounded-4 border bg-light tutorial-card">
-                <a href="project-details.html?id=${project.id}" class="text-decoration-none">
+                <a href="tutorial-details.html?id=${project.id}" class="text-decoration-none">
                     <img src="${imageSrc}" 
                          class="card-img-top rounded-top-3 tutorial-card-img" 
                          alt="${project.title}"
@@ -157,7 +182,7 @@ function initializeFeaturedProjects() {
 
     // Check if Pagination class exists
     if (typeof Pagination === 'undefined') {
-        console.error('Pagination class not loaded. Make sure pagination.js is included.');
+        console.error('Pagination class not loaded. Make sure tutorials-pagination.js is included.');
         return;
     }
 

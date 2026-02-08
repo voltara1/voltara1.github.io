@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Grab the modal instance (if present) so we can close it programmatically
   // -----------------------------------------------------------------
   const loginSignupModalEl = document.getElementById('loginSignupModal');
-  const loginSignupModal   = loginSignupModalEl ? bootstrap.Modal.getOrCreateInstance(loginSignupModalEl) : null;
+  const loginSignupModal = loginSignupModalEl ? bootstrap.Modal.getOrCreateInstance(loginSignupModalEl) : null;
 
   // -----------------------------------------------------------------
   // Hero CTA: Share Tutorial button behavior
@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       const token = localStorage.getItem('authToken');
       if (token) {
-        window.location.href = 'userpage.html';
+        window.location.href = 'user-page.html';
       } else if (loginSignupModal) {
         loginSignupModal.show();
       }
@@ -59,16 +59,21 @@ document.addEventListener('DOMContentLoaded', () => {
         dashboardLink.textContent = isAdmin ? 'Admin Dashboard' : 'My Tutorials';
         dashboardLink.onclick = function (e) {
           e.preventDefault();
-          window.location.href = isAdmin ? 'adminPage.html' : 'userpage.html';
+          if (isAdmin) {
+            window.location.href = 'admin-page.html';
+          } else {
+            localStorage.setItem('openMyTutorials', 'true');
+            window.location.href = 'user-page.html';
+          }
         };
       }
 
       if (profileLink) {
-        // Pages like adminPage.html where we only want Update Profile + Logout
         profileLink.textContent = 'Update Profile';
         profileLink.onclick = function (e) {
           e.preventDefault();
-          // Placeholder: profile update not implemented yet
+          localStorage.setItem('openProfileModal', 'true');
+          window.location.href = 'user-page.html';
         };
       }
       if (logoutLink) {
@@ -151,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Map form fields to match your UserDto model exactly
       let requestBody;
-      
+
       if (endpoint.includes('signin') || endpoint.includes('login')) {
         requestBody = {
           email: document.getElementById('loginEmail').value.trim(),
@@ -182,28 +187,28 @@ document.addEventListener('DOMContentLoaded', () => {
         // Check content type before parsing
         const contentType = resp.headers.get('content-type');
         let answer;
-        
+
         if (contentType && contentType.includes('application/json')) {
           answer = await resp.json();
         } else {
           const textResponse = await resp.text();
           answer = { message: textResponse || `Server returned ${resp.status} ${resp.statusText}` };
         }
-  
+
         if (!resp.ok) {
           // ---------------------------------------------------------
           // Server responded with an error (400‑500)
           // ---------------------------------------------------------
           let msg = answer.message || answer.error || `Server returned ${resp.status} ${resp.statusText}`;
-          
+
           // Handle specific HTTP status codes
           if (resp.status === 409) {
             // Conflict - email already exists
             msg = 'User already exists. Please use a different email address.';
           } else if (resp.status === 403) {
             // Forbidden - check if it's a specific security message
-            if (answer.message && (answer.message.toLowerCase().includes('email already exists') || 
-                                  answer.message.toLowerCase().includes('please use another email'))) {
+            if (answer.message && (answer.message.toLowerCase().includes('email already exists') ||
+              answer.message.toLowerCase().includes('please use another email'))) {
               msg = 'User already exists. Please use a different email address.';
             } else if (answer.message && answer.message.toLowerCase().includes('access denied')) {
               msg = 'Access forbidden. Please check your permissions.';
@@ -227,7 +232,7 @@ document.addEventListener('DOMContentLoaded', () => {
           } else if (resp.status === 400) {
             msg = answer.message || 'Please check your input.';
           }
-          
+
           const alert = createAlert('danger', msg);
           formEl.prepend(alert);
         } else {
@@ -260,21 +265,32 @@ document.addEventListener('DOMContentLoaded', () => {
               }
             }
             localStorage.setItem('isAdmin', isAdminFlag ? 'true' : 'false');
-            
-            // NEW: Store user ID from the response
-            if (answer.id) {
-              localStorage.setItem('userId', answer.id);
-              // Show user ID in a toast notification if toast helper exists
-              if (typeof showToast === 'function') {
-                showToast({
-                  bgColor: "info",
-                  msg: `User ID: ${answer.id} (retrieved successfully)`
-                });
-              }
+
+            // Store numeric userId from the login response (backend returns it alongside the token)
+            const userIdCandidates = [
+              answer.userId,
+              answer.user_id,
+              answer.id,
+              answer.user && answer.user.id,
+              answer.user && answer.user.userId
+            ];
+
+            const userIdValue = userIdCandidates.find(v => v !== undefined && v !== null && v !== '' && !Number.isNaN(parseInt(v, 10)));
+
+            if (userIdValue !== undefined) {
+              const numericUserId = parseInt(userIdValue, 10);
+              localStorage.setItem('userId', String(numericUserId));
+
+              // if (typeof showToast === 'function') {
+              //   showToast({
+              //     bgColor: "info",
+              //     msg: `User ID: ${numericUserId} (retrieved from login response)`
+              //   });
+              // }
             } else {
-              console.error('Sign-in response does not contain "id" field');
+              console.error('Sign-in response does not contain a usable numeric userId field');
             }
-            
+
             updateAuthButton(); // Update navbar button
           }
 
@@ -288,13 +304,13 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('signupName').value = '';
             document.getElementById('signupEmail').value = '';
             document.getElementById('signupPassword').value = '';
-            
+
             // Automatically switch to login tab after successful signup
             setTimeout(() => {
               const loginTab = document.querySelector('#pills-login-tab');
               if (loginTab) {
                 new bootstrap.Tab(loginTab).show();
-                
+
                 // Pre-fill email in login form for convenience
                 const signupEmail = document.getElementById('signupEmail').value;
                 if (signupEmail) {
@@ -319,14 +335,14 @@ document.addEventListener('DOMContentLoaded', () => {
         // -------------------------------------------------------------
         console.error('Fetch error details:', err);
         let msg = 'Network error – try again later.';
-        
+
         // Provide more specific error messages
         if (err instanceof TypeError && err.message.includes('fetch')) {
           msg = 'Unable to connect to server. Please check if the server is running.';
         } else if (err.name === 'AbortError') {
           msg = 'Request timed out. Please try again.';
         }
-        
+
         const alert = createAlert('danger', msg);
         formEl.prepend(alert);
       } finally {
@@ -344,7 +360,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // -------------------------------------------------------------
   const projectsContainer = document.querySelector('.container-fluid.my-2.row');
   const paginationContainer = document.querySelector('.pagination');
-  
+
   // Get all project cards
   if (projectsContainer && paginationContainer) {
     const allProjects = Array.from(projectsContainer.querySelectorAll('.col'));
@@ -354,27 +370,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const showPage = (page) => {
       currentPage = page;
-      
+
       // Hide all projects
       allProjects.forEach(project => {
         project.style.display = 'none';
       });
-      
+
       // Show projects for current page
       const startIndex = (page - 1) * itemsPerPage;
       const endIndex = startIndex + itemsPerPage;
-      
+
       for (let i = startIndex; i < endIndex && i < allProjects.length; i++) {
         allProjects[i].style.display = 'block';
       }
-      
+
       // Update pagination controls
       updatePagination();
     };
 
     const updatePagination = () => {
       paginationContainer.innerHTML = '';
-      
+
       // Previous button
       const prevLi = document.createElement('li');
       prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
@@ -386,23 +402,23 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       }
       paginationContainer.appendChild(prevLi);
-      
+
       // Page numbers
       for (let i = 1; i <= totalPages; i++) {
         const li = document.createElement('li');
         li.className = `page-item ${i === currentPage ? 'active' : ''}`;
         li.innerHTML = `<a class="page-link" href="#">${i}</a>`;
-        
+
         if (i !== currentPage) {
           li.addEventListener('click', (e) => {
             e.preventDefault();
             showPage(i);
           });
         }
-        
+
         paginationContainer.appendChild(li);
       }
-      
+
       // Next button
       const nextLi = document.createElement('li');
       nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
@@ -425,8 +441,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // -------------------------------------------------------------
   // Merge data
   // -------------------------------------------------------------
-  const loginForm   = document.querySelector('#pills-login form');
-  const signupForm  = document.querySelector('#pills-signup form');
+  const loginForm = document.querySelector('#pills-login form');
+  const signupForm = document.querySelector('#pills-signup form');
 
   if (loginForm && signupForm) {
     // Store the original button text so we can restore it later
@@ -436,8 +452,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (signupSubmitBtn) signupSubmitBtn.dataset.originalText = 'Sign Up';
 
     // Update these to match your actual endpoints
-    bindForm(loginForm,  'http://localhost:8890/api/v1/public/signin');   
-    bindForm(signupForm, 'http://localhost:8890/api/v1/public/signup'); 
+    bindForm(loginForm, `${API_BASE_URL}/public/signin`);
+    bindForm(signupForm, `${API_BASE_URL}/public/signup`);
 
     // -----------------------------------------------------------
     //  clear alerts when the user switches tabs
@@ -469,14 +485,14 @@ document.addEventListener('DOMContentLoaded', () => {
   // -------------------------------------------------------------
   // Logout function
   // -------------------------------------------------------------
-  window.logout = function() {
+  window.logout = function () {
     localStorage.removeItem('authToken');
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('userName');
     localStorage.removeItem('userId'); // Remove user ID on logout
     localStorage.removeItem('isAdmin');
     updateAuthButton(); // Switch back to login button
-    
+
     // Show success message if toast helper is available
     if (typeof showToast === 'function') {
       showToast({ bgColor: "success", msg: "You have been logged out successfully." });

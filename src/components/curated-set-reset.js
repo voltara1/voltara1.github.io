@@ -1,5 +1,4 @@
-// Base URL for your backend API
-const API_BASE_URL = 'http://localhost:8890/api/v1';
+// Uses global API_BASE_URL provided by config-const.js
 
 /**
  * Set the curated flag for a tutorial (ADMIN only).

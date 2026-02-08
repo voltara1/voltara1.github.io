@@ -35,7 +35,7 @@ function renderAdminProjectTable(tutorials) {
         return `
       <tr>
         <td>${tutorial.id}</td>
-        <td><a href="project-details.html?id=${tutorial.id}">${tutorial.title}</a></td>
+        <td><a href="tutorial-details.html?id=${tutorial.id}">${tutorial.title}</a></td>
         <td>${tutorial.category}</td>
         <td>${tutorial.proficiency}</td>
         <td class="text-end">${tutorial.likes}</td>
@@ -51,6 +51,115 @@ function renderAdminProjectTable(tutorials) {
     `;
     }).join("");
     return rows || '<tr><td colspan="6" class="text-muted text-center small">No projects to display.</td></tr>';
+}
+
+function renderUnifiedTutorialsView() {
+    if (!adminTutorials.length) {
+        setAdminMainContent('<p class="text-muted mb-0">No projects available.</p>');
+        return;
+    }
+    const htmlElements = `
+    <h2 class="admin-main-title mb-3 fs-3 fw-bold text-secondary">Manage Tutorials</h2>
+    <div class="admin-filter-panel mb-3 border rounded-3 bg-light">
+      <div class="admin-filter-groups row g-2">
+        <div class="col-12 col-md-4">
+          <label for="admin-filter-category" class="form-label mb-1 small text-muted">Category</label>
+          <select id="admin-filter-category" class="form-select form-select-sm">
+            <option value="">All categories</option>
+            <option value="Arduino">Arduino</option>
+            <option value="ESP32">ESP32</option>
+            <option value="IoT">IoT</option>
+            <option value="PCB Design">PCB Design</option>
+            <option value="Raspberry Pi">Raspberry Pi</option>
+            <option value="Robotics">Robotics</option>
+            <option value="Sensors">Sensors</option>
+            <option value="STM32">STM32</option>
+          </select>
+        </div>
+        <div class="col-12 col-md-4">
+          <label for="admin-filter-curated" class="form-label mb-1 small text-muted">Curated</label>
+          <select id="admin-filter-curated" class="form-select form-select-sm">
+            <option value="">All tutorials</option>
+            <option value="curated">Curated only</option>
+            <option value="noncurated">Non-curated only</option>
+          </select>
+        </div>
+        <div class="col-12 col-md-4">
+          <label for="admin-filter-proficiency" class="form-label mb-1 small text-muted">Proficiency</label>
+          <select id="admin-filter-proficiency" class="form-select form-select-sm">
+            <option value="">All levels</option>
+            <option value="BEGINNER">Beginner</option>
+            <option value="INTERMEDIATE">Intermediate</option>
+            <option value="ADVANCE">Advance</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-striped table-hover align-middle mb-0">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Title</th>
+            <th scope="col">Category</th>
+            <th scope="col">Proficiency</th>
+            <th scope="col" class="text-end">Likes</th>
+            <th scope="col">Curated</th>
+          </tr>
+        </thead>
+        <tbody id="admin-tutorials-unified-body"></tbody>
+      </table>
+    </div>
+  `;
+    setAdminMainContent(htmlElements);
+
+    const categorySelect = document.getElementById("admin-filter-category");
+    const curatedSelect = document.getElementById("admin-filter-curated");
+    const proficiencySelect = document.getElementById("admin-filter-proficiency");
+    const body = document.getElementById("admin-tutorials-unified-body");
+    if (!body) {
+        return;
+    }
+
+    function applyFilters() {
+        let tutorials = adminTutorials.slice();
+        const selectedCategory = categorySelect ? categorySelect.value : "";
+        const curatedValue = curatedSelect ? curatedSelect.value : "";
+        const selectedProficiency = proficiencySelect ? proficiencySelect.value : "";
+
+        if (selectedCategory) {
+            tutorials = tutorials.filter(function (t) {
+                return t.category && t.category.toLowerCase() === selectedCategory.toLowerCase();
+            });
+        }
+
+        if (curatedValue === "curated") {
+            tutorials = tutorials.filter(function (t) { return !!t.curated; });
+        } else if (curatedValue === "noncurated") {
+            tutorials = tutorials.filter(function (t) { return !t.curated; });
+        }
+
+        if (selectedProficiency) {
+            tutorials = tutorials.filter(function (t) { return t.proficiency === selectedProficiency; });
+        }
+
+        body.innerHTML = renderAdminProjectTable(tutorials);
+        if (typeof attachCuratedToggleHandlers === "function") {
+            attachCuratedToggleHandlers();
+        }
+    }
+
+    if (categorySelect) {
+        categorySelect.addEventListener("change", applyFilters);
+    }
+    if (curatedSelect) {
+        curatedSelect.addEventListener("change", applyFilters);
+    }
+    if (proficiencySelect) {
+        proficiencySelect.addEventListener("change", applyFilters);
+    }
+
+    applyFilters();
 }
 
 // View 3.1: filter (checkbox) and list projects by selected categories

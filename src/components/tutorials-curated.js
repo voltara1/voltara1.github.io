@@ -41,7 +41,7 @@ function addCard(tutorial, position, category) {
     cardDiv.className = 'card h-100 ms-0 rounded-4 border bg-light mb-3 tutorial-card';
     // anchor tag for a clickable hyperlink applies to the whole card area
     const anchor = document.createElement('a');
-    anchor.href = `project-details.html?id=${tutorial.id}`;
+    anchor.href = `tutorial-details.html?id=${tutorial.id}`;
     anchor.className = 'text-decoration-none';
 
     // add an image using backend file name as primary source with placeholder fallback
@@ -49,7 +49,7 @@ function addCard(tutorial, position, category) {
     curatedProjectImage.id = "curatedCardImage-" + position;
 
     const placeholderSrc = `https://placehold.co/400x300/23374D/FFFFFF?text=${encodeURIComponent(tutorial.category.name)}`;
-    const uploadsBasePath = 'http://127.0.0.1:8890/api/v1/uploads/';
+    const uploadsBasePath = UPLOADS_BASE_URL;
     const imageFileName = tutorial.imageMain || tutorial.image_main;
     const primarySrc = imageFileName ? (uploadsBasePath + encodeURIComponent(imageFileName)) : placeholderSrc;
 

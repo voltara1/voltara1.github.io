@@ -1,6 +1,6 @@
 // This asynchronous function fetches all tutorial objects from back-end API
 // HTTP method: GET
-// end-point URL: http://localhost:8890/api/v1/tutorial
+// Endpoint: `${API_BASE_URL}/tutorial`
 
 let voltaraTutorials = [];
 let tutorialsFetch = false;
@@ -20,7 +20,7 @@ async function ensureTutorialsLoaded() {
     
     tutorialsFetch = (async function () {
         try {
-            const response = await fetch("http://localhost:8890/api/v1/tutorial");
+            const response = await fetch(`${API_BASE_URL}/tutorial`);
             // if the response is NOT ok, throw a custom response
             if (response.status === 403) {
                 throw new Error('Permission denied. Please confim authentication');

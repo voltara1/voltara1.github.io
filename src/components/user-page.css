@@ -372,6 +372,8 @@ textarea.form-control {
   resize: vertical;
 }
 
+/*
+
 .projects-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -434,6 +436,8 @@ textarea.form-control {
   margin-bottom: 15px;
   line-height: 1.5;
 }
+
+*/
 
 .project-meta {
   display: flex;
@@ -628,6 +632,8 @@ footer {
   background: linear-gradient(45deg, #e74c3c, #c0392b);
 }
 
+/*
+/*
 .platform-badge {
   display: inline-block;
   padding: 4px 10px;
@@ -646,10 +652,16 @@ footer {
 .esp32 {
   background: #9b59b6;
 }
+*/
+*/
 
+/*
+/*
 .hidden {
   display: none;
 }
+*/
+*/
 
 .bom-section {
   margin-top: 20px;

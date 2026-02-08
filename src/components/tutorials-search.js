@@ -32,14 +32,14 @@ function search(query) {
 // Function to render a single search result card
 function renderSearchResultCard(project) {
     const placeholderSrc = `https://placehold.co/400x300/23374D/FFFFFF?text=${encodeURIComponent(project.category.name)}`;
-    const uploadsBasePath = 'http://127.0.0.1:8890/api/v1/uploads/';
+    const uploadsBasePath = UPLOADS_BASE_URL;
     const imageFileName = project.imageMain || project.image_main;
     const imageSrc = imageFileName ? (uploadsBasePath + encodeURIComponent(imageFileName)) : placeholderSrc;
 
     return `
         <div class="col">
             <div class="card h-100 ms-0 rounded-4 border bg-light tutorial-card">
-                <a href="project-details.html?id=${project.id}" class="text-decoration-none">
+                <a href="tutorial-details.html?id=${project.id}" class="text-decoration-none">
                     <img src="${imageSrc}" 
                          class="card-img-top rounded-top-3 tutorial-card-img" 
                          alt="${project.title}" 

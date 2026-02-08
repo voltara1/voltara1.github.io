@@ -15,6 +15,14 @@ document.addEventListener('DOMContentLoaded', function() {
     updateUserInfo(userName, userEmail);
     
     initializePage();
+
+    const shouldOpenMyTutorials = localStorage.getItem('openMyTutorials') === 'true';
+    if (shouldOpenMyTutorials) {
+        showProjectsSection();
+        localStorage.removeItem('openMyTutorials');
+    } else {
+        showUploadSection();
+    }
     // Do not load tutorials on initial page load; they will be fetched when the My Tutorials section is opened.
 });
 
@@ -49,7 +57,7 @@ function loadUserTutorials() {
     console.log(`Loading tutorials for user ID: ${userId}`);
     
     // Get tutorials using the user ID
-    fetch(`http://localhost:8890/api/v1/tutorial/user/${userId}`, {
+    fetch(`${API_BASE_URL}/tutorial/user/${userId}`, {
         method: 'GET',
         headers: getAuthHeaders()
     })
@@ -111,14 +119,15 @@ function renderTutorialsTable(tutorials) {
         
         html += `
             <tr>
-                <td>${tutorial.title || 'Untitled Tutorial'}</td>
+                <td>
+                    <a href="tutorial-details.html?id=${tutorial.id}" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
+                        ${tutorial.title || 'Untitled Tutorial'}
+                    </a>
+                </td>
                 <td><span class="badge bg-primary">${categoryName}</span></td>
                 <td><span class="badge ${proficiencyClass}">${tutorial.proficiency || 'N/A'}</span></td>
                 <td>${formatDate(tutorial.createdAt)}</td>
                 <td>
-                    <button class="action-btn view" title="View Details" onclick="showTutorialDetails(${tutorial.id})">
-                        <i class="fas fa-eye"></i>
-                    </button>
                     <button class="action-btn delete" title="Delete Tutorial" onclick="deleteTutorial(${tutorial.id})">
                         <i class="fas fa-trash"></i>
                     </button>
@@ -138,7 +147,7 @@ function showTutorialDetails(tutorialId) {
     showNotification('Loading tutorial details...', 'info');
     
     // API request for a single tutorial
-    fetch(`http://localhost:8890/api/v1/tutorial/${tutorialId}`, {
+    fetch(`${API_BASE_URL}/tutorial/${tutorialId}`, {
         method: 'GET',
         headers: getAuthHeaders()
     })
@@ -265,7 +274,7 @@ function deleteTutorial(tutorialId) {
     showNotification('Deleting tutorial...', 'info');
     
     // API request to delete the tutorial
-    fetch(`http://localhost:8890/api/v1/tutorial/${tutorialId}`, {
+    fetch(`${API_BASE_URL}/tutorial/${tutorialId}`, {
         method: 'DELETE',
         headers: getAuthHeaders()
     })
@@ -288,8 +297,10 @@ function deleteTutorial(tutorialId) {
     });
 }
 
-// The following functions are also defined in userauth.js
-// They're included here for completeness but should be in userauth.js
+
+
+// The following functions are also defined in user-auth.js
+// They're included here for completeness but should be in user-auth.js
 
 /**
  * Gets authentication headers with JWT token
@@ -312,48 +323,6 @@ function isAuthenticated() {
 }
 
 /**
- * Logs out the current user
- */
-function logout() {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('userId');
-    localStorage.removeItem('userName');
-    localStorage.removeItem('userEmail');
-    window.location.href = 'index.html';
-}
-
-/**
- * Updates user information in the UI
- * @param {string} userName - User's display name
- * @param {string} userEmail - User's email address
- */
-function updateUserInfo(userName, userEmail) {
-    // Update navbar button with user info
-    const navButton = document.querySelector('.navbar-nav.nav-pills .btn-primary') || 
-                     document.querySelector('.navbar-nav.nav-pills .btn-success');
-    
-    if (navButton) {
-        // Set button text to username
-        navButton.textContent = userName;
-        navButton.classList.remove('btn-primary');
-        navButton.classList.add('btn-success');
-        navButton.onclick = logout;
-        
-        // Add user icon
-        const userIcon = document.createElement('i');
-        userIcon.classList.add('fas', 'fa-user', 'pe-2');
-        navButton.prepend(userIcon);
-    }
-    
-    // Update profile modal fields
-    const usernameInput = document.getElementById('profileUsername');
-    const emailInput = document.getElementById('profileEmail');
-    
-    if (usernameInput) usernameInput.value = userName;
-    if (emailInput) emailInput.value = userEmail || '';
-}
-
-/**
  * Initializes all page functionality and event listeners
  */
 function initializePage() {
@@ -367,6 +336,7 @@ function initializePage() {
     const bomInput = document.getElementById('bomFiles');
     const projectsLink = document.getElementById('projectsLink');
     const uploadLink = document.getElementById('uploadLink');
+    const shareTutorialBtn = document.getElementById('shareTutorialBtn');
     const backToUpload = document.getElementById('backToUpload');
     const backToProjects = document.getElementById('backToProjects');
     const logoutBtn = document.getElementById('logoutBtn');
@@ -415,6 +385,13 @@ function initializePage() {
     
     if (uploadLink) {
         uploadLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            showUploadSection();
+        });
+    }
+
+    if (shareTutorialBtn) {
+        shareTutorialBtn.addEventListener('click', function(e) {
             e.preventDefault();
             showUploadSection();
         });
@@ -669,7 +646,7 @@ function addProject() {
     showNotification('Uploading project...', 'info');
     
     // Send to backend
-    fetch('http://localhost:8890/api/v1/tutorial', {
+    fetch(`${API_BASE_URL}/tutorial`, {
         method: 'POST',
         headers: {
             'Authorization': getAuthHeaders().Authorization
@@ -698,12 +675,13 @@ function addProject() {
     })
     .then(data => {
         // Show success toast/notification
-        showNotification('Project uploaded successfully!', 'success');
+        showNotification('Tutorial uploaded successfully!', 'success');
+        //showToast('success','Tutorial uploaded successfully....!');
 
         // If backend returned the new tutorial ID, wait 2 seconds then redirect
         if (data && data.id) {
             setTimeout(() => {
-                window.location.href = `project-details.html?id=${data.id}`;
+                window.location.href = `tutorial-details.html?id=${data.id}`;
             }, 2000);
             return;
         }
@@ -734,22 +712,3 @@ function formatDate(dateString) {
     return new Date(dateString).toLocaleDateString(undefined, options);
 }
 
-/**
- * Shows a notification message to the user
- * @param {string} message - Message to display
- * @param {string} type - Type of notification (success, error, info, etc.)
- */
-function showNotification(message, type) {
-    const notification = document.getElementById('notification');
-    if (notification) {
-        notification.textContent = message;
-        notification.className = `notification ${type} show`;
-        
-        // Automatically hide notification after 3 seconds for success/info, 5 seconds for error
-        const duration = type === 'error' ? 5000 : 3000;
-        setTimeout(() => {
-            notification.classList.remove('show');
-        }, duration);
-    }
-    console.log(`[${type.toUpperCase()}] ${message}`);
-}

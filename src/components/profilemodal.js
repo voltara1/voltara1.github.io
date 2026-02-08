@@ -12,7 +12,7 @@ function setupProfileModalHandlers() {
     const profileModal = document.getElementById('profileModal');
     const closeProfileModal = document.getElementById('closeProfileModal');
     const cancelProfile = document.getElementById('cancelProfile');
-    const saveProfileBtn = document.getElementById('saveProfileBtn');
+    const saveProfileBtn = document.getElementById('saveProfile');
     
     if (profileSettingsBtn && profileModal) {
         profileSettingsBtn.addEventListener('click', function(e) {
@@ -76,7 +76,7 @@ function setupProfileModalHandlers() {
             showNotification('Updating profile...', 'info');
             
             // Update user profile via backend API
-            fetch('http://localhost:8890/api/v1/user/update', {
+            fetch(`${API_BASE_URL}/user/update`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': getAuthHeaders().Authorization
@@ -183,36 +183,6 @@ function updateUserInfo(userName, userEmail) {
     if (emailInput) emailInput.value = userEmail || '';
 }
 
-/**
- * Logs out the current user
- */
-function logout() {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('userId');
-    localStorage.removeItem('userName');
-    localStorage.removeItem('userEmail');
-    window.location.href = 'index.html';
-}
-
-/**
- * Gets authentication headers with JWT token
- * @returns {Object} Headers object with authorization token
- */
-function getAuthHeaders() {
-    const token = localStorage.getItem('authToken');
-    return {
-        'Authorization': token ? `Bearer ${token}` : '',
-        'Content-Type': 'application/json'
-    };
-}
-
-/**
- * Checks if user is authenticated
- * @returns {boolean} True if authenticated, false otherwise
- */
-function isAuthenticated() {
-    return !!localStorage.getItem('authToken');
-}
 
 // Attach setup function to DOMContentLoaded event
 document.addEventListener('DOMContentLoaded', function() {
@@ -224,5 +194,15 @@ document.addEventListener('DOMContentLoaded', function() {
         const userName = localStorage.getItem('userName') || 'User';
         const userEmail = localStorage.getItem('userEmail') || '';
         updateUserInfo(userName, userEmail);
+    }
+
+    // Auto-open profile modal if requested by navbar on another page
+    const shouldOpenProfile = localStorage.getItem('openProfileModal') === 'true';
+    if (shouldOpenProfile) {
+        const profileModal = document.getElementById('profileModal');
+        if (profileModal) {
+            profileModal.style.display = 'flex';
+        }
+        localStorage.removeItem('openProfileModal');
     }
 });

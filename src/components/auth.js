@@ -3,26 +3,6 @@
  * Handles user authentication, token management, and API integration
  */
 
-// Add a minimal showToast function to auth.js since it's not included in userpage.html
-function showToast(options) {
-    const toastElement = document.getElementById('msg-toast'); 
-    const toastBodyElement = document.getElementById('msg-toast-body');
-    
-    if (!toastElement || !toastBodyElement) {
-        console.error('Toast elements not found in DOM');
-        return;
-    }
-    
-    toastBodyElement.textContent = options.msg;
-    // Remove existing background classes
-    toastElement.classList.remove("bg-success", "bg-danger", "bg-info", "bg-warning");
-    // Add the new background class
-    toastElement.classList.add("bg-" + options.bgColor);
-    
-    // Initialize and show the toast
-    const toast = new bootstrap.Toast(toastElement, { delay: 4000 });
-    toast.show();
-}
 
 /**
  * Checks if the user is currently authenticated
@@ -84,8 +64,7 @@ function requireAuth() {
         window.location.href = 'index.html';
         return false;
     }
-    // Ensure numeric ID is available in localStorage
-    getUserIdFromToken(); 
+    // At this stage, userId should already be stored from the login response.
     return true;
 }
 
@@ -110,16 +89,20 @@ function logout() {
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('userName');
     localStorage.removeItem('userEmail');
-    localStorage.removeItem('userId'); 
+    localStorage.removeItem('userId');
     
-    // Show success message using the local showToast function
-    showToast({ 
-        bgColor: "success", 
-        msg: "You have been logged out successfully." 
-    });
+    // Show success message using the shared showToast function
+    if (typeof showToast === 'function') {
+        showToast({ 
+            bgColor: "success", 
+            msg: "You have been logged out successfully." 
+        });
+    }
     
-    // Redirect to login page
-    window.location.href = 'index.html';
+    // Delay redirect so the user can see the toast
+    setTimeout(() => {
+        window.location.href = 'index.html';
+    }, 2000);
 }
 
 /**
@@ -127,8 +110,8 @@ function logout() {
  * Redirects unauthenticated users from protected pages
  */
 document.addEventListener('DOMContentLoaded', function() {
-    // Apply authentication check only to userpage
-    if (window.location.pathname.includes('userpage.html')) {
+    // Apply authentication check only to user dashboard page
+    if (window.location.pathname.includes('user-page.html')) {
         requireAuth();
     }
 });
