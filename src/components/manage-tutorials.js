@@ -1,15 +1,15 @@
-// Initialised adminProjects used by all admin tutorial views
+// initialised adminProjects used by all admin tutorial views
 let adminTutorials = [];
 
 // Populate adminProjects from the voltaraTutorials object array.
-// This normalises the raw voltaraTutorials data into a simpler shape used by admin views.
+// This normalises the raw voltaraTutorials data into a simpler shape (less properties) used by admin views.
 // If there are no tutorials, adminTutorials is reset to an empty array and the function returns.
 function buildTutorialsList() {
     if (!voltaraTutorials.length) {
         adminTutorials = [];
         return;
     }
-    // Deconstruct each tutorial object into a flat structure (id, title, category, proficiency,
+    // Deconstruct each tutorial object into new structure (id, title, category, proficiency,likes)
     // curated flag and numeric likes) suitable for filtering and sorting in the admin UI.
     adminTutorials = voltaraTutorials.map(function (tutorial) {
         const categoryName = tutorial.category && tutorial.category.name ? tutorial.category.name : "";
@@ -144,8 +144,8 @@ function renderUnifiedTutorialsView() {
         }
 
         body.innerHTML = renderAdminProjectTable(tutorials);
-        if (typeof attachCuratedToggleHandlers === "function") {
-            attachCuratedToggleHandlers();
+        if (typeof curatedToggle === "function") {
+            curatedToggle();
         }
     }
 
@@ -263,8 +263,8 @@ function renderCategoryView() {
             return selected.some(function (cat) { return tutorial.category.toLowerCase() === cat.toLowerCase(); });
         }) : [];
         body.innerHTML = renderAdminProjectTable(filtered);
-        if (typeof attachCuratedToggleHandlers === "function") {
-            attachCuratedToggleHandlers();
+        if (typeof curatedToggle === "function") {
+            curatedToggle();
         }
     }
     checkboxes.forEach(function (cb) {
@@ -346,8 +346,8 @@ function renderCuratedView(sortKey) {
     function updateTable() {
         const tutorials = getSorted();
         body.innerHTML = renderAdminProjectTable(tutorials);
-        if (typeof attachCuratedToggleHandlers === "function") {
-            attachCuratedToggleHandlers();
+        if (typeof curatedToggle === "function") {
+            curatedToggle();
         }
     }
     select.value = sort;
@@ -412,8 +412,8 @@ function renderNonCurated(sortKey) {
     function updateTable() {
         const tutorials = getSorted();
         body.innerHTML = renderAdminProjectTable(tutorials);
-        if (typeof attachCuratedToggleHandlers === "function") {
-            attachCuratedToggleHandlers();
+        if (typeof curatedToggle === "function") {
+            curatedToggle();
         }
     }
     select.value = sort;
@@ -492,8 +492,8 @@ function renderByProficiencyView() {
             return selected.indexOf(tutorial.proficiency) !== -1;
         }) : [];
         body.innerHTML = renderAdminProjectTable(filtered);
-        if (typeof attachCuratedToggleHandlers === "function") {
-            attachCuratedToggleHandlers();
+        if (typeof curatedToggle === "function") {
+            curatedToggle();
         }
     }
     checkboxes.forEach(function (cb) {

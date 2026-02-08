@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const userEmail = localStorage.getItem('userEmail') || '';
     updateUserInfo(userName, userEmail);
     
-    initializePage();
+    initialisePage();
 
     const shouldOpenMyTutorials = localStorage.getItem('openMyTutorials') === 'true';
     if (shouldOpenMyTutorials) {
@@ -323,9 +323,9 @@ function isAuthenticated() {
 }
 
 /**
- * Initializes all page functionality and event listeners
+ * initialises all page functionality and event listeners
  */
-function initializePage() {
+function initialisePage() {
     // Get all DOM elements needed for functionality
     const projectForm = document.getElementById('projectForm');
     const imageUploadArea = document.getElementById('imageUploadArea');

@@ -16,7 +16,7 @@ function setAdminMainContent(html) {
 }
 
 
-// Initialise admin page after the DOM has fully loaded.
+// initialise admin page after the DOM has fully loaded.
 // Attach event handler so each admin menu button loads data and renders its view.
 document.addEventListener("DOMContentLoaded", function () {
   const adminSection = document.querySelector(".admin-section");
@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
       setAdminMainTitle("Manage users");
       try {
         await Promise.all([ensureTutorialsLoaded(), ensureAdminUsersLoaded()]);
-        buildAdminUserStats();
+        buildUserStats();
         if (adminUsersUnauthorized) {
           setAdminMainContent('<p class="text-muted mb-0">Admin login required to view users.</p>');
           return;
@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
           setAdminMainContent('<p class="text-muted mb-0">No users available.</p>');
           return;
         }
-        renderAdminUserSearchView();
+        renderUserSearchView();
       } catch (error) {
         console.error("Failed to load users or tutorials", error);
         setAdminMainContent('<p class="text-muted mb-0">Error loading users. Please try again.</p>');

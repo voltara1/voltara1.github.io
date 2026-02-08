@@ -170,10 +170,10 @@ function setupCategoryButtons() {
 }
 
 /**
- * Initialize featured projects with filtering
- * This is the ONLY initialization function - runs when page loads
+ * initialise featured projects with filtering
+ * This is the ONLY initialisation function - runs when page loads
  */
-function initializeFeaturedProjects() {
+function initialiseFeaturedProjects() {
     // Check if voltaraTutorials exists
     if (typeof voltaraTutorials === 'undefined') {
         console.error('voltaraTutorials not loaded. Make sure voltara-db.js is included.');
@@ -192,11 +192,11 @@ function initializeFeaturedProjects() {
     // Set up category button click handlers
     setupCategoryButtons();
 
-    console.log('✓ Featured Projects with filtering initialized!');
+    console.log('✓ Featured Projects with filtering initialised!');
 }
 
 // ========== START EVERYTHING ==========
-// Wait for page to load, then initialize
+// Wait for page to load, then initialise
 // This is the ONLY DOMContentLoaded listener for homepage features
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -210,7 +210,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // otherwise, wait for tutorials to load - show loading spinner
     if (voltaraTutorials.length > 0) {
         featuredGrid.innerHTML = '';
-        initializeFeaturedProjects();
+        initialiseFeaturedProjects();
     } else {
         featuredGrid.innerHTML = '<div class="text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>';
 
@@ -221,7 +221,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             featuredGrid.innerHTML = '';
-            initializeFeaturedProjects();
+            initialiseFeaturedProjects();
         });
     }
 });

@@ -106,7 +106,7 @@ function logout() {
 }
 
 /**
- * Initializes authentication on page load
+ * initialises authentication on page load
  * Redirects unauthenticated users from protected pages
  */
 document.addEventListener('DOMContentLoaded', function() {

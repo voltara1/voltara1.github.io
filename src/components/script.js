@@ -432,7 +432,7 @@ document.addEventListener('DOMContentLoaded', () => {
       paginationContainer.appendChild(nextLi);
     };
 
-    // Initialize pagination
+    // initialise pagination
     if (allProjects.length > 0) {
       showPage(1);
     }

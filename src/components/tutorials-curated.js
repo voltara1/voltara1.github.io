@@ -6,29 +6,9 @@ function fetchProjectData() {
     displayCuratedProjectCard();   //render all cards on the first page
 }
 
-/*
-addCard() function creates a card element for each project and append it to the card group
-the following html elements will be added dynamically by addCard()
------------------------------------------------------------
-<div class = "col" > 
-┌─────────────────────────────────┐
-│                                 │
-│ <div class = "card">            │
-│ ┌───────────────────────────────┤
-│ │                               │
-│ │ <a> anchor                    │
-│ │ ┌─────────────────────────────┤
-│ │ │                             │
-│ │ │ <img>                       │
-│ │ │ ┌─────────────────────────┐ │
-│ │ │ │                         │ │
-│ │ │ └─────────────────────────┘ │
-│ │ │ <h5> Project Title          │
-| | | <span><span> Likes          |
-│ │ │ <p> Project Descriptions    │
-└─┴─┴─────────────────────────────┘
------------------------------------------------------------
-*/
+// addCard() function creates a card element for each project and append it to the card group
+// the following html elements will be added dynamically by addCard()
+
 
 function addCard(tutorial, position, category) {
     // target the parent of all cards to obtain the starting point

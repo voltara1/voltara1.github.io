@@ -1,20 +1,33 @@
+// initialised adminUserStats used by all admin user views
+// to store selected/less  properties  of User (id, username, email, tutorials, likes, dates).
 let adminUserStats = [];
+
+// True when backend returns an authorization/permission error.
+// initialised with false  ~ authorised.
 let adminUsersUnauthorized = false;
 
+// Wrapper around ensureUsersLoaded() so the admin page can share the auth flag state
+// and reuse the same usersFetch promise from users-loader.js.
 function ensureAdminUsersLoaded() {
-    adminUsersUnauthorized = false;
-    return ensureUsersLoaded();
+    adminUsersUnauthorized = false; // starts with user is authorised 
+    return ensureUsersLoaded();     
+    //users-loader may flag this user as unauthorised by checking return response from backend
 }
 
-function deleteAdminUser(userId) {
+// Delete a single user from the backend and refresh the admin users view.
+// Ask for confirmation, calls DELETE /admin/users/{id} with admin JWT,
+// show a notification and update adminUserStats on success.
+function deleteUser(userId) {
+    // User id cannot be null
     if (userId == null) {
         return;
     }
-
+    // OK or Cancel?
     if (!window.confirm("Are you sure you want to delete this user? This action cannot be undone.")) {
         return;
     }
 
+    // grab the JWT token of the user from local storage and pass the token to backend for authentication
     var token = localStorage.getItem("authToken") || "";
     var headers = {};
     if (token) {
@@ -22,6 +35,7 @@ function deleteAdminUser(userId) {
     }
     headers["Content-Type"] = "application/json";
 
+    // Backend endpoint to delete a user by user id
     fetch(`${API_BASE_URL}/admin/users/${userId}`, {
         method: "DELETE",
         headers: headers
@@ -52,7 +66,7 @@ function deleteAdminUser(userId) {
                 return user.id !== userId;
             });
 
-            renderAdminUserSearchView();
+            renderUserSearchView();
         })
         .catch(function (error) {
             console.error("Error deleting user:", error);
@@ -62,7 +76,11 @@ function deleteAdminUser(userId) {
         });
 }
 
-function buildAdminUserStats() {
+// Populate adminUserStats from the voltaraUsers User object array.
+// This normalises raw user data and joins tutorials so that each row shows
+// tutorial count and total likes per user in the admin UI.
+function buildUserStats() {
+    // check if no user in array
     if (!Array.isArray(voltaraUsers) || !voltaraUsers.length) {
         adminUserStats = [];
         return;
@@ -70,6 +88,8 @@ function buildAdminUserStats() {
 
     const tutorials = Array.isArray(voltaraTutorials) ? voltaraTutorials : [];
 
+    // map user with the following attributes:
+    // user id, username, email, creater_at, tutorial count, likes
     adminUserStats = voltaraUsers.map(function (user) {
         const userId = user && typeof user.id !== "undefined" ? user.id : null;
         const username =
@@ -117,22 +137,19 @@ function buildAdminUserStats() {
     });
 }
 
-function formatAdminUserDate(dateString) {
+// Format various backend date string formats into a simple YYYY-MM-DD
+// value suitable for display in admin user tables.
+function formatUserDate(dateString) {
     if (!dateString) {
         return "";
     }
     var s = dateString.toString();
-    var sepIndex = s.indexOf("T");
-    if (sepIndex === -1) {
-        sepIndex = s.indexOf(" ");
-    }
-    if (sepIndex === -1) {
-        return s.length >= 10 ? s.slice(0, 10) : s;
-    }
-    return s.slice(0, sepIndex);
+    return s.slice(0, 10);
 }
 
-function renderAdminUserTableRows(users) {
+// Render table rows for the main admin users list (non-search view).
+// Returns an HTML string injected into the relevant <tbody> in admin-page.js.
+function renderUserTableRows(users) {
     if (!users || !users.length) {
         return '<tr><td colspan="8" class="text-muted text-center small">No users to display.</td></tr>';
     }
@@ -151,7 +168,7 @@ function renderAdminUserTableRows(users) {
                 (user.email || "") +
                 "</td>" +
                 "<td>" +
-                formatAdminUserDate(user.createdAt) +
+                formatUserDate(user.createdAt) +
                 "</td>" +
                 '<td class="text-end">' +
                 (user.tutorials != null ? user.tutorials : 0) +
@@ -165,7 +182,7 @@ function renderAdminUserTableRows(users) {
                     "</button>" +
                 "</td>" +
                 '<td class="text-center">' +
-                    '<button type="button" class="btn btn-sm btn-outline-danger" title="Delete user" onclick="deleteAdminUser(' + (user.id != null ? user.id : 'null') + ')">' +
+                    '<button type="button" class="btn btn-sm btn-outline-danger" title="Delete user" onclick="deleteUser(' + (user.id != null ? user.id : 'null') + ')">' +
                         '<i class="fas fa-trash"></i>' +
                     "</button>" +
                 "</td>" +
@@ -175,7 +192,9 @@ function renderAdminUserTableRows(users) {
         .join("");
 }
 
-function renderAdminUserSearchView() {
+// Render the admin "Manage users" view with search input and results table.
+// Provides client-side filtering over adminUserStats by username/email.
+function renderUserSearchView() {
     if (!adminUserStats.length) {
         setAdminMainContent(
             '<p class="text-muted mb-0">No users available.</p>'
@@ -218,6 +237,7 @@ function renderAdminUserSearchView() {
         return;
     }
 
+    // Filter adminUserStats by username or email using the current search query.
     function filterUsers(query) {
         var q = (query || "").toString().toLowerCase().trim();
         if (!q) {
@@ -230,6 +250,7 @@ function renderAdminUserSearchView() {
         });
     }
 
+    // Build table rows for the current filtered user list shown in the search results.
     function renderSearchRows(users) {
         if (!users || !users.length) {
             return '<tr><td colspan="8" class="text-muted text-center small">No users to display.</td></tr>';
@@ -240,7 +261,7 @@ function renderAdminUserSearchView() {
                 "<td>" + (user.id != null ? user.id : "") + "</td>" +
                 "<td>" + (user.username || "") + "</td>" +
                 "<td>" + (user.email || "") + "</td>" +
-                "<td>" + formatAdminUserDate(user.createdAt) + "</td>" +
+                "<td>" + formatUserDate(user.createdAt) + "</td>" +
                 '<td class="text-end">' + (user.tutorials != null ? user.tutorials : 0) + "</td>" +
                 '<td class="text-end">' + (user.likes != null ? user.likes : 0) + "</td>" +
                 '<td class="text-center">' +
@@ -249,7 +270,7 @@ function renderAdminUserSearchView() {
                     "</button>" +
                 "</td>" +
                 '<td class="text-center">' +
-                    '<button type="button" class="btn btn-sm btn-outline-danger" title="Delete user" onclick="deleteAdminUser(' + (user.id != null ? user.id : 'null') + ')">' +
+                    '<button type="button" class="btn btn-sm btn-outline-danger" title="Delete user" onclick="deleteUser(' + (user.id != null ? user.id : 'null') + ')">' +
                         '<i class="fas fa-trash"></i>' +
                     "</button>" +
                 "</td>" +

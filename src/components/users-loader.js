@@ -23,7 +23,7 @@ function ensureUsersLoaded() {
         .then(function (response) {
             // If the response is NOT ok, throw a custom message
             if (response.status === 403) {
-                window.adminUsersUnauthorized = true;
+                window.adminUsersUnauthorized = true;  // unauthorised user.
                 throw new Error('Permission denied. Please confirm authentication');
             } else if (!response.ok) {
                 throw new Error('Failed to load users: ' + response.status);

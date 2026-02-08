@@ -108,7 +108,7 @@ function startExploreTutorials() {
     // Set up filter button click handlers
     setupExploreFilterButtons();
 
-    console.log('✓ Explore Tutorials page with filtering initialized!');
+    console.log('✓ Explore Tutorials page with filtering initialised!');
 }
 
 // Wait for the page to fully load, then either render immediately or load tutorials
