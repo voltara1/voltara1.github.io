@@ -1,6 +1,6 @@
 /**
  * Authentication Management System
- * Handles user authentication, token management, and API integration
+ * Handles user authentication, token management
  */
 
 

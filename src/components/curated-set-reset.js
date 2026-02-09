@@ -18,8 +18,6 @@ async function setTutorialCurated(tutorialId, curated, adminToken) {
     const response = await fetch(url, {
         method: 'PATCH',
         headers: {
-            // Content-Type is optional here since there is no body,
-            // but safe to include?
             'Content-Type': 'application/json',
             // Pass the ADMIN JWT
             Authorization: `Bearer ${adminToken}`,
@@ -101,18 +99,3 @@ function curatedToggle() {
     });
 }
 
-
-/*
-import { setTutorialCurated } from './admin-tutorials.js';
-
-const adminToken = // retrieve admin token, e.g. from localStorage ;
-
-setTutorialCurated(50, true, adminToken)
-  .then((updatedTutorial) => {
-    console.log('Updated tutorial:', updatedTutorial);
-  })
-  .catch((err) => {
-    console.error('Error updating curated flag:', err);
-  });
-
-  */

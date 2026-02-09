@@ -132,7 +132,8 @@
         <div class="d-flex align-items-center gap-2">
           <!-- Search form -->
           <form class="d-flex" role="search">
-            <input id="search-input" class="form-control search-input me-2" type="search" placeholder="Search" aria-label="Search" />
+            <input id="search-input" class="form-control search-input me-2" type="search" placeholder="Search"
+              aria-label="Search" />
             <button class="btn btn-outline-light" type="submit">Search</button>
           </form>
 
@@ -145,7 +146,9 @@
             <ul class="dropdown-menu dropdown-menu-end" id="authDropdownMenu">
               <li><a class="dropdown-item" href="#" id="nav-dashboard-link">Dashboard</a></li>
               <li><a class="dropdown-item" href="#" id="nav-profile-link">Update Profile</a></li>
-              <li><hr class="dropdown-divider"></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
               <li><a class="dropdown-item" href="#" id="nav-logout-link">Logout</a></li>
             </ul>
           </div>
@@ -164,7 +167,8 @@
       <div class="row align-items-center">
         <!-- Left column: Headline, subtitle, and CTA buttons -->
         <div class="col-lg-6 col-md-12">
-          <h1 class="hero-title">Discover and Share Open-Source Projects with Microcontroller, IoT, Sensors and More</h1>
+          <h1 class="hero-title">Discover and Share Open-Source Projects with Microcontroller, IoT, Sensors and More
+          </h1>
           <p class="hero-subtitle">
             Join our community, contribute your designs, and collaborate on the next
             generation of electronic innovations.
@@ -293,8 +297,7 @@
         </div>
       </div>
       <!-- curatedProjectCardGroup is the parent container ID that is used as the reference starting point for DOM manipulation in addCard() function in script.js -->
-      <div id="curatedProjectCardGroup"
-           class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 g-4">
+      <div id="curatedProjectCardGroup" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 g-4">
 
         <!-- Curated Projects cards is dinamically inserted here 
         by addCard() function in script.js -->
@@ -304,7 +307,6 @@
   </section>
   <!-- End of Curated Projects section -->
 
-  <!-- TODO: Browse by About Us section -->
   <!-- Start of About Us section -->
   <section class="border-top border-bottom py-4 curated-section">
     <div class="container-fluid px-4">
@@ -319,75 +321,85 @@
           <a class="btn btn-primary mb-4" href="#" role="button">Join the Community</a>
         </div>
         <div class="col-12 col-md-4 p-2">
-          <img class="border img-fluid w-100"
-               src="http://127.0.0.1:8890/api/v1/uploads/about-us.png"
-               alt="Voltara About Us">
+          <img class="border img-fluid w-100" src="http://127.0.0.1:8890/api/v1/uploads/about-us.png"
+            alt="Voltara About Us">
         </div>
       </div>
     </div>
   </section>
   <!-- End of About Us section -->
-
   <!-- Start of Newletter and Social Media section -->
   <section class="py-4 curated-section">
     <div class="container-fluid px-4">
       <div class="row">
-      <!-- Newsletter section  -->
-      <div class="col-sm-6">
-        <div class="d-flex flex-column">
-          <div class="col-sm-11 ms-0">
-            <div class="text-black text-start fw-medium pt-1 pb-2">
-              Subscribe to our Newsletter:
-            </div>
-
-            <!-- Newsletter section contains form for email and button -->
-            <!-- submitForm() function (in script.js) is invoked everytime the subscribe button is clicked -->
-            <!-- the purpose is for email validation with toast notifications -->
-            <form id="newsletter-form" action="" method="post" onsubmit="submitForm(event);">
-              <div class="input-group mb-3">
-
-                <input id="txtEmail" type="text" class="form-control" placeholder="e.g. john@email.com"
-                  aria-label="Recipient's username" aria-describedby="button-addon2" />
-
-                <button class="btn btn-primary" type="submit" id="button-addon2">
-                  <i class="fa-solid fa-newspaper"></i>
-                  Subscribe
-                </button>
-
+        <!-- Newsletter section  -->
+        <div class="col-sm-6">
+          <div class="d-flex flex-column">
+            <div class="col-sm-11 ms-0">
+              <div class="text-black text-start fw-medium pt-1 pb-2">
+                Subscribe to our Newsletter:
               </div>
-            </form>
 
+              <!-- Newsletter section contains form for email and button -->
+              <!-- submitForm() function (in script.js) is invoked everytime the subscribe button is clicked -->
+              <!-- the purpose is for email validation with toast notifications -->
+              <form id="newsletter-form" action="" method="post" onsubmit="submitForm(event);">
+                <div class="input-group mb-3">
+
+                  <input id="txtEmail" type="text" class="form-control" placeholder="e.g. john@email.com"
+                    aria-label="Recipient's username" aria-describedby="button-addon2" />
+
+                  <button class="btn btn-primary" type="submit" id="button-addon2">
+                    <i class="fa-solid fa-newspaper"></i>
+                    Subscribe
+                  </button>
+
+                </div>
+              </form>
+
+            </div>
           </div>
         </div>
-      </div>
-      <!-- Social Media section -->
-      <div class="nav col-sm-6 pt-2 justify-content-evenly align-items-center small">
-        <a href="#" class="text-dark text-decoration-none">
-          <i class="fa-brands fa-square-facebook text-info"></i>
-          Facebook
-        </a>
-        <a href="#" class="text-dark text-decoration-none">
-          <i class="fa-brands fa-instagram text-danger"></i>
-          Instagram
-        </a>
-        <a href="#" class="text-dark text-decoration-none">
-          <i class="fa-brands fa-x-twitter text-black"></i>
-          Twitter
-        </a>
-        <a href="#" class="text-dark text-decoration-none">
-          <i class="fa-brands fa-youtube text-danger"></i>
-          YouTube
-        </a>
-      </div>
+        <!-- Social Media section -->
+        <div class="nav col-sm-6 pt-2 justify-content-evenly align-items-center small">
+          <a href="#" class="text-dark text-decoration-none">
+            <i class="fa-brands fa-square-facebook text-info"></i>
+            Facebook
+          </a>
+          <a href="#" class="text-dark text-decoration-none">
+            <i class="fa-brands fa-instagram text-danger"></i>
+            Instagram
+          </a>
+          <a href="#" class="text-dark text-decoration-none">
+            <i class="fa-brands fa-x-twitter text-black"></i>
+            Twitter
+          </a>
+          <a href="#" class="text-dark text-decoration-none">
+            <i class="fa-brands fa-youtube text-danger"></i>
+            YouTube
+          </a>
+        </div>
       </div>
     </div>
   </section>
   <!-- End of Newletter and Social Media section -->
 
+  <div class="container-fluid px-4 mt-3">
+    <h5 class="text-danger medium text-center mb-1">
+      All tutorials shown on this site are for illustration and learning purposes only and do not represent fully tested
+      or production-ready products.
+    </h5>
+    <h5 class="text-danger medium text-center mb-2">
+      Tutorial images used are adapted from
+      <a href="https://randomnerdtutorials.com/" class="text-danger fw-semibold" target="_blank"
+        rel="noopener noreferrer">Random Nerd Tutorials</a>.
+    </h5>
+  </div>
 
   <!-- Updated Footer section -->
   <footer class="bg-dark text-white-50 border-top curated-section">
-    <div class="container-fluid px-4 py-3 d-flex flex-column-reverse flex-md-row justify-content-between align-items-center">
+    <div
+      class="container-fluid px-4 py-3 d-flex flex-column-reverse flex-md-row justify-content-between align-items-center">
       <p class="col-md-4 mb-0">© 2025 Voltara.</p>
       <a href="/"
         class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none"
@@ -443,7 +455,7 @@
   <script src="./src/components/index.js"></script>
   <!-- 4. user.js: Login/Signup modal and authentication form handling -->
   <script src="./src/components/script.js"></script>
-   <!-- 5. tutorials-curated.js: display curated collection based on filter and proficiency-->
+  <!-- 5. tutorials-curated.js: display curated collection based on filter and proficiency-->
   <script src="./src/components/tutorials-curated.js"></script>
   <!-- 6. tutorials-search.js: tutorial search feature, on the navbar section -->
   <script src="./src/components/tutorials-search.js"></script>

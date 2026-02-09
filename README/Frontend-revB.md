@@ -1,3 +1,9 @@
+<p align="center">
+  <img <img width="720" height="720" alt="s -Photoroom" src="https://github.com/user-attachments/assets/d8805243-378c-4283-9229-e450d7c991d2" />
+</p>
+
+<hr>
+
 ## Frontend Architecture Overview
 This frontend is a JavaScript app built with static HTML pages and modular JS components under `src/components`. It relies on:
 
@@ -15,6 +21,45 @@ The backend API base URL is configured in `src/components/config-const.js`:
 
 
 ## File & Page Structure
+
+```bash
+voltara/
+│
+├─ Database/                    # Contains quick build to replicate the DB in your own server
+│   ├── MySQL/                  # Data for importation to voltara_db tables
+│   ├── uploads/                # Images for the tutorials
+├─ README/                      # Contains documentations for this app
+│   ├── dataflow.md             # tables' data for import to voltara_db tables
+│   ├── frontend.md             # Developer's Guide for the frontend portion of this app
+│   ├── backend.md              # References to the backend portion of this app
+├─ src/components/              # Style sheets and Core application codes
+│   ├── styles.css              # Main style sheets for all html except user page and admin page
+│   ├── user-page.css           # Style sheets for user page
+│   ├── admin-page.css          # Style sheets for admin page
+│   ├── config-const.js         # Define global constants used across the site
+│   ├── index.js                # For landing page; Featured tutorials, category filters, curated section, newsletter and shared toast/notification.
+│   ├── script.js               # Login/signup modal, form binding and navbar auth state.
+│   ├── auth.js                 # Handles user authentication, token management, and API integration
+│   ├── profilemodal.js         # Handles user/admin profile updates
+│   ├── user-page.js            # For user-page.html: User dashboard, tutorial submission form, tutorials by the same user 
+│   ├── users-loader.js         # Global tutorial fetch, Single source of user object data
+│   ├── admin-page.js           # For admin-page.html: admin dashboard, manage users and manage tutorials 
+│   ├── manage-users.js         # Admin page to manage users (delete/suspend users) with search user by email or username
+│   ├── manage-tutorials.js     # Admin page to manage tutorials (set/reset curated flag) with various filters
+│   ├── curated-set-reset.js    # Backend API call to set/reset curated flag by admin
+│   ├── tutorials-loader.js     # Global tutorial fetch, Single source of tutorial object data
+│   ├── tutorials-pagination.js # Pagination helper used by homepage, explore and search views.
+│   ├── tutorials-search.js     # Global tutorial search based on title, description and keywords
+│   ├── tutorials-curated.js    # Display up to 3 curated tutorials with a proficiency/likes weighting.
+│   ├── tutorials-explore.js    # For tutorials-explore.html; explore tutorials with category filters
+│   └── tutorial-details.js     # For tutorial-details.html; render tutorial details, download assetts
+├── index.html                  # Landing page with featured/curated tutorials, category filters, global search and newsletter subscription.
+├── tutorials-explore.html      # Explore page listing all tutorials with category filters and pagination.
+├── tutorial-details.html       # Detail page for a single tutorial (title, media, BOM and related tutorials).
+├── user-page.html              # Authenticated user dashboard for uploading and managing the logged‑in user’s tutorials.
+└── admin-page.html             # Admin dashboard (manage users, manage tutorials, set/reset curated flag).
+
+```
 
 ### Top‑level pages
 
@@ -609,10 +654,11 @@ This structure is designed so that adding a new view usually means:
   - Render into a specific container,
   - Reuse `Pagination`, `tutorials-search.js` and `showNotification` where appropriate.
 
-##Features not implemented at the moment:
-- Likes
-- Public Q&A
-- Discussion Forum
+## Features currently not implemented:
+- Likes, the feature for public to "upvote" a tutorial
+- Public Q&A, the feature for public to interact with the user/creator on matters pertaining to a specific tutorial.
+- Discussion Forum. Topic specific discussion forums.
+
 These features require moderate to significant modifications in backend including new column, new table in MySQL database, new API endpoints with DELETE capability for public (for "unlike") and significant DOM manipulation and additional UI.
 
 
