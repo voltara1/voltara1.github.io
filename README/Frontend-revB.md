@@ -659,6 +659,5 @@ This structure is designed so that adding a new view usually means:
 - Public Q&A, the feature for public to interact with the user/creator on matters pertaining to a specific tutorial.
 - Discussion Forum. Topic specific discussion forums.
 
-These features require moderate to significant modifications in backend including new column, new table in MySQL database, new API endpoints with DELETE capability for public (for "unlike") and significant DOM manipulation and additional UI.
 
 
