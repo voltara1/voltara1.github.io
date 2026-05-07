@@ -1,52 +1,104 @@
-// submitForm() function is called from onsubmit event on the index.html newsletter section
-// the purpose is to validate the email input and show a toast message accordingly.
-function submitForm(event) {
-    event.preventDefault(); /* prevent the default form submission */
-
-    const emailInput = document.getElementById('txtEmail'); /* get the email input element */
-    const email = emailInput.value;
-    // validate the email input
-    // if the email input is empty, show a toast message and return
-    if (email === "") {
-        showToast({ bgColor: "danger", msg: "All inputs must not be empty." });
-        return;
-    }
-
-    // validate the email format using a regular expression
-    // if the email format is invalid, show a toast message and return
-    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-    if (!emailRegex.test(email)) {
-        showToast({ bgColor: "danger", msg: "Email is invalid. Please check." });
-        return;
-    }
-    // if the email format is valid, show a success toast message
-    showToast({ bgColor: "success", msg: "Subscription successful!" });
-    event.target.reset();/* reset the form after successful submission */
-}
-
-/**
- * function() to display a toast message with the given message and background color
- * @param {string} bgColor the background color (success/danger/info/...)
- * @param {string} msg the message to be displayed in the toast
- */
-function showToast({ bgColor, msg }) {
-    const toastElement = document.getElementById('msg-toast'); 
-    const toastBodyElement = document.getElementById('msg-toast-body');
-    toastBodyElement.textContent = msg;
-    toastElement.classList.remove("bg-success", "bg-danger");
-    toastElement.classList.add("bg-" + bgColor);
-
-    const toast = new bootstrap.Toast(toastElement, { delay: 10000 });
-    toast.show(); /* display the toast message for 4 secs */
-}
-
 
 document.addEventListener('DOMContentLoaded', () => {
   // -----------------------------------------------------------------
-  // Grab the modal instance (so we can close it programmatically)
+  // Grab the modal instance (if present) so we can close it programmatically
   // -----------------------------------------------------------------
   const loginSignupModalEl = document.getElementById('loginSignupModal');
-  const loginSignupModal   = bootstrap.Modal.getOrCreateInstance(loginSignupModalEl);
+  const loginSignupModal = loginSignupModalEl ? bootstrap.Modal.getOrCreateInstance(loginSignupModalEl) : null;
+
+  // -----------------------------------------------------------------
+  // Hero CTA: Share Tutorial button behavior
+  // -----------------------------------------------------------------
+  const shareTutorialBtn = document.getElementById('share-tutorial-btn');
+  if (shareTutorialBtn) {
+    shareTutorialBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const token = localStorage.getItem('authToken');
+      if (token) {
+        window.location.href = 'user-page.html';
+      } else if (loginSignupModal) {
+        loginSignupModal.show();
+      }
+    });
+  }
+
+  // -----------------------------------------------------------------
+  // Function to update auth button in navbar
+  // -----------------------------------------------------------------
+  const updateAuthButton = () => {
+    const token = localStorage.getItem('authToken');
+    const loginButton = document.getElementById('authButton');
+    const dropdownMenu = document.getElementById('authDropdownMenu');
+    const dashboardLink = document.getElementById('nav-dashboard-link');
+    const profileLink = document.getElementById('nav-profile-link');
+    const logoutLink = document.getElementById('nav-logout-link');
+
+    if (token && loginButton) {
+      const userName = localStorage.getItem('userName') || 'Account';
+      const isAdmin = localStorage.getItem('isAdmin') === 'true';
+
+      // Configure button appearance
+      loginButton.innerHTML = '';
+      const userIcon = document.createElement('i');
+      userIcon.classList.add('pe-2', 'fas', 'fa-user');
+      loginButton.appendChild(userIcon);
+      loginButton.appendChild(document.createTextNode(userName));
+
+      loginButton.classList.remove('btn-secondary');
+      loginButton.classList.add('btn-success');
+      loginButton.setAttribute('data-bs-toggle', 'dropdown');
+      loginButton.removeAttribute('data-bs-target');
+      loginButton.onclick = null; // let Bootstrap handle dropdown
+
+      // Configure dropdown menu if present
+      if (dropdownMenu) {
+        dropdownMenu.classList.remove('d-none');
+      }
+      if (dashboardLink) {
+        // Pages like index.html, projects.html, project-details.html
+        dashboardLink.textContent = isAdmin ? 'Admin Dashboard' : 'My Tutorials';
+        dashboardLink.onclick = function (e) {
+          e.preventDefault();
+          if (isAdmin) {
+            window.location.href = 'admin-page.html';
+          } else {
+            localStorage.setItem('openMyTutorials', 'true');
+            window.location.href = 'user-page.html';
+          }
+        };
+      }
+
+      if (profileLink) {
+        profileLink.textContent = 'Update Profile';
+        profileLink.onclick = function (e) {
+          e.preventDefault();
+          localStorage.setItem('openProfileModal', 'true');
+          window.location.href = 'user-page.html';
+        };
+      }
+      if (logoutLink) {
+        logoutLink.onclick = function (e) {
+          e.preventDefault();
+          if (typeof window.logout === 'function') {
+            window.logout();
+          }
+        };
+      }
+    } else if (loginButton) {
+      // User is not logged in - show login/signup button
+      loginButton.textContent = 'Login / Signup';
+      loginButton.classList.remove('btn-success');
+      loginButton.classList.add('btn-secondary');
+      loginButton.onclick = null;
+      loginButton.setAttribute('data-bs-toggle', 'modal');
+      loginButton.setAttribute('data-bs-target', '#loginSignupModal');
+
+      // Hide dropdown menu if present
+      if (dropdownMenu) {
+        dropdownMenu.classList.add('d-none');
+      }
+    }
+  };
 
   // -----------------------------------------------------------------
   // show a temporary alert inside the modal body
@@ -77,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // Simple client‑side validation (HTML5 + custom rules)
       // -------------------------------------------------------------
       if (!formEl.checkValidity()) {
-        // If the browser’s native validation fails, let it show the tooltips
+        // If the browser's native validation fails, let it show the tooltips
         formEl.reportValidity();
         submitBtn.disabled = false;
         submitBtn.textContent = submitBtn.dataset.originalText || 'Submit';
@@ -102,6 +154,24 @@ document.addEventListener('DOMContentLoaded', () => {
       const formData = new FormData(formEl);
       const payload = Object.fromEntries(formData.entries());
 
+      // Map form fields to match your UserDto model exactly
+      let requestBody;
+
+      if (endpoint.includes('signin') || endpoint.includes('login')) {
+        requestBody = {
+          email: document.getElementById('loginEmail').value.trim(),
+          password: document.getElementById('loginPassword').value.trim()
+        };
+      } else if (endpoint.includes('signup')) {
+        requestBody = {
+          userName: document.getElementById('signupName').value.trim(),
+          email: document.getElementById('signupEmail').value.trim(),
+          password: document.getElementById('signupPassword').value.trim()
+        };
+      } else {
+        requestBody = payload;
+      }
+
       // -------------------------------------------------------------
       //  Send it to the server (JSON API)
       // -------------------------------------------------------------
@@ -110,18 +180,59 @@ document.addEventListener('DOMContentLoaded', () => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            // 'X-CSRF-Token': '<your‑token‑if‑you‑need‑it>'
           },
-          body: JSON.stringify(payload)
+          body: JSON.stringify(requestBody)
         });
 
-        const answer = await resp.json(); // assume JSON response
+        // Check content type before parsing
+        const contentType = resp.headers.get('content-type');
+        let answer;
+
+        if (contentType && contentType.includes('application/json')) {
+          answer = await resp.json();
+        } else {
+          const textResponse = await resp.text();
+          answer = { message: textResponse || `Server returned ${resp.status} ${resp.statusText}` };
+        }
 
         if (!resp.ok) {
           // ---------------------------------------------------------
           // Server responded with an error (400‑500)
           // ---------------------------------------------------------
-          const msg = answer.message || 'Something went wrong.';
+          let msg = answer.message || answer.error || `Server returned ${resp.status} ${resp.statusText}`;
+
+          // Handle specific HTTP status codes
+          if (resp.status === 409) {
+            // Conflict - email already exists
+            msg = 'User already exists. Please use a different email address.';
+          } else if (resp.status === 403) {
+            // Forbidden - check if it's a specific security message
+            if (answer.message && (answer.message.toLowerCase().includes('email already exists') ||
+              answer.message.toLowerCase().includes('please use another email'))) {
+              msg = 'User already exists. Please use a different email address.';
+            } else if (answer.message && answer.message.toLowerCase().includes('access denied')) {
+              msg = 'Access forbidden. Please check your permissions.';
+            } else {
+              // Generic forbidden message
+              msg = 'Access forbidden. Please check your permissions.';
+            }
+          } else if (resp.status === 500) {
+            // Server error - might be unhandled exception
+            if (answer.message && answer.message.toLowerCase().includes('email already exists')) {
+              msg = 'User already exists. Please use a different email address.';
+            } else {
+              msg = 'Server error occurred. Please try again later.';
+            }
+          } else if (resp.status === 405) {
+            msg = 'HTTP method not allowed. Please check the endpoint URL.';
+          } else if (resp.status === 404) {
+            msg = 'Server endpoint not found. Please check the URL.';
+          } else if (resp.status === 401) {
+            msg = 'Invalid credentials.';
+          } else if (resp.status === 400) {
+            msg = answer.message || 'Please check your input.';
+          }
+
           const alert = createAlert('danger', msg);
           formEl.prepend(alert);
         } else {
@@ -129,16 +240,85 @@ document.addEventListener('DOMContentLoaded', () => {
           // Show Message
           // ---------------------------------------------------------
           const successMsg = answer.message ||
-            (endpoint.includes('login')
+            (endpoint.includes('login') || endpoint.includes('signin')
               ? 'You are now logged in!'
               : 'Your account has been created!');
 
           const alert = createAlert('success', successMsg);
           formEl.prepend(alert);
 
-          // optional: store a token, redirect, etc.
-          // localStorage.setItem('authToken', answer.token);
-          // window.location.reload();
+          // Store token and user info if returned and update auth button
+          if (answer.token) {
+            localStorage.setItem('authToken', answer.token);
+            localStorage.setItem('refreshToken', answer.refreshToken || '');
+            localStorage.setItem('userName', answer.userName || document.getElementById('loginEmail').value.split('@')[0]);
+
+            // Detect admin role from response and persist a simple flag
+            let isAdminFlag = false;
+            const roleCandidates = [answer.roles, answer.authorities, answer.role, answer.userRole, answer.scope];
+            for (const val of roleCandidates) {
+              if (!val) continue;
+              if (typeof val === 'string') {
+                if (val.toUpperCase().includes('ADMIN')) { isAdminFlag = true; break; }
+              } else if (Array.isArray(val)) {
+                if (val.some(r => typeof r === 'string' && r.toUpperCase().includes('ADMIN'))) { isAdminFlag = true; break; }
+              }
+            }
+            localStorage.setItem('isAdmin', isAdminFlag ? 'true' : 'false');
+
+            // Store numeric userId from the login response (backend returns it alongside the token)
+            const userIdCandidates = [
+              answer.userId,
+              answer.user_id,
+              answer.id,
+              answer.user && answer.user.id,
+              answer.user && answer.user.userId
+            ];
+
+            const userIdValue = userIdCandidates.find(v => v !== undefined && v !== null && v !== '' && !Number.isNaN(parseInt(v, 10)));
+
+            if (userIdValue !== undefined) {
+              const numericUserId = parseInt(userIdValue, 10);
+              localStorage.setItem('userId', String(numericUserId));
+
+              // if (typeof showToast === 'function') {
+              //   showToast({
+              //     bgColor: "info",
+              //     msg: `User ID: ${numericUserId} (retrieved from login response)`
+              //   });
+              // }
+            } else {
+              console.error('Sign-in response does not contain a usable numeric userId field');
+            }
+
+            updateAuthButton(); // Update navbar button
+          }
+
+          // Redirect to home page (index.html) on successful login
+          if (endpoint.includes('login') || endpoint.includes('signin')) {
+            setTimeout(() => {
+              window.location.href = 'index.html';
+            }, 1500);
+          } else if (endpoint.includes('signup')) {
+            // Clear the signup form
+            document.getElementById('signupName').value = '';
+            document.getElementById('signupEmail').value = '';
+            document.getElementById('signupPassword').value = '';
+
+            // Automatically switch to login tab after successful signup
+            setTimeout(() => {
+              const loginTab = document.querySelector('#pills-login-tab');
+              if (loginTab) {
+                new bootstrap.Tab(loginTab).show();
+
+                // Pre-fill email in login form for convenience
+                const signupEmail = document.getElementById('signupEmail').value;
+                if (signupEmail) {
+                  document.getElementById('loginEmail').value = signupEmail;
+                }
+              }
+            }, 1000);
+          }
 
           // Give the user a short moment to read the message,
           // then hide the modal and reset the forms
@@ -153,9 +333,18 @@ document.addEventListener('DOMContentLoaded', () => {
         // -------------------------------------------------------------
         // Network or unexpected error
         // -------------------------------------------------------------
-        const alert = createAlert('danger', 'Network error – try again later.');
+        console.error('Fetch error details:', err);
+        let msg = 'Network error – try again later.';
+
+        // Provide more specific error messages
+        if (err instanceof TypeError && err.message.includes('fetch')) {
+          msg = 'Unable to connect to server. Please check if the server is running.';
+        } else if (err.name === 'AbortError') {
+          msg = 'Request timed out. Please try again.';
+        }
+
+        const alert = createAlert('danger', msg);
         formEl.prepend(alert);
-        console.error(err);
       } finally {
         // -------------------------------------------------------------
         // Re‑enable the button no matter what happened
@@ -167,26 +356,149 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // -------------------------------------------------------------
+  // Pagination functions for Featured Projects
+  // -------------------------------------------------------------
+  const projectsContainer = document.querySelector('.container-fluid.my-2.row');
+  const paginationContainer = document.querySelector('.pagination');
+
+  // Get all project cards
+  if (projectsContainer && paginationContainer) {
+    const allProjects = Array.from(projectsContainer.querySelectorAll('.col'));
+    const itemsPerPage = 8;
+    let currentPage = 1;
+    const totalPages = Math.ceil(allProjects.length / itemsPerPage);
+
+    const showPage = (page) => {
+      currentPage = page;
+
+      // Hide all projects
+      allProjects.forEach(project => {
+        project.style.display = 'none';
+      });
+
+      // Show projects for current page
+      const startIndex = (page - 1) * itemsPerPage;
+      const endIndex = startIndex + itemsPerPage;
+
+      for (let i = startIndex; i < endIndex && i < allProjects.length; i++) {
+        allProjects[i].style.display = 'block';
+      }
+
+      // Update pagination controls
+      updatePagination();
+    };
+
+    const updatePagination = () => {
+      paginationContainer.innerHTML = '';
+
+      // Previous button
+      const prevLi = document.createElement('li');
+      prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
+      prevLi.innerHTML = '<a class="page-link" href="#" tabindex="-1">Previous</a>';
+      if (currentPage > 1) {
+        prevLi.addEventListener('click', (e) => {
+          e.preventDefault();
+          showPage(currentPage - 1);
+        });
+      }
+      paginationContainer.appendChild(prevLi);
+
+      // Page numbers
+      for (let i = 1; i <= totalPages; i++) {
+        const li = document.createElement('li');
+        li.className = `page-item ${i === currentPage ? 'active' : ''}`;
+        li.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+
+        if (i !== currentPage) {
+          li.addEventListener('click', (e) => {
+            e.preventDefault();
+            showPage(i);
+          });
+        }
+
+        paginationContainer.appendChild(li);
+      }
+
+      // Next button
+      const nextLi = document.createElement('li');
+      nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
+      nextLi.innerHTML = '<a class="page-link" href="#">Next</a>';
+      if (currentPage < totalPages) {
+        nextLi.addEventListener('click', (e) => {
+          e.preventDefault();
+          showPage(currentPage + 1);
+        });
+      }
+      paginationContainer.appendChild(nextLi);
+    };
+
+    // initialise pagination
+    if (allProjects.length > 0) {
+      showPage(1);
+    }
+  }
+
+  // -------------------------------------------------------------
   // Merge data
   // -------------------------------------------------------------
-  const loginForm   = document.querySelector('#pills-login form');
-  const signupForm  = document.querySelector('#pills-signup form');
+  const loginForm = document.querySelector('#pills-login form');
+  const signupForm = document.querySelector('#pills-signup form');
 
-  // Store the original button text so we can restore it later
-  loginForm.querySelector('button[type="submit"]').dataset.originalText   = 'Login';
-  signupForm.querySelector('button[type="submit"]').dataset.originalText  = 'Sign Up';
+  if (loginForm && signupForm) {
+    // Store the original button text so we can restore it later
+    const loginSubmitBtn = loginForm.querySelector('button[type="submit"]');
+    const signupSubmitBtn = signupForm.querySelector('button[type="submit"]');
+    if (loginSubmitBtn) loginSubmitBtn.dataset.originalText = 'Login';
+    if (signupSubmitBtn) signupSubmitBtn.dataset.originalText = 'Sign Up';
 
-  bindForm(loginForm,  '/api/login');   // <-- change to your real endpoint
-  bindForm(signupForm, '/api/signup'); // <-- change to your real endpoint
+    // Update these to match your actual endpoints
+    bindForm(loginForm, `${API_BASE_URL}/public/signin`);
+    bindForm(signupForm, `${API_BASE_URL}/public/signup`);
+
+    // -----------------------------------------------------------
+    //  clear alerts when the user switches tabs
+    // -----------------------------------------------------------
+    const pills = document.getElementById('pills-tab');
+    if (pills) {
+      pills.addEventListener('shown.bs.tab', (event) => {
+        const targetPaneSelector = event.target.getAttribute('data-bs-target');
+        if (!targetPaneSelector) return;
+        const currentlyVisiblePane = document.querySelector(targetPaneSelector);
+        if (!currentlyVisiblePane) return;
+        currentlyVisiblePane.querySelectorAll('.alert').forEach(a => a.remove());
+      });
+    }
+  }
 
   // -------------------------------------------------------------
-  //  clear alerts when the user switches tabs
+  // Check authentication status on page load
   // -------------------------------------------------------------
-  const pills = document.getElementById('pills-tab');
-  pills.addEventListener('shown.bs.tab', (event) => {
-    // event.target   = newly‑shown tab button
-    // event.relatedTarget = previous tab button
-    const currentlyVisiblePane = document.querySelector(event.target.getAttribute('data-bs-target'));
-    currentlyVisiblePane.querySelectorAll('.alert').forEach(a => a.remove());
-  });
+  const checkAuthStatus = () => {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      updateAuthButton();
+    }
+  };
+
+  checkAuthStatus();
+
+  // -------------------------------------------------------------
+  // Logout function
+  // -------------------------------------------------------------
+  window.logout = function () {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('userName');
+    localStorage.removeItem('userId'); // Remove user ID on logout
+    localStorage.removeItem('isAdmin');
+    updateAuthButton(); // Switch back to login button
+
+    // Show success message if toast helper is available
+    if (typeof showToast === 'function') {
+      showToast({ bgColor: "success", msg: "You have been logged out successfully." });
+    }
+
+    // Redirect to home page
+    window.location.href = 'index.html';
+  };
 });

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Voltara</title>
+  <link rel="icon" href="assets/favicon.ico">
+
+  <!-- External Stylesheets -->
+  <!-- Bootstrap 5: Provides responsive grid system, utility classes, and pre-built components -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+
+  <!-- Font Awesome: Icon library for UI elements (social media, navigation, category icons) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <link href="src/components/styles.css" rel="stylesheet" type="text/css" />
+  <link href="src/components/adminPage.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="admin-body vh-100">
+
+  <!-- =========================== -->
+  <!-- NAVIGATION BAR -->
+  <!-- =========================== -->
+  <!-- Responsive navigation with mobile hamburger menu, centered nav links, and right-aligned search/auth buttons, using themed color -->
+  <nav class="navbar navbar-expand-lg" style="background-color: #23374D;">
+    <div class="container-fluid px-4">
+      <!-- Logo/Brand - Links to homepage -->
+      <a class="navbar-brand" href="index.html">
+        <img src="assets/voltara-logo-transparent.png" alt="Voltara Logo" class="navbar-logo" />
+      </a>
+
+      <!-- Mobile hamburger toggle button - Visible on small screens -->
+      <button class="navbar-toggler navbar-dark" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+        aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Collapsible navigation content -->
+      <div class="collapse navbar-collapse" id="navbarContent">
+
+        <!-- Center-aligned navigation links -->
+        <ul class="navbar-nav mx-auto">
+          <li class="nav-item">
+            <a class="nav-link text-white fw-semibold" href="index.html">HOME</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white fw-semibold active" href="projects.html">EXPLORE</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white fw-semibold" href="#">ARTICLES</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white fw-semibold" href="#">FORUM</a>
+          </li>
+        </ul>
+
+        <!-- Right-aligned search bar and authentication buttons -->
+        <div class="d-flex align-items-center gap-2">
+          <!-- Search form -->
+          <form class="d-flex" role="search">
+            <input id="search-input" class="form-control search-input me-2" type="search" placeholder="Search"
+              aria-label="Search" />
+            <button class="btn btn-outline-light" type="submit">Search</button>
+          </form>
+
+          <!-- Authentication dropdown -->
+          <div class="dropdown">
+            <button id="authButton" type="button" class="btn btn-secondary dropdown-toggle text-nowrap"
+              data-bs-toggle="modal" data-bs-target="#loginSignupModal" aria-expanded="false">
+              Login / Signup
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" id="authDropdownMenu">
+              <li><a class="dropdown-item" href="#" id="nav-profile-link">Update Profile</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item" href="#" id="nav-logout-link">Logout</a></li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </nav>
+
+
+  <section class="admin-section py-4 min-vh-100">
+    <div class="container-fluid px-4">
+      <div class="row">
+        <aside class="col-12 col-md-3 col-lg-3 mb-4 d-flex">
+          <div class="card admin-sidebar h-100 w-100 rounded-3 overflow-hidden">
+            <div class="card-header admin-sidebar-header bg-secondary text-light">
+              <h5 class="mb-0">Admin Dashboard</h5>
+            </div>
+            <div class="card-body p-0">
+              <div class="list-group admin-menu">
+                <button
+                  class="list-group-item list-group-item-action admin-menu-toggle fw-semibold text-uppercase small"
+                  type="button" data-bs-toggle="collapse" data-bs-target="#admin-users-menu" aria-expanded="true">
+                  <span class="me-2"><i class="fa-solid fa-users"></i></span>
+                  Manage users
+                </button>
+                <div class="collapse show" id="admin-users-menu">
+                  <button id="admin-users-list-all"
+                    class="list-group-item list-group-item-action admin-menu-item fs-6 ps-5" type="button">
+                    • List ALL users
+                  </button>
+                  <button id="admin-users-search"
+                    class="list-group-item list-group-item-action admin-menu-item fs-6 ps-5" type="button">
+                    • Search users by username or email
+                  </button>
+                </div>
+                <button
+                  class="list-group-item list-group-item-action admin-menu-toggle fw-semibold text-uppercase small"
+                  type="button" data-bs-toggle="collapse" data-bs-target="#admin-projects-menu" aria-expanded="false">
+                  <span class="me-2"><i class="fa-solid fa-grip"></i></span>
+                  Manage Tutorial
+                </button>
+                <div class="collapse" id="admin-projects-menu">
+                  <button class="list-group-item list-group-item-action admin-menu-item fs-6 ps-5" type="button">
+                    • List projects by category
+                  </button>
+                  <button class="list-group-item list-group-item-action admin-menu-item fs-6 ps-5" type="button">
+                    • List curated projects
+                  </button>
+                  <button class="list-group-item list-group-item-action admin-menu-item fs-6 ps-5" type="button">
+                    • List non-curated projects
+                  </button>
+                  <button class="list-group-item list-group-item-action admin-menu-item fs-6 ps-5" type="button">
+                    • List projects by proficiency
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </aside>
+        <main class="col-12 col-md-9 col-lg-9 d-flex">
+          <div class="card admin-main h-100 w-100">
+            <div class="card-body" id="admin-main-content">
+              <h2 class="admin-main-title mb-3 fs-3 fw-bold text-secondary">Admin dashboard</h2>
+              <p class="text-muted mb-4">Select an action on the left to manage users or tutorials.</p>
+              <div class="admin-placeholder mb-4" id="admin-users-placeholder">
+                <h5 class="mb-2">Users management overview</h5>
+                <p class="mb-1">List ALL users will show a table with:</p>
+                <ul class="mb-2 ps-4">
+                  <li>User id, username, email address</li>
+                  <li>Creation or registration date</li>
+                  <li>Number of tutorials submitted by this user</li>
+                  <li>Total number of likes received</li>
+                </ul>
+                <p class="mb-0">Sorting controls will allow ordering by user id, username, email, registration date
+                  and total likes.</p>
+              </div>
+              <div class="admin-placeholder" id="admin-projects-placeholder">
+                <h5 class="mb-2">Tutorial management overview</h5>
+                <p class="mb-1"> options include:</p>
+                <ul class="mb-2">
+                  <li>List tutorials by category with checkboxes for Arduino, ESP32, IoT, PCB Design, Raspberry Pi,
+                    Robotics, Sensors and STM32 and controls to select or clear all categories.</li>
+                  <li>List of curated tutorials with sorting by number of likes in ascending or descending order.</li>
+                  <li>List of non-curated tutorials with sorting by number of likes in ascending or descending order.
+                  </li>
+                  <li>List of tutorials by proficiency with checkboxes for Beginner, Intermediate and Advance and
+                    support for multiple selections.</li>
+                </ul>
+                <p class="mb-0">Future JavaScript will render the tables and filters in this area based on the
+                  selected menu item.</p>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  </section>
+
+  <footer class="bg-dark text-white-50 border-top  padding-top: 60px">
+    <div
+      class="container-fluid px-4 d-flex flex-column-reverse flex-md-row justify-content-between align-items-center p-3">
+      <p class="col-md-4 mb-0">© 2025 Voltara.</p>
+      <a href="/"
+        class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none"
+        aria-label="Bootstrap">
+        <img src="assets/voltara-logo-transparent.png" alt="Voltara Logo" class="navbar-logo" />
+      </a>
+      <ul class="nav col-md-4 justify-content-end flex-nowrap">
+        <li class="nav-item">
+          <a href="index.html" class="nav-link px-2 text-white-50">Home</a>
+        </li>
+        <li class="nav-item">
+          <a href="projects.html" class="nav-link px-2 text-white-50">Explore</a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link px-2 text-white-50">Articles</a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link px-2 text-white-50">Forum</a>
+        </li>
+      </ul>
+    </div>
+  </footer>
+
+  <!-- End of Updated Footer section -->
+
+
+  <!-- =========================== -->
+  <!-- JAVASCRIPT INCLUDES -->
+  <!-- =========================== -->
+
+  <script src="src/components/tutorials-loader.js"></script>
+  <script src="src/components/manageUser.js"></script>
+  <script src="src/components/manageTutorial.js"></script>
+  <script src="src/components/setcurated.js"></script>
+  <!-- Shared login/signup + navbar auth behavior -->
+  <script src="src/components/script.js"></script>
+  <script src="src/components/adminPage.js"></script>
+  <!-- Bootstrap Bundle: Includes Popper.js for tooltips, popovers, and dropdowns -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+    crossorigin="anonymous"></script>
+
+</body>
+
+</html>

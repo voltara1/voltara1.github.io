@@ -1,0 +1,30 @@
+
+body.admin-body {
+  background-color: var(--off-white);
+}
+
+.admin-main {
+  border-radius: 0.75rem;
+  min-height: 320px;
+   min-height: 100vh;
+}
+
+/* Keep tutorial title links in admin tables looking like normal text */
+.admin-main a,
+.admin-main a:visited,
+.admin-main a:hover,
+.admin-main a:active {
+  color: inherit;
+  text-decoration: none;
+}
+
+/*
+.footer {
+  margin-top: 100px;
+  margin-bottom: 0;
+}
+*/
+
+.admin-sidebar .list-group-item {
+  text-align: left;
+}
